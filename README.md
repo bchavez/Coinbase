@@ -50,15 +50,13 @@ When your customer has finished selecting their items they would like to purchas
 
 ![Payment Page](https://raw.github.com/bchavez/Coinbase/50f55472be49008af2cdda7959284a304af6ca78/Docs/payaddress.png)
 
-Once the user sends **Bitcoins** to the **Bitcoin Address**, the user then clicks on **Confirm Payment**. Payment confirmation will verify that the funds have been transferred to the **Bitcoin** address that is associated with your merchant account.
+Once the customer sends **Bitcoins** to the **Bitcoin Address**, the user then clicks on **Confirm Payment**. Payment confirmation will verify that the funds have been transferred to the **Bitcoin Address** that is associated with your merchant account.
 
 ![Payment Confirm](https://raw.github.com/bchavez/Coinbase/50f55472be49008af2cdda7959284a304af6ca78/Docs/payaddress-wait.png)
 
 Upon successful transfer, the user is redirected to the **SuccessUrl** and optionally, the **CallbackUrl** is invoked.
 
 **Note:** A separate **Bitcoin Address** is generated for each order and user. This ensures order totals don't build up at a single **Bitcoin Address**.
-
-**Note:** If the user updates their order subtotal, then you'll need to re-create / re-request a new button page.
 
 **Note:** Once a button page is created, the customer will have about 10 minutes to complete their purchase. If not, then the URL to the payment page will expire.
 
