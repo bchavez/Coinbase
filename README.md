@@ -91,7 +91,7 @@ else
 }
 ```
 
-**Note:** Don't ask me why creating a payment page is called a ***button*** in their API. Coinbaise claims the underlying *data model* is the same regardless if it is a payment button that is created or a payment page. It makes no sense to me to expose this detail conceptually; but whatever, I didn't design their API.
+**Note:** Don't ask me why creating a payment page is called a ***button*** in their API. Coinbaise claims the underlying *data model* is the same regardless if you are creating a payment button or a payment page. It makes no sense to me to expose this detail conceptually to your API consumers; but whatever, I didn't design their API.
 
 -------
 #### Handling Callbacks on Your Server
