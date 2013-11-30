@@ -46,7 +46,7 @@ This integration option allows you to redirect the user's browser to Coinbase's 
 
 This integration method is similar [PayPal's Express Checkout (web checkout)](https://developer.paypal.com/webapps/developer/docs/integration/web/web-checkout/) or [Dwolla's off-site gateway](https://developers.dwolla.com/dev/pages/gateway#ux) payment method.
 
-When your customer has finished selected their items to purchase, the checkout payment process is completed by redirecting the user's browser to Coinbase's servers where the user is presented with the following checkout page:
+When your customer has finished selecting their items they would like to purchase, the checkout payment process is completed by redirecting the user's browser to Coinbase's servers where the user is presented with the following checkout page:
 
 ![Payment Page](https://raw.github.com/bchavez/Coinbase/50f55472be49008af2cdda7959284a304af6ca78/Docs/payaddress.png)
 
