@@ -48,7 +48,7 @@ This integration method is similar [PayPal's Express Checkout (web checkout)](ht
 
 When your customer has finished selected their items to purchase, the checkout payment process is completed by redirecting the user's browser to Coinbase's servers where the user is presented with the following checkout page:
 
-![Payment Page](https://github.com/bchavez/Coinbase/blob/50f55472be49008af2cdda7959284a304af6ca78/Docs/payaddress.png)
+![Payment Page](https://raw.github.com/bchavez/Coinbase/50f55472be49008af2cdda7959284a304af6ca78/Docs/payaddress.png)
 
 Once the user sends **Bitcoins** to the **Bitcoin Address**, the user then clicks on **Confirm Payment**. Payment confirmation will verify that the funds have been transferred to the **Bitcoin** address that is associated with your merchant account.
 
