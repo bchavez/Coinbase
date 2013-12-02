@@ -58,6 +58,7 @@
     <Compile Include="CoinbaseCallback.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="Converters\DecimalStringConverter.cs" />
+    <Compile Include="Serialization\JsonNetDeseralizer.cs" />
     <Compile Include="Serialization\JsonNetSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

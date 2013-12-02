@@ -12,10 +12,13 @@
     <description>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins for low-cost payment processing.</description>
     <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>
       <releaseNotes>
+          v0.2.1 - 12/01/2013:
+          * Fixing nuget deployment issue.
+          
           v0.2.0 - 12/01/2013:
           * Removed Microsoft WebAPI HttpClient (version issues)
           * Replaced with RestSharp
-          
+
           v0.1.0 - 12/01/2013:
           * Bug fix in GetCheckoutUrl()
 
@@ -34,8 +37,8 @@
   </metadata>
   
     <files>
-      <file src="..\..\__package\Coinbase\Coinbase.dll" target="lib\net40\Dwolla.Checkout.dll" />
-      <file src="..\..\__package\Coinbase\Coinbase.XML" target="lib\net40\Dwolla.Checkout.XML" />
+      <file src="..\..\__package\Coinbase\Coinbase.dll" target="lib\net40\Coinbase.dll" />
+      <file src="..\..\__package\Coinbase\Coinbase.XML" target="lib\net40\Coinbase.XML" />
     </files>
     
 </package>
