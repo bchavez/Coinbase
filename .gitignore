@@ -149,3 +149,7 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+/Source/Coinbase.Tests/App.config
+/nuget.push.bat
+/__package
+/__compile

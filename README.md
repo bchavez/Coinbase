@@ -42,11 +42,11 @@ This library uses the **API key** authentication make calls to Coinbase servers.
 ----
 ###Integration Options
 #### Redirect to Payment Page
-This integration option allows you to redirect the user's browser to Coinbase's servers to complete the checkout / payment process. Optionally, you can add a **CallbackUrl** and/or **SuccessUrl** that will notify your server on the success or failure of a payment.
+This integration option redirects the user's browser to Coinbase's servers to complete the checkout / payment process. Optionally, a **CallbackUrl** and/or **SuccessUrl** can be added to the payment that will notify a server on the success or failure of a payment.
 
 This integration method is similar [PayPal's Express Checkout (web checkout)](https://developer.paypal.com/webapps/developer/docs/integration/web/web-checkout/) or [Dwolla's off-site gateway](https://developers.dwolla.com/dev/pages/gateway#ux) payment method.
 
-When your customer has finished selecting their items they would like to purchase, the checkout payment process is completed by redirecting the user's browser to Coinbase's servers where the user is presented with the following checkout page:
+When a customer has finished selecting items they wish to purchase, the checkout payment process is completed by redirecting the user's browser to Coinbase's servers where the user is presented with the following checkout page:
 
 ![Payment Page](https://raw.github.com/bchavez/Coinbase/50f55472be49008af2cdda7959284a304af6ca78/Docs/payaddress.png)
 
@@ -54,13 +54,13 @@ Once the customer sends **Bitcoins** to the **Bitcoin Address**, the user then c
 
 ![Payment Confirm](https://raw.github.com/bchavez/Coinbase/50f55472be49008af2cdda7959284a304af6ca78/Docs/payaddress-wait.png)
 
-Upon successful transfer, the user is redirected to the **SuccessUrl** and optionally, the **CallbackUrl** is invoked.
+When the transfer of **Bitcoins** has been verified, the user is redirected to the **SuccessUrl** and optionally the **CallbackUrl** is invoked.
 
-**Note:** A separate **Bitcoin Address** is generated for each order and user. This ensures order totals don't build up at a single **Bitcoin Address**.
+**Note:** A separate **Bitcoin Address** is generated for each order and customer. This ensures order totals don't build up at a single **Bitcoin Address**.
 
-**Note:** Once a button page is created, the customer will have about 10 minutes to complete their purchase. If not, then the URL to the payment page will expire.
+**Note:** Once a payment page is created, the customer will have about 10 minutes to complete their purchase. After 10 minutes the URL to the payment page will expire.
 
-The server code to integrate the following payment page is shown below:
+The following server code registers a payment request with Coinbase and retrieves a checkout redirect URL for the user's browser:
 
 ```csharp
 var api = new CoinbaseApi( apiKey: "my_api_key" );
@@ -91,10 +91,20 @@ else
 }
 ```
 
-**Note:** Don't ask me why creating a payment page is called a ***button*** in their API. Coinbaise claims the underlying *data model* is the same regardless if you are creating a payment button or a payment page. It makes no sense to me to expose this detail conceptually to your API consumers; but whatever, I didn't design their API.
+**Note:** Don't ask me why creating a payment page is called a ***button*** in their API. Coinbaise claims the underlying *data model* is the same regardless if you are creating a payment *button* or a payment *page*. It makes no sense to me to expose this detail conceptually to your API consumers; but whatever, I didn't design their API.
 
 -------
 #### Handling Callbacks on Your Server
+
+Verifying callback authenticity is non-existent in Coinbase's API at the time of this writing. Therefore, it is necessary to implement some kind of security mechanism to verify the authenticity of callbacks. Using [HMAC](http://en.wikipedia.org/wiki/Hash-based_message_authentication_code) or any other message authentication should be used to verify that the original payment request is indeed authentic and originated from Coinbase. Usually, choosing a secret that only you and Coinbase know is a good start.
+
+To do this, (and for sake of simplicity), a `Guid` is used to record each checkout. The `Custom` property in the button request is used to identify the order pending inside a database.
+
+```csharp
+
+
+
+```
 
 -------
 #### Handling Redirects on Your Server

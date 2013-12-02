@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Coinbase</id>
+    <version>$version$</version>
+    <authors>Brian Chavez</authors>
+    <owners>Brian Chavez</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/bchavez/Coinbase</projectUrl>
+    <iconUrl>https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/s160x160/1378361_455546227892941_135818110_a.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins for low-cost payment processing.</description>
+    <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>
+      <releaseNotes>
+          v0.2.0 - 12/01/2013:
+          * Removed Microsoft WebAPI HttpClient (version issues)
+          * Replaced with RestSharp
+          
+          v0.1.0 - 12/01/2013:
+          * Bug fix in GetCheckoutUrl()
+
+          v0.1.0 - 12/01/2013:
+          * Initial implementation for payment checkout URL and button creation.
+      </releaseNotes>
+      <copyright>Copyright 2013</copyright>
+    <tags>bitcoin coinbase api payment money merchant checkout cart gateway bank</tags>
+    <dependencies>
+      <group targetFramework="net40">
+          <dependency id="FluentValidation" />
+          <dependency id="Newtonsoft.Json" />
+          <dependency id="RestSharp" />
+      </group>
+    </dependencies>
+  </metadata>
+  
+    <files>
+      <file src="..\..\__package\Coinbase\Coinbase.dll" target="lib\net40\Dwolla.Checkout.dll" />
+      <file src="..\..\__package\Coinbase\Coinbase.XML" target="lib\net40\Dwolla.Checkout.XML" />
+    </files>
+    
+</package>
