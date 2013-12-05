@@ -120,7 +120,7 @@ namespace Coinbase
         public string Id { get; set; }
         [JsonProperty("created_at")]
         [JsonConverter(typeof(IsoDateTimeConverter))]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public Status Status { get; set; }
 

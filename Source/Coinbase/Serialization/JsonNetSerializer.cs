@@ -58,4 +58,5 @@ namespace Coinbase.Serialization
             set{}
         }
     }
+
 }

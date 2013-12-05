@@ -98,15 +98,81 @@ Verifying callback authenticity is non-existent in Coinbase's API at the time of
 
 To do this, (and for sake of simplicity), a `Guid` is used to record each checkout. The `Custom` property in the button request is used to identify the order pending inside a database.
 
+For example, here's a simple order that we will handle our callback on:
+
 ```csharp
+// CREATE THE ORDER, AND REDIRECT
+var api = new CoinbaseApi( apiKey: "my_api_key" );
 
+var purchaseId = Guid.NewGuid().ToString("n");
 
+var paymenRequest = new ButtonRequest
+    {
+        Name = "Best Candy Bar on Earth",
+        Currency = Currency.USD,
+        Price = 79.99m,
+        Type = ButtonType.BuyNow,
+        Custom = purchaseId, //<< Here is how we identify the order, our purchaseId
+        Description = "Yummy Candy bar",
+        Style = ButtonStyle.CustomLarge,
+        CallbackUrl = "http://domain.com/bitcoin/callback"
+        SuccessUrl = "http://domain.com/bitcoin/success"
+    };
+
+var buttonResponse = api.RegisterButton( paymenRequest );
+
+if ( buttonResponse.Success )
+{
+    var redirectUrl = buttonResponse.GetCheckoutUrl();
+    return Redirect
+}
+```
+It's important to note that we're setting a `CallbackUrl` and a `SuccessUrl`. The `CallbackUrl` will be invoked **asynchronously** after the customer has completed their purchase. The `SuccessUrl` is invoked **synchronously** by the customer's browser after the customer has completed their payment transaction.
+
+An MVC controller action that handles the callback **asynchronously** might look like this:
+
+```csharp
+//This method is invoked by Coinbase's servers.
+[Route( "bitcoin/callback" ), HttpPost]
+public ActionResult Bitcoin_Execute( [JsonNetBinder] CoinbaseCallback callback )
+{
+    if( callback.Order.Status == Status.Completed )
+    {
+        var purchaseId = callback.Order.Custom;
+        
+        //check DB for purchaseId Guid
+
+        return new HttpStatusCodeResult( HttpStatusCode.OK );
+    }
+    return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
+}
 
 ```
+**Note:** Don't forget the `[JsonNetBinder]` attribute on the callback parameter. It's needed to fully parse the callback with `Newtonsoft.Json`. Otherwise, some fields in the callback such as `CompletedAt` might be null.
+
 
 -------
 #### Handling Redirects on Your Server
+An MVC controller action that handles the customer's `SuccessUrl` redirect might look like this:
 
+```csharp
+//This action is invoked by the customer's browser
+//and after successfully completing their payment
+//This handles the redirect back to the merchant's website.
+[Route( "bitcoin/success" ), HttpGet]
+public ActionResult Bitcoin_GetRequest()
+{
+    if ( this.Request.QueryString["order[status]"].StartsWith( "complete", StringComparison.OrdinalIgnoreCase ) )
+    {
+        var purchaseId = this.Request.QueryString["order[custom]"];
+
+        //The bitcoin payment has completed, use the purchaseId
+        //to fulfill the order.
+    }
+
+    //Show Error.
+}
+```
  
 
 Reference
