@@ -140,7 +140,8 @@ public ActionResult Bitcoin_Execute( [JsonNetBinder] CoinbaseCallback callback )
     {
         var purchaseId = callback.Order.Custom;
         
-        //check DB for purchaseId Guid
+        //The bitcoin payment has completed, use the purchaseId
+        //to fulfill the order.
 
         return new HttpStatusCodeResult( HttpStatusCode.OK );
     }
