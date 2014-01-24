@@ -154,7 +154,8 @@ namespace Coinbase
     {
         Canceled,
         Completed = 0x01,
-        New
+        New,
+        Mispaid
     }
 
     public class Customer
