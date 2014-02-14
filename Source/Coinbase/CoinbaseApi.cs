@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using Coinbase.Converters;
 using Coinbase.Serialization;
 using FluentValidation;
@@ -13,9 +17,68 @@ using RestSharp;
 
 namespace Coinbase
 {
+    public class CoinbaseApiAuthenticator : IAuthenticator
+    {
+        private readonly string apiKey;
+        private readonly string apiSecret;
+
+        public CoinbaseApiAuthenticator(string apiKey, string apiSecret)
+        {
+            this.apiKey = apiKey;
+            this.apiSecret = apiSecret;
+        }
+
+        public void Authenticate(IRestClient client, IRestRequest request)
+        {
+            var nonce = GetNonce();
+
+            var url = client.BuildUri(request);
+
+            var body = request.Parameters.First(p => p.Type == ParameterType.RequestBody).Value;
+
+            var hmacSig = GenerateSignature(nonce, url.ToString(), body.ToString(), this.apiSecret);
+
+            request.AddHeader("ACCESS_KEY", this.apiKey)
+                .AddHeader("ACCESS_NONCE", nonce)
+                .AddHeader("ACCESS_SIGNATURE", hmacSig);
+        }
+
+        /// <summary>
+        /// The nonce is a positive integer number that must increase with every request you make.
+        /// The ACCESS_SIGNATURE header is a HMAC-SHA256 hash of the nonce concatentated with the full URL and body of the HTTP request, encoded using your API secret.
+        /// In some distributed scenarios, it might be necessary to override the implementation of this method to allow cluster of computers to make individual payment requests to coinbase
+        /// where synchronization of the nonce is necessary.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetNonce()
+        {
+            return DateTime.UtcNow.Ticks.ToString();
+        }
+
+
+        public static string GenerateSignature( string nonce, string url, string body, string appSecret )
+        {
+            return GetHMACInHex( appSecret, nonce + url + body );
+        }
+
+        internal static string GetHMACInHex( string key, string data )
+        {
+            var hmacKey = Encoding.ASCII.GetBytes( key );
+
+            using( var signatureStream = new MemoryStream( Encoding.ASCII.GetBytes( data ) ) )
+            {
+                var hex = new HMACSHA256( hmacKey ).ComputeHash( signatureStream )
+                    .Aggregate( new StringBuilder(), ( sb, b ) => sb.AppendFormat( "{0:x2}", b ), sb => sb.ToString() );
+
+                return hex;
+            }
+        }
+    }
+
     public class CoinbaseApi
     {
         private readonly string apiKey;
+        private readonly string apiSecret;
 
         private JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -26,20 +89,27 @@ namespace Coinbase
         public const string BaseUrl = "https://coinbase.com/api/v1/{action}?api_key={apikey}";
         public const string CheckoutPageUrl = "https://coinbase.com/checkouts/{code}";
 
-        public CoinbaseApi() : this(string.Empty)
+        public CoinbaseApi() : this(string.Empty, string.Empty)
         {
         }
 
-        public CoinbaseApi( string apiKey )
+        [Obsolete( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs.", true )]
+        public CoinbaseApi(string apiSimpleKey)
+        {
+            throw new InvalidOperationException( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs." );
+        }
+
+        public CoinbaseApi( string apiKey, string apiSecret )
         {
             this.apiKey = !string.IsNullOrWhiteSpace( apiKey ) ? apiKey : ConfigurationManager.AppSettings["CoinbaseApiKey"];
-            if ( string.IsNullOrWhiteSpace( this.apiKey ) )
+            this.apiSecret = !string.IsNullOrWhiteSpace( apiSecret ) ? apiSecret : ConfigurationManager.AppSettings["CoinbaseApiSecret"];
+            if ( string.IsNullOrWhiteSpace( this.apiKey ) || string.IsNullOrWhiteSpace(this.apiSecret) )
             {
-                throw new ArgumentException( "The API key must not be empty. A valid API key should be used in the CoinbaseApi constructor or an appSettings configuration element with <add key='CoinbaseApiKey' value='my_api_key' /> should exist.", "apiKey" );
+                throw new ArgumentException( "The API key / secret must not be empty. A valid API key and API secret should be used in the CoinbaseApi constructor or an appSettings configuration element with <add key='CoinbaseApiKey' value='my_api_key' /> and <add key='CoinbaseApiSecret' value='my_api_secret' /> should exist.", "apiKey" );
             }
         }
 
-        public CoinbaseApi(string apiKey, JsonSerializerSettings settings) : this(apiKey)
+        public CoinbaseApi(string apiKey, string apiSecret, JsonSerializerSettings settings) : this(apiKey, apiSecret)
         {
             this.settings = settings;
         }
@@ -52,19 +122,24 @@ namespace Coinbase
 #if DEBUG
             client.Proxy = new WebProxy( "http://localhost.:8888", false );
 #endif
+            client.Authenticator = GetAuthenticator();
             client.AddHandler( "application/json", new JsonNetDeseralizer( settings ) );
             return client;
         }
 
+        protected virtual IAuthenticator GetAuthenticator()
+        {
+            return new CoinbaseApiAuthenticator(apiKey, apiSecret);
+        }
+
         protected virtual IRestRequest CreateRequest( string action )
         {
-            var post = new RestRequest( action, Method.POST )
+            var post = new RestRequest(action, Method.POST)
                 {
                     RequestFormat = DataFormat.Json,
                     JsonSerializer = new JsonNetSerializer(settings),
-                    
-                }
-                .AddParameter( "api_key", this.apiKey, ParameterType.QueryString );
+                };               
+
             return post;
         }
 
@@ -84,6 +159,8 @@ namespace Coinbase
 
             if ( resp.ErrorException != null )
                 throw resp.ErrorException;
+            if ( resp.ErrorMessage != null )
+                throw new Exception(resp.ErrorMessage);
 
             return resp.Data;
         }
