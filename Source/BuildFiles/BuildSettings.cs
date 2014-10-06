@@ -50,7 +50,26 @@ namespace BuildFiles
                         GlobalAssemblyInfo( i );
                     };
         }
+        public class CoinbaseMvcProject
+        {
+            public static readonly Directory Folder = Folders.Source.SubFolder("Coinbase.Mvc");
+            public static readonly File ProjectFile = Folder.File("Coinbase.Mvc.csproj");
+            public static readonly Directory OutputDirectory = Folders.CompileOutput.SubFolder("Coinbase.Mvc");
+            public static readonly File OutputDll = OutputDirectory.File("Coinbase.Mvc.dll");
+            public static readonly Directory PackageDir = Folders.Package.SubFolder("Coinbase.Mvc");
 
+            public static readonly File NugetSpec = Folders.Source.SubFolder(".nuget").File("Coinbase.Mvc.nuspec");
+            public static readonly File NugetNupkg = Folders.Package.File("Coinbase.Mvc.{0}.nupkg".With(Properties.CommandLineProperties.Version()));
+
+            public static readonly Action<IAssemblyInfoDetails> AssemblyInfo =
+                i =>
+                {
+                    i.Title("Coinbase.Mvc for .NET")
+                     .Product("Coinbase.Mvc");
+
+                    GlobalAssemblyInfo(i);
+                };
+        }
         public class Tests
         {
             public static readonly Directory Folder = Folders.Source.SubFolder( "Coinbase.Tests" );
