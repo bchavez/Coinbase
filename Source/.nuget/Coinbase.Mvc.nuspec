@@ -3,7 +3,7 @@
 <package>
   <metadata>
     <id>Coinbase.Mvc</id>
-    <version>0.1.0</version>
+    <version>$version$</version>
     <authors>Brian Chavez, Elan Hasson</authors>
     <owners>Brian Chavez, Elan Hasson</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
@@ -13,8 +13,7 @@
     <description>Provides support for instant payment notification handling for Asp.net MVC projects. </description>
     <summary> Removes need to have ASP.Net runtime present from the Coinbase main package.</summary>
     <releaseNotes>
-      History:
-      v0.1 - 10/05/2014:
+      History:v0.1.0 - 10/05/2014:
       * Split out classes that have dependencies on ASP.Net into new package Coinbase.Mvc.
  
     </releaseNotes>
