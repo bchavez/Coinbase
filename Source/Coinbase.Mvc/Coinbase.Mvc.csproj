@@ -87,6 +87,7 @@
     <ProjectReference Include="..\Coinbase\Coinbase.csproj">
       <Project>{cbb355b9-6d99-43d7-abd8-ef1ea39a3956}</Project>
       <Name>Coinbase</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
