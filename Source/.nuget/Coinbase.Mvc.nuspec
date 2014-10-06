@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<package>
+  <metadata>
+    <id>Coinbase.Mvc</id>
+    <version>0.1.0</version>
+    <authors>Brian Chavez, Elan Hasson</authors>
+    <owners>Brian Chavez, Elan Hasson</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/bchavez/Coinbase</projectUrl>
+    <iconUrl>https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/s160x160/1378361_455546227892941_135818110_a.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides support for instant payment notification handling for Asp.net MVC projects. </description>
+    <summary> Removes need to have ASP.Net runtime present from the Coinbase main package.</summary>
+    <releaseNotes>
+      History:
+      v0.1 - 10/05/2014:
+      * Split out classes that have dependencies on ASP.Net into new package Coinbase.Mvc.
+ 
+    </releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>bitcoin coinbase api payment money merchant checkout cart gateway bank mvc IPN</tags>
+    <dependencies>
+
+      <group>
+
+
+        <dependency id="Microsoft.AspNet.Mvc" version="5.2.2" />
+        <dependency id="Microsoft.AspNet.Razor" version="3.2.2" />
+        <dependency id="Microsoft.AspNet.WebPages" version="3.2.2" />
+        <dependency id="Microsoft.Bcl" version="1.1.9" />
+        <dependency id="Microsoft.Bcl.Build" version="1.0.21" />
+        <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+        <dependency id="Newtonsoft.Json" version="6.0.5" />
+        <dependency id="Coinbase" version="0.2.5" />
+      </group>
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="..\..\__package\Coinbase.Mvc\Coinbase.Mvc.dll" target="lib\net40\Coinbase.Mvc.dll" />
+    <file src="..\..\__package\Coinbase.Mvc\Coinbase.Mvc.XML" target="lib\net40\Coinbase.Mvc.XML" />
+  </files>
+
+</package>
