@@ -61,6 +61,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Coinbase.Mvc\Coinbase.Mvc.csproj">
+      <Project>{d1905679-600d-4e8a-ae15-949cfaff6781}</Project>
+      <Name>Coinbase.Mvc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Coinbase\Coinbase.csproj">
       <Project>{cbb355b9-6d99-43d7-abd8-ef1ea39a3956}</Project>
       <Name>Coinbase</Name>
