@@ -3,7 +3,7 @@ using System.IO;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 
-namespace Coinbase.Serialization
+namespace Coinbase.Mvc.Serialization
 {
     /*
 * Example 

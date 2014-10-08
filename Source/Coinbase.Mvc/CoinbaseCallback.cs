@@ -1,4 +1,4 @@
-﻿namespace Coinbase
+﻿namespace Coinbase.Mvc
 {
     public class CoinbaseCallback
     {
