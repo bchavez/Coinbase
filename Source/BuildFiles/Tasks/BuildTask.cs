@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-using System.Xml.XPath;
+﻿using System;
 using Fluent.IO;
 using FluentBuild;
 using FluentFs.Core;
@@ -11,8 +9,8 @@ namespace BuildFiles.Tasks
     {
         public BuildTask()
         {
-            this.AddTask( "clean", Clean );
-            this.AddTask( "build", CompileSources );
+            AddTask("clean", Clean);
+            AddTask("build", CompileSources);
         }
 
         public void Clean()
@@ -23,46 +21,72 @@ namespace BuildFiles.Tasks
 
         public void CompileSources()
         {
-            var assemblyInfoFile = Folders.CompileOutput.File( "Global.AssemblyInfo.cs" );
+            File assemblyInfoFile = Folders.CompileOutput.File("Global.AssemblyInfo.cs");
 
-            Task.CreateAssemblyInfo.Language.CSharp( aid =>
-                {
-                    Projects.CoinbaseProject.AssemblyInfo( aid );
-                    aid.OutputPath( assemblyInfoFile );
-                } );
+            Task.CreateAssemblyInfo.Language.CSharp(aid =>
+            {
+                Projects.CoinbaseProject.AssemblyInfo(aid);
+                aid.OutputPath(assemblyInfoFile);
 
-            Task.Build.MsBuild( msb =>
-                {
-                    msb.Configuration( "Release" )
-                       .ProjectOrSolutionFilePath( Projects.CoinbaseProject.ProjectFile )
-                       .AddTarget( "Rebuild" )
-                       .OutputDirectory( Projects.CoinbaseProject.OutputDirectory );
-                });
+             
+            });
+            Task.CreateAssemblyInfo.Language.CSharp(aid =>
+            {
+                Projects.CoinbaseMvcProject.AssemblyInfo(aid);
+                aid.OutputPath(assemblyInfoFile);
+            });
+            Task.Build.MsBuild(msb =>
+            {
+                msb.Configuration("Release")
+                    .ProjectOrSolutionFilePath(Projects.CoinbaseProject.ProjectFile)
+                    .AddTarget("Rebuild")
+                    .OutputDirectory(Projects.CoinbaseProject.OutputDirectory);
+            });
+            Task.Build.MsBuild(msb =>
+            {
+                msb.Configuration("Release")
+                    .ProjectOrSolutionFilePath(Projects.CoinbaseMvcProject.ProjectFile)
+                    .AddTarget("Rebuild")
+                    .OutputDirectory(Projects.CoinbaseMvcProject.OutputDirectory);
+            });
+            assemblyInfoFile.Delete(OnError.Continue);
 
-            assemblyInfoFile.Delete( OnError.Continue );
+            Defaults.Logger.WriteHeader("BUILD COMPLETE. Packaging ...");
 
-            Defaults.Logger.WriteHeader( "BUILD COMPLETE. Packaging ..." );
 
-            
             //copy compile directory to package directory
-            Path.Get( Projects.CoinbaseProject.OutputDirectory.ToString() )
-                .Copy( Projects.CoinbaseProject.PackageDir.ToString(), Overwrite.Always, recursive: true );
+            Path.Get(Projects.CoinbaseProject.OutputDirectory.ToString())
+                .Copy(Projects.CoinbaseProject.PackageDir.ToString(), Overwrite.Always, true);
 
-            var version = Properties.CommandLineProperties.Version();
+            Path.Get(Projects.CoinbaseMvcProject.OutputDirectory.ToString())
+                .Copy(Projects.CoinbaseMvcProject.PackageDir.ToString(), Overwrite.Always, true);
 
-            Defaults.Logger.Write( "RESULTS", "NuGet packing" );
+            string version = Properties.CommandLineProperties.Version();
 
-            var nuget = Path.Get( Folders.Lib.ToString() )
-                .Files( "NuGet.exe", recursive: true ).First();
+            Defaults.Logger.Write("RESULTS", "NuGet packing");
 
-            Task.Run.Executable( e => e.ExecutablePath(nuget.FullPath)
-                .WithArguments( "pack", Projects.CoinbaseProject.NugetSpec.Path, "-Version", version, "-OutputDirectory", Folders.Package.ToString() ) );
+            Path nuget = Path.Get(Folders.Lib.ToString())
+                .Files("NuGet.exe", true).First();
 
-            Defaults.Logger.Write( "RESULTS", "Setting NuGet PUSH script" );
-            var pushcmd = "{0} push {1}".With( nuget.MakeRelative().ToString(), Path.Get(Projects.CoinbaseProject.NugetNupkg.ToString()).MakeRelative().ToString() );
+            Task.Run.Executable(e => e.ExecutablePath(nuget.FullPath)
+                .WithArguments("pack", Projects.CoinbaseProject.NugetSpec.Path, "-Version", version, "-OutputDirectory",
+                    Folders.Package.ToString()));
+            Task.Run.Executable(e => e.ExecutablePath(nuget.FullPath)
+                .WithArguments("pack", Projects.CoinbaseMvcProject.NugetSpec.Path, "-Version", version,
+                    "-OutputDirectory", Folders.Package.ToString()));
+
+            Defaults.Logger.Write("RESULTS", "Setting NuGet PUSH script");
+
+
             //Defaults.Logger.Write( "RESULTS", pushcmd );
-            System.IO.File.WriteAllText( "nuget.push.bat", pushcmd );
+            System.IO.File.WriteAllText("nuget.push.bat",
+                "{0} push {1}".With(nuget.MakeRelative().ToString(),
+                    Path.Get(Projects.CoinbaseProject.NugetNupkg.ToString()).MakeRelative().ToString()) +
+                Environment.NewLine
+                +
+                "{0} push {1}".With(nuget.MakeRelative().ToString(),
+                    Path.Get(Projects.CoinbaseMvcProject.NugetNupkg.ToString()).MakeRelative().ToString())
+                );
         }
-
     }
 }
