@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoinbaseApi.cs" />
+    <Compile Include="_Obsoleted.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="Converters\DecimalStringConverter.cs" />
     <Compile Include="Serialization\JsonNetDeseralizer.cs" />
