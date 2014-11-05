@@ -53,9 +53,9 @@ namespace Coinbase
 
         internal static string GetHMACInHex( string key, string data )
         {
-            var hmacKey = Encoding.ASCII.GetBytes( key );
+            var hmacKey = Encoding.UTF8.GetBytes( key );
 
-            using( var signatureStream = new MemoryStream( Encoding.ASCII.GetBytes( data ) ) )
+            using( var signatureStream = new MemoryStream( Encoding.UTF8.GetBytes( data ) ) )
             {
                 var hex = new HMACSHA256( hmacKey ).ComputeHash( signatureStream )
                     .Aggregate( new StringBuilder(), ( sb, b ) => sb.AppendFormat( "{0:x2}", b ), sb => sb.ToString() );
