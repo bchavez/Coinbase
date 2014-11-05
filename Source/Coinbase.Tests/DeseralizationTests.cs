@@ -164,11 +164,11 @@ namespace Coinbase.Tests
     }
   }
 }";
-            var obj = JsonConvert.DeserializeObject<CoinbaseCallback>( json );
+            var obj = JsonConvert.DeserializeObject<Mvc.CoinbaseCallback>( json );
 
             obj.Should().NotBeNull();
 
-            var truth = new CoinbaseCallback
+            var truth = new Mvc.CoinbaseCallback
                 {
                     Order = new Order
                         {
