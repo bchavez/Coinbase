@@ -63,7 +63,7 @@ When the transfer of **Bitcoins** has been verified, the user is redirected to t
 The following server code registers a payment request with Coinbase and retrieves a checkout redirect URL for the user's browser:
 
 ```csharp
-var api = new CoinbaseApi( apiKey: "my_api_key" );
+var api = new CoinbaseApi( apiKey: "my_api_key", apiSecret: "my_api_secret" );
 
 var paymenRequest = new ButtonRequest
     {
