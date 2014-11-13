@@ -13,7 +13,11 @@
     <description>Provides support for instant payment notification handling for Asp.net MVC projects. </description>
     <summary> Removes need to have ASP.Net runtime present from the Coinbase main package.</summary>
     <releaseNotes>
-      History:v0.1.0 - 10/05/2014:
+      History:v0.3.0 - 11/13/2014:
+      * Using new ObjectModel namespace refactoring.
+      * Compiled against .NET 4.5 which is required for latest MVC references.
+      
+      v0.1.0 - 10/05/2014:
       * Split out classes that have dependencies on ASP.Net into new package Coinbase.Mvc.
  
     </releaseNotes>
@@ -22,16 +26,14 @@
     <dependencies>
 
       <group>
-
-
-        <dependency id="Microsoft.AspNet.Mvc" version="5.2.2" />
-        <dependency id="Microsoft.AspNet.Razor" version="3.2.2" />
-        <dependency id="Microsoft.AspNet.WebPages" version="3.2.2" />
-        <dependency id="Microsoft.Bcl" version="1.1.9" />
-        <dependency id="Microsoft.Bcl.Build" version="1.0.21" />
-        <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
-        <dependency id="Newtonsoft.Json" version="6.0.5" />
-        <dependency id="Coinbase" version="0.2.5" />
+          
+        <dependency id="Microsoft.AspNet.Mvc" />
+        <dependency id="Microsoft.AspNet.Razor"/>
+        <dependency id="Microsoft.AspNet.WebPages"  />
+        <dependency id="Microsoft.Web.Infrastructure" />
+        <dependency id="Newtonsoft.Json" />
+        <dependency id="Coinbase" version="0.3.0" />
+          
       </group>
     </dependencies>
   </metadata>

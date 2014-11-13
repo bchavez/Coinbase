@@ -11,35 +11,46 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins for low-cost payment processing.</description>
     <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>
-    <releaseNotes> 
-      History:v0.2.5 - 10/05/2014:
-      * Updated all Nuget Package Dependencies
-      * Removed missing App.config file from Coinbase.Tests project
+    <releaseNotes>
+        History:v0.3.0 - 11/13/2014:
+        ** BREAKING CHANGES **
+        * Moved MVC specific code into new NuGet library. Please use Coinbase.Mvc for your MVC projects.
+        * Issue #3 fixed - ASCII HMAC encoding now uses UTF8.
+        * Issue #4 fixed - Input string not a valid integer.
+        * Using new http://api.coinbase.com API endpoint.
+        * Third-party references updated: Newtonsoft, RestSharp
+        * Coinbase's ObjectModel updated.
+        * Namespace refactorings: Order, ButtonReqeust, etc are now in Coinbase.ObjectModel.
+        * Support for handling subscription payments.
+        
+        v0.2.5 - 10/05/2014:
+        * Updated all Nuget Package Dependencies
+        * Removed missing App.config file from Coinbase.Tests project
 
-      v0.2.4 - 02/13/2014:
-      * Added support for new API Key + Secret.
-      * Deprecated single API Key
+        v0.2.4 - 02/13/2014:
+        * Added support for new API Key + Secret.
+        * Deprecated single API Key
 
-      v0.2.3 - 01/23/2014:
-      * Added "mispaid" status to Status enum to avoid parsing error.
+        v0.2.3 - 01/23/2014:
+        * Added "mispaid" status to Status enum to avoid parsing error.
 
-      v0.2.2 - 12/04/2013:
-      * Added JsonNetBinderAttribute.cs for binding CoinbaseCallbacks.
-      * Made CreatedAt nullable to prevent deserialization errors.
-      * Updated documentation.
+        v0.2.2 - 12/04/2013:
+        * Added JsonNetBinderAttribute.cs for binding CoinbaseCallbacks.
+        * Made CreatedAt nullable to prevent deserialization errors.
+        * Updated documentation.
 
-      v0.2.1 - 12/01/2013:
-      * Fixing nuget deployment issue.
+        v0.2.1 - 12/01/2013:
+        * Fixing nuget deployment issue.
 
-      v0.2.0 - 12/01/2013:
-      * Removed Microsoft WebAPI HttpClient (version issues)
-      * Replaced with RestSharp
+        v0.2.0 - 12/01/2013:
+        * Removed Microsoft WebAPI HttpClient (version issues)
+        * Replaced with RestSharp
 
-      v0.1.0 - 12/01/2013:
-      * Bug fix in GetCheckoutUrl()
+        v0.1.0 - 12/01/2013:
+        * Bug fix in GetCheckoutUrl()
 
-      v0.1.0 - 12/01/2013:
-      * Initial implementation for payment checkout URL and button creation.
+        v0.1.0 - 12/01/2013:
+        * Initial implementation for payment checkout URL and button creation.
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>bitcoin coinbase api payment money merchant checkout cart gateway bank</tags>
@@ -48,8 +59,6 @@
         <dependency id="FluentValidation-Signed" />
         <dependency id="Newtonsoft.Json" />
         <dependency id="RestSharp" />
-        <dependency id="Microsoft.Bcl" version="1.1.9" />
-        <dependency id="Microsoft.Bcl.Build" version="1.0.21"  />
       </group>
     </dependencies>
   </metadata>
