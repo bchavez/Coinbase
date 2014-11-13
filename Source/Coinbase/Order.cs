@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Runtime.Serialization;
 using Coinbase.Converters;
 using FluentValidation;
@@ -127,9 +128,19 @@ namespace Coinbase
         public string Name { get; set; }
 
         /// <summary>
-        /// One of buy_now, donation, and subscription. Default is buy_now.
+        /// One of buy_now or donation. Default is buy_now.
         /// </summary>
         public ButtonType Type { get; set; }
+
+        /// <summary>
+        /// Whether or not this button is a subscription.
+        /// </summary>
+        public bool Subscription { get; set; }
+
+        /// <summary>
+        /// Required if ‘Subscription’ is true. Must be one of never, hourly, daily, weekly, every_two_weeks, monthly, quarterly, and yearly.
+        /// </summary>
+        public SubscriptionType? Repeat { get; set; }
 
         /// <summary>
         /// Price as a decimal string, for example 1.23. Can be more then two significant digits if price_currency_iso equals BTC.
@@ -148,6 +159,12 @@ namespace Coinbase
         /// An optional custom parameter. Usually an Order, User, or Product ID corresponding to a record in your database.
         /// </summary>
         public string Custom { get; set; }
+
+        /// <summary>
+        /// Set this to true to prevent the custom parameter from being viewed or modified after the button has been created. Use this if you are storing sensitive data in the custom parameter which you don’t want to be faked or leaked to the end user. Defaults to false. Note that if this value is set to true, the custom parameter will not be included in success or failure URLs, but it WILL be included in callbacks to your server.
+        /// </summary>
+        [JsonProperty("custom_secure")]
+        public bool CustomSecure { get; set; }
 
         /// <summary>
         /// A custom callback URL specific to this button. It will receive the same information that would otherwise be sent to your Instant Payment Notification URL. If you have an Instant Payment Notification URL set on your account, this will be called instead — they will not both be called.
@@ -211,6 +228,24 @@ namespace Coinbase
         /// </summary>
         [JsonProperty("include_address")]
         public bool IncludeAddress { get; set; }
+
+        /// <summary>
+        /// Auto-redirect users to success_url or cancel_url after payment. (cancel_url if the user pays the wrong amount.)
+        /// </summary>
+        [JsonProperty("auto_redirect")]
+        public bool AutoRedirect { get; set; }
+        
+        /// <summary>
+        /// Auto-redirect user to success_url after successful payment. (Overridden by auto_redirect if present)
+        /// </summary>
+        [JsonProperty("auto_redirect_success")]
+        public bool AutoRedirectSuccess { get; set; }
+
+        /// <summary>
+        /// Auto-redirect user to cancel_url after payment of wrong amount. (Overridden by auto_redirect if present)
+        /// </summary>
+        [JsonProperty("auto_redirect_cancel")]
+        public bool AutoRedirectCancel { get; set; }
     }
 
     public class ButtonValidator : AbstractValidator<ButtonRequest>
@@ -227,9 +262,27 @@ namespace Coinbase
             RuleFor(x => x.Currency)
                 .Must(x => Enum.IsDefined(typeof(Currency), x))
                 .WithMessage("A valid currency must be used.");
+
+            RuleFor(x => x.Repeat)
+                .NotEmpty()
+                .When(b => b.Subscription);
         }
     }
 
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum SubscriptionType
+    {
+        Never = 1,
+        Hourly,
+        Daily,
+        Weekly,
+        [EnumMember(Value = "every_two_weeks")]
+        EveryTwoWeeks,
+        Monthly,
+        Quarterly,
+        Yearly
+    }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ButtonType
@@ -241,7 +294,6 @@ namespace Coinbase
         [EnumMember(Value = "buy_now")]
         BuyNow = 1,
         Donation,
-        Subscription,
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
