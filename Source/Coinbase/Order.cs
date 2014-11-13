@@ -107,7 +107,7 @@ namespace Coinbase
 
     public class Price
     {
-        public int Cents { get; set; }
+        public decimal Cents { get; set; }
 
         [JsonProperty("currency_iso")]
         public Currency Currency { get; set; }

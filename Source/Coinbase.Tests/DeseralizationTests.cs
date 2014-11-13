@@ -120,6 +120,46 @@ namespace Coinbase.Tests
 
             obj.ShouldBeEquivalentTo( truth );
         }
+        
+        //Coinbase updated Button response due to API changes.
+        [Test]
+        public void should_be_able_to_parse_button_response_V2()
+        {
+            /*
+             * {"success":false,
+             *    "errors":["You have not filled out your merchant profile. Please enter your information in the Profile section."],
+             *    "button": {
+             *        "code":"c6fcf1709df34388c6a1eadc145db599",
+             *        "type":"buy_now",
+             *        "subscription?":false,
+             *        "repeat":null,
+             *        "style":"custom_large",
+             *        "text":"Pay With Bitcoin",
+             *        "name":"Order Name",
+             *        "description":"Order Description",
+             *        "custom":"Custom_Order_Id",
+             *        "callback_url":"http://www.bitarmory.com/callback",
+             *        "success_url":"http://www.bitarmory.com/success",
+             *        "cancel_url":"http://www.bitarmory.com/cancel",
+             *        "info_url":"http://www.bitarmory.com/info",
+             *        "auto_redirect":false,"auto_redirect_success":false,
+             *        "auto_redirect_cancel":false,
+             *        "price":
+             *            {"cents":7999.0,
+             *            "currency_iso":"USD"
+             *            },
+             *        "variable_price":false,
+             *        "choose_price":false,
+             *        "include_address":false,
+             *        "include_email":false
+             *        }
+             *    }
+             */
+            var json = @"{""success"":false,""errors"":[""You have not filled out your merchant profile. Please enter your information in the Profile section.""],""button"":{""code"":""a0f012205616bd374e16d3afddb7c2ae"",""type"":""buy_now"",""subscription?"":false,""repeat"":null,""style"":""custom_large"",""text"":""Pay With Bitcoin"",""name"":""Order Name"",""description"":""Order Description"",""custom"":""Custom_Order_Id"",""callback_url"":""http://www.bitarmory.com/callback"",""success_url"":""http://www.bitarmory.com/success"",""cancel_url"":""http://www.bitarmory.com/cancel"",""info_url"":""http://www.bitarmory.com/info"",""auto_redirect"":false,""auto_redirect_success"":false,""auto_redirect_cancel"":false,""price"":{""cents"":7999.0,""currency_iso"":""USD""},""variable_price"":false,""choose_price"":false,""include_address"":false,""include_email"":false}}";
+
+            var b = JsonConvert.DeserializeObject<ButtonResponse>(json);
+        }
+
 
 
 
@@ -218,5 +258,6 @@ namespace Coinbase.Tests
 
             obj.ShouldBeEquivalentTo( truth );
         }
+
     }
 }
