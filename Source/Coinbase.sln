@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase", "Coinbase\Coinbase.csproj", "{CBB355B9-6D99-43D7-ABD8-EF1EA39A3956}"
 EndProject
@@ -12,7 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{23B50146-7258-4807-89C8-BCA7C18BD6FA}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\Coinbase.Mvc.nuspec = .nuget\Coinbase.Mvc.nuspec
-		.nuget\Coinbase.nuspec = .nuget\Coinbase.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.Mvc", "Coinbase.Mvc\Coinbase.Mvc.csproj", "{D1905679-600D-4E8A-AE15-949CFAFF6781}"
