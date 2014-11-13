@@ -234,8 +234,12 @@ namespace Coinbase
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ButtonType
     {
+        // Setting a non-zero value that is not default(int) corrects
+        // JSON.NET serialization output when DefaultValueHandleing.Ignore
+        // should not have any effect since int values are not used in
+        // coinbase's API.
         [EnumMember(Value = "buy_now")]
-        BuyNow,
+        BuyNow = 1,
         Donation,
         Subscription,
     }
@@ -243,8 +247,12 @@ namespace Coinbase
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ButtonStyle
     {
+        // Setting a non-zero value that is not default(int) corrects
+        // JSON.NET serialization output when DefaultValueHandleing.Ignore
+        // should not have any effect since int values are not used in
+        // coinbase's API.
         [EnumMember(Value = "buy_now_large")]
-        BuyNowLarge,
+        BuyNowLarge = 1,
         [EnumMember(Value = "buy_now_small")]
         BuyNowSmall,
         [EnumMember(Value = "donation_large")]
