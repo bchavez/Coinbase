@@ -19,7 +19,6 @@ namespace Coinbase
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
-        public const string BaseUrl = "https://coinbase.com/api/v1/{action}?api_key={apikey}";
         public const string CheckoutPageUrl = "https://coinbase.com/checkouts/{code}";
 
         public CoinbaseApi() : this(string.Empty, string.Empty)
@@ -49,7 +48,7 @@ namespace Coinbase
 
         protected virtual RestClient CreateClient()
         {
-            const string BaseUri = "https://coinbase.com/api/v1/";
+            const string BaseUri = "https://api.coinbase.com/v1/";
             
             var client = new RestClient( BaseUri );
 #if DEBUG
