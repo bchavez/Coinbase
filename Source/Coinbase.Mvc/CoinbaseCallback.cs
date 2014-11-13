@@ -1,4 +1,6 @@
-﻿namespace Coinbase.Mvc
+﻿using Coinbase.ObjectModel;
+
+namespace Coinbase.Mvc
 {
     public class CoinbaseCallback
     {

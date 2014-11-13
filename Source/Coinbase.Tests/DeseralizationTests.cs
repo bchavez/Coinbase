@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using Coinbase.Mvc;
+using Coinbase.ObjectModel;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

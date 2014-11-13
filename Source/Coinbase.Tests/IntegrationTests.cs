@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Coinbase.ObjectModel;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;

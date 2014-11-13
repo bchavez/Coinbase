@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Coinbase
+namespace Coinbase.ObjectModel
 {
     [JsonConverter( typeof(StringEnumConverter) )]
     public enum Currency
