@@ -13,13 +13,14 @@
     <description>Provides support for instant payment notification handling for Asp.net MVC projects. </description>
     <summary> Removes need to have ASP.Net runtime present from the Coinbase main package.</summary>
     <releaseNotes>
-      History:v0.3.1 - 11/13/2014:
-      * Using new ObjectModel namespace refactoring.
-      * Compiled against .NET 4.5 which is required for latest MVC references.
-      
-      v0.1.0 - 10/05/2014:
-      * Split out classes that have dependencies on ASP.Net into new package Coinbase.Mvc.
- 
+        History:v0.3.3 - 11/13/2014:
+        * Using new ObjectModel namespace refactoring.
+        * Compiled against .NET 4.5 which is required for latest MVC references.
+        * Using FluentValidation (not signed) to ease with versioning/upgrades.
+
+        v0.1.0 - 10/05/2014:
+        * Split out classes that have dependencies on ASP.Net into new package Coinbase.Mvc.
+
     </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>bitcoin coinbase api payment money merchant checkout cart gateway bank mvc IPN</tags>

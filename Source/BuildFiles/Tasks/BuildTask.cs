@@ -21,20 +21,19 @@ namespace BuildFiles.Tasks
 
         public void CompileSources()
         {
-            File assemblyInfoFile = Folders.CompileOutput.File("Global.AssemblyInfo.cs");
+            //File assemblyInfoFile = Folders.CompileOutput.File("Global.AssemblyInfo.cs");
 
             Task.CreateAssemblyInfo.Language.CSharp(aid =>
             {
                 Projects.CoinbaseProject.AssemblyInfo(aid);
-                aid.OutputPath(assemblyInfoFile);
-
-             
+                aid.OutputPath(Projects.CoinbaseProject.Folder.SubFolder("Properties").File("AssemblyInfo.cs"));
             });
             Task.CreateAssemblyInfo.Language.CSharp(aid =>
             {
                 Projects.CoinbaseMvcProject.AssemblyInfo(aid);
-                aid.OutputPath(assemblyInfoFile);
+                aid.OutputPath(Projects.CoinbaseMvcProject.Folder.SubFolder("Properties").File("AssemblyInfo.cs"));
             });
+            
             Task.Build.MsBuild(msb =>
             {
                 msb.Configuration("Release")
@@ -49,7 +48,6 @@ namespace BuildFiles.Tasks
                     .AddTarget("Rebuild")
                     .OutputDirectory(Projects.CoinbaseMvcProject.OutputDirectory);
             });
-            assemblyInfoFile.Delete(OnError.Continue);
 
             Defaults.Logger.WriteHeader("BUILD COMPLETE. Packaging ...");
 

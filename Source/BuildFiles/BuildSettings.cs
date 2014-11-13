@@ -25,7 +25,8 @@ namespace BuildFiles
                .FileVersion( Properties.CommandLineProperties.Version() )
                .InformationalVersion( "{0} built on {1} UTC".With( Properties.CommandLineProperties.Version(), DateTime.UtcNow ) )
                .Trademark( "MIT License" )
-               .Description( "http://www.github.com/bchavez/Coinbase" );
+               .Description( "http://www.github.com/bchavez/Coinbase" )
+               .ComVisible(false);
         }
 
         public static readonly File SolutionFile = Folders.Source.File( "Coinbase.sln" );
@@ -44,10 +45,10 @@ namespace BuildFiles
             public static readonly Action<IAssemblyInfoDetails> AssemblyInfo =
                 i =>
                     {
-                        i.Title( "Coinbase API for .NET" )
-                         .Product( "Coinbase API" );
+                        i.Title("Coinbase API for .NET")
+                            .Product("Coinbase API");
 
-                        GlobalAssemblyInfo( i );
+                        GlobalAssemblyInfo(i);
                     };
         }
         public class CoinbaseMvcProject
@@ -63,9 +64,9 @@ namespace BuildFiles
 
             public static readonly Action<IAssemblyInfoDetails> AssemblyInfo =
                 i =>
-                {
-                    i.Title("Coinbase.Mvc for .NET")
-                     .Product("Coinbase.Mvc");
+                    {
+                        i.Title("Coinbase.Mvc for .NET")
+                            .Product("Coinbase.Mvc");
 
                     GlobalAssemblyInfo(i);
                 };
