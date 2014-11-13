@@ -24,9 +24,13 @@ namespace Coinbase
 
             var url = client.BuildUri(request);
 
-            var body = request.Parameters.First(p => p.Type == ParameterType.RequestBody).Value;
+            var body = string.Empty;
 
-            var hmacSig = GenerateSignature(nonce, url.ToString(), body.ToString(), this.apiSecret);
+            var param = request.Parameters.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
+            if( param != null )
+                body = param.Value.ToString();
+
+            var hmacSig = GenerateSignature(nonce, url.ToString(), body, this.apiSecret);
 
             request.AddHeader("ACCESS_KEY", this.apiKey)
                 .AddHeader("ACCESS_NONCE", nonce)

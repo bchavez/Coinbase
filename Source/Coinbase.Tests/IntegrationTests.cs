@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using FluentAssertions;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Coinbase.Tests
@@ -70,6 +71,20 @@ namespace Coinbase.Tests
             //&order[total_native][cents]=7999
             //&order[total_native][currency_iso]=USD
             //&order[transaction]=
+        }
+
+        [Test]
+        [Explicit]
+        public void create_order_test()
+        {
+            var json =
+                @"{""success"":true,""button"":{""code"":""d4d26483141bec5f551d4d8822fab6fa"",""type"":""buy_now"",""subscription?"":false,""repeat"":null,""style"":""custom_large"",""text"":""Pay With Bitcoin"",""name"":""Order Name"",""description"":""Order Description"",""custom"":""Custom_Order_Id"",""callback_url"":""http://www.bitarmory.com/callback"",""success_url"":""http://www.bitarmory.com/success"",""cancel_url"":""http://www.bitarmory.com/cancel"",""info_url"":""http://www.bitarmory.com/info"",""auto_redirect"":false,""auto_redirect_success"":false,""auto_redirect_cancel"":false,""price"":{""cents"":7999.0,""currency_iso"":""USD""},""variable_price"":false,""choose_price"":false,""include_address"":false,""include_email"":false}}";
+
+            var b = JsonConvert.DeserializeObject<ButtonResponse>(json);
+            var api = new CoinbaseApi();
+
+            var o = api.CreateOrder(b);
+            o.Should().NotBeNull();
         }
     }
 }

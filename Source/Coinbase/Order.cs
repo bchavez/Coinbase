@@ -138,7 +138,7 @@ namespace Coinbase
         public bool Subscription { get; set; }
 
         /// <summary>
-        /// Required if ‘Subscription’ is true. Must be one of never, hourly, daily, weekly, every_two_weeks, monthly, quarterly, and yearly.
+        /// Required if 'Subscription' is true. Must be one of never, hourly, daily, weekly, every_two_weeks, monthly, quarterly, and yearly.
         /// </summary>
         public SubscriptionType? Repeat { get; set; }
 
