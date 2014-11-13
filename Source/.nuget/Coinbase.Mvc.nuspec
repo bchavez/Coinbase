@@ -39,8 +39,8 @@
   </metadata>
 
   <files>
-    <file src="..\..\__package\Coinbase.Mvc\Coinbase.Mvc.dll" target="lib\net40\Coinbase.Mvc.dll" />
-    <file src="..\..\__package\Coinbase.Mvc\Coinbase.Mvc.XML" target="lib\net40\Coinbase.Mvc.XML" />
+    <file src="..\..\__package\Coinbase.Mvc\Coinbase.Mvc.dll" target="lib\net45\Coinbase.Mvc.dll" />
+    <file src="..\..\__package\Coinbase.Mvc\Coinbase.Mvc.XML" target="lib\net45\Coinbase.Mvc.XML" />
   </files>
 
 </package>
