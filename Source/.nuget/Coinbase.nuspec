@@ -7,7 +7,7 @@
     <owners>Brian Chavez</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/bchavez/Coinbase</projectUrl>
-    <iconUrl>https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/s160x160/1378361_455546227892941_135818110_a.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/bchavez/Coinbase/master/Docs/coinbase.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins for low-cost payment processing.</description>
     <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>

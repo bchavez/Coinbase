@@ -8,7 +8,7 @@
     <owners>Brian Chavez, Elan Hasson</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/bchavez/Coinbase</projectUrl>
-    <iconUrl>https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/s160x160/1378361_455546227892941_135818110_a.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/bchavez/Coinbase/master/Docs/coinbase.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides support for instant payment notification handling for Asp.net MVC projects. </description>
     <summary> Removes need to have ASP.Net runtime present from the Coinbase main package.</summary>
