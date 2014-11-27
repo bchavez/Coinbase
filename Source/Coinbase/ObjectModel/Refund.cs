@@ -22,7 +22,7 @@ namespace Coinbase.ObjectModel
         /// The currency to issue the refund in. If BTC, the original bitcoin amount will be sent back. If USD (or another currency code if the order had a different native price), the amount of bitcoin sent back will be equivalent to the original USD value (or other native value) at the current exchange rate.
         /// </summary>
         [JsonProperty("refund_iso_code")]
-        public string RefundIsoCurrency { get; set; }
+        public Currency RefundIsoCurrency { get; set; }
 
         /// <summary>
         /// This field is required if the order or mispayment does not already have a value for refund_address. Must be a valid bitcoin address. If this field is specified but the order or mispayment already has a refund_address that was automatically added by Coinbase, the already-present refund_address will take precendence over the external_refund_address specified.

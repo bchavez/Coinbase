@@ -93,13 +93,25 @@ namespace Coinbase.Tests
         public void create_refund_test()
         {
             // arrange
-            var api = new CoinbaseApi();
+            var api = new CoinbaseApi(apiKey:"my_api_key", apiSecret:"my_api_secret");
+
+            var refundOptions = new RefundOptions
+                {
+                    RefundIsoCurrency = Currency.BTC,
+                    
+                    //By default, refunds will be issued to the refund_address
+                    //that is set on the order.
+                    //Additionally, if you want to send the refund to a different
+                    //bitcoin address other than the one that was in the original order
+                    //set ExteranlRefundAddress proeprty.  
+                    //OPTIONAL:
+                    ExternalRefundAddress = "BITCOIN_REFUND_ADDRESS";
+                };
+            
             var orderIdToRefund = "YOUR_ORDER_ID";
-            var refundAddress = "YOUR_REFUND_ADDRESS";
-            const Currency refundCurrency = Currency.BTC;
 
             // act
-            var refundResult = api.Refund(orderIdToRefund, refundAddress, refundCurrency);
+            var refundResult = api.Refund(orderIdToRefund, refundOptions);
             
             // assert
             refundResult.Should().NotBeNull();
