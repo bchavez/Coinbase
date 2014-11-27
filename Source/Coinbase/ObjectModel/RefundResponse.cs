@@ -35,6 +35,9 @@ namespace Coinbase.ObjectModel
         public Transaction RefundTransaction { get; set; }
     }
 
+    /// <summary>
+    ///If the order has status completed and the refund processed successfully, the order data will contain the refund transaction details in RefundTransaction.
+    /// </summary>
     public class RefundResponse
     {
         [JsonProperty("order")]
