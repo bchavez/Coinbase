@@ -11,13 +11,6 @@ namespace Coinbase.ObjectModel
         public string description { get; set; }
         public string id { get; set; }
     }
- 
-    public class RefundTransaction
-    {
-        public string id { get; set; }
-        public object hash { get; set; }
-        public int confirmations { get; set; }
-    }
 
     public class OrderRefundResponseDetails
     {
@@ -37,8 +30,9 @@ namespace Coinbase.ObjectModel
         public string custom { get; set; }
         public string receive_address { get; set; }
         public Button button { get; set; }
-        public Transaction transaction { get; set; }
-        public RefundTransaction refund_transaction { get; set; }
+        public Transaction Transaction { get; set; }
+        [JsonProperty("refund_transaction")]
+        public Transaction RefundTransaction { get; set; }
     }
 
     public class RefundResponse
