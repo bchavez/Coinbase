@@ -2,12 +2,6 @@
 
 namespace Coinbase.ObjectModel
 {
-    public class TotalAmount
-    {
-        public double cents { get; set; }
-        public string currency_iso { get; set; }
-    }
-
     public class Button
     {
         public string type { get; set; }
@@ -33,13 +27,13 @@ namespace Coinbase.ObjectModel
         public object @event { get; set; }
 
         [JsonProperty("total_btc")]
-        public TotalAmount TotalBtc { get; set; }
+        public Price TotalBtc { get; set; }
 
         [JsonProperty("total_native")]
-        public TotalAmount TotalNative { get; set; }
+        public Price TotalNative { get; set; }
 
         [JsonProperty("total_payout")]
-        public TotalAmount TotalPayout { get; set; }
+        public Price TotalPayout { get; set; }
         public string custom { get; set; }
         public string receive_address { get; set; }
         public Button button { get; set; }
