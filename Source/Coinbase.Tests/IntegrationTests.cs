@@ -103,7 +103,7 @@ namespace Coinbase.Tests
                     //that is set on the order.
                     //Additionally, if you want to send the refund to a different
                     //bitcoin address other than the one that was in the original order
-                    //set ExteranlRefundAddress proeprty.  
+                    //set ExteranlRefundAddress property.  
                     //OPTIONAL:
                     ExternalRefundAddress = "BITCOIN_REFUND_ADDRESS";
                 };
