@@ -112,6 +112,16 @@ namespace Coinbase.Tests
 
             // act
             var refundResult = api.Refund(orderIdToRefund, refundOptions);
+
+            if( refundResult.Order.Errors.Length != 0 )
+            {
+                //Some Refund Error
+            }
+            else if( refundResult.Order.Status == Status.Completed )
+            {
+                //The refund was successful
+                var refundTxn = refundResult.Order.RefundTransaction;
+            }
             
             // assert
             refundResult.Should().NotBeNull();

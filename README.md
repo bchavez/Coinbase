@@ -180,11 +180,36 @@ public ActionResult Bitcoin_GetRequest()
 To refund an order to a wallet for a currency:
 
 ```csharp
-var api = new CoinbaseApi( apiKey: "my_api_key", apiSecret: "my_api_secret" );
-var orderIdToRefund = "YOUR_ORDER_ID";
-var refundAddress = "YOUR_REFUND_ADDRESS";
-var refundCurrency = "YOUR_CURRENCY";
-var refundResult = api.Refund(orderIdToRefund, refundAddress, refundCurrency);
+
+   var api = new CoinbaseApi(apiKey:"my_api_key", apiSecret:"my_api_secret");
+
+   var refundOptions = new RefundOptions
+       {
+           RefundIsoCurrency = Currency.BTC,
+           
+           //By default, refunds will be issued to the refund_address
+           //that is set on the order.
+           //Additionally, if you want to send the refund to a different
+           //bitcoin address other than the one that was in the original order
+           //set ExteranlRefundAddress proeprty.  
+           //OPTIONAL:
+           ExternalRefundAddress = "BITCOIN_REFUND_ADDRESS";
+       };
+   
+   var orderIdToRefund = "YOUR_ORDER_ID";
+
+   var refundResult = api.Refund(orderIdToRefund, refundOptions);
+
+   if( refundResult.Order.Errors.Length != 0 )
+   {
+       //Some Refund Error
+   }
+   else if( refundResult.Order.Status == Status.Completed )
+   {
+       //The refund was successful
+       var refundTxn = refundResult.Order.RefundTransaction;
+   }
+            
 ```
 
 Reference
@@ -192,7 +217,14 @@ Reference
 * [Coinbase API Documentation](https://coinbase.com/docs/api/overview)
 
 
+Contributors
+---------
 Created by [Brian Chavez](http://bchavez.bitarmory.com).
+
+A big thanks to GitHub and all contributors:
+
+* [ElanHasson](https://github.com/ElanHasson) (Elan Hasson)
+* [ryanmwilliams](https://github.com/ryanmwilliams) (Ryan Williams)
 
 ---
 
