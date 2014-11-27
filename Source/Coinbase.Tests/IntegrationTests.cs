@@ -98,7 +98,10 @@ namespace Coinbase.Tests
             var refundAddress = "YOUR_REFUND_ADDRESS";
             const Currency refundCurrency = Currency.BTC;
 
+            // act
             var refundResult = api.Refund(orderIdToRefund, refundAddress, refundCurrency);
+            
+            // assert
             refundResult.Should().NotBeNull();
         }
     }
