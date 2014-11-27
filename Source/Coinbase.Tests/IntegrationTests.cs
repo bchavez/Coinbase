@@ -87,5 +87,19 @@ namespace Coinbase.Tests
             var o = api.CreateOrder(b);
             o.Should().NotBeNull();
         }
+
+        [Test]
+        [Explicit]
+        public void create_refund_test()
+        {
+            // arrange
+            var api = new CoinbaseApi();
+            var orderIdToRefund = "YOUR_ORDER_ID";
+            var refundAddress = "YOUR_REFUND_ADDRESS";
+            const Currency refundCurrency = Currency.BTC;
+
+            var refundResult = api.Refund(orderIdToRefund, refundAddress, refundCurrency);
+            refundResult.Should().NotBeNull();
+        }
     }
 }

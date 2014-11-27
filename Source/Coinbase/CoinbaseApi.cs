@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Globalization;
 using System.Net;
 using Coinbase.ObjectModel;
 using Coinbase.Serialization;
@@ -109,7 +110,6 @@ namespace Coinbase
 
             var post = CreateRequest( "buttons/{code}/create_order" )
                 .AddUrlSegment( "code", code );
-                
 
             var resp = client.Execute<OrderResponse>(post);
 
@@ -118,6 +118,27 @@ namespace Coinbase
 
             return resp.Data;
         }
+
+        public RefundResponse Refund(
+            string orderId, 
+            string externalRefundAddress, 
+            Currency refundCurrency)
+        {
+            var client = CreateClient();
+            var body = new Refund(externalRefundAddress, refundCurrency);
+            var post = CreateRequest("orders/{orderId}/refund")
+                .AddUrlSegment("orderId", orderId)
+                .AddBody(body);
+
+            var resp = client.Execute<RefundResponse>(post);
+
+            if (resp.ErrorException != null)
+                throw resp.ErrorException;
+
+            return resp.Data;
+        }
+
+     
     }
 
 }
