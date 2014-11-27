@@ -12,7 +12,10 @@
     <description>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins for low-cost payment processing.</description>
     <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>
     <releaseNotes>
-        History:v0.3.7 - 11/13/2014:
+        History:v0.3.8 - 11/13/2014:
+        * Added capability to issue refunds.
+
+        v0.3.7 - 11/13/2014:
         ** BREAKING CHANGES **
         * Moved MVC specific code into new NuGet library. Please use Coinbase.Mvc for your MVC projects.
         * Issue #3 fixed - ASCII HMAC encoding now uses UTF8.
