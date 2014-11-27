@@ -122,10 +122,10 @@ namespace Coinbase
         /// <summary>
         /// Authenticated resource which refunds an order or a mispayment to an order. Returns a snapshot of the order data, updated with refund transaction details.
         /// This endpoint will only refund the full amount of the order or mispayment, specified as either the original BTC amount or native currency amount (such as USD). To issue partial refunds, you can use the regular api/v1/transactions/send_money endpoint.
+        /// https://www.coinbase.com/api/doc/1.0/orders/refund.html
         /// </summary>
-        /// <param name="orderId"></param>
-        /// <param name="refundCurrency">The currency to issue the refund in. If BTC, the original bitcoin amount will be sent back. If USD (or another currency code if the order had a different native price), the amount of bitcoin sent back will be equivalent to the original USD value (or other native value) at the current exchange rate.</param>
-        /// <param name="refundOptions"></param>
+        /// <param name="orderId">id_or_custom_field URL parameter</param>
+        /// <param name="refundOptions">Refund options for this order ID</param>
         /// <returns>If the order has status completed and the refund processed successfully, the order data will contain the refund transaction details in RefundTransaction. If the refund does not process, order['errors'] will be present, specifying any problems.</returns>
         public RefundResponse Refund(string orderId, RefundOptions refundOptions)
         {

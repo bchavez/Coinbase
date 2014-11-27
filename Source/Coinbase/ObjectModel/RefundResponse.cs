@@ -1,23 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Coinbase.ObjectModel
 {
-    public class Button
+    public class Mispayment
     {
-        public string type { get; set; }
-        public bool subscription { get; set; }
-        public object repeat { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public string id { get; set; }
-    }
-
-    public class OrderRefundResponseDetails
-    {
-        public string id { get; set; }
-        public string created_at { get; set; }
-        public string status { get; set; }
-        public object @event { get; set; }
+        public string Id { get; set; }
+        [JsonProperty("created_at")]
+        [JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime? CreatedAt { get; set; }
 
         [JsonProperty("total_btc")]
         public Price TotalBtc { get; set; }
@@ -25,14 +17,30 @@ namespace Coinbase.ObjectModel
         [JsonProperty("total_native")]
         public Price TotalNative { get; set; }
 
-        [JsonProperty("total_payout")]
-        public Price TotalPayout { get; set; }
-        public string custom { get; set; }
-        public string receive_address { get; set; }
-        public Button button { get; set; }
-        public Transaction Transaction { get; set; }
         [JsonProperty("refund_transaction")]
         public Transaction RefundTransaction { get; set; }
+    }
+
+    public class RefundOrder : Order
+    {
+        [JsonProperty("refund_address")]
+        public string RefundAddress { get; set; }
+
+        public object Event { get; set; }
+
+        [JsonProperty("total_payout")]
+        public Price TotalPayout { get; set; }
+
+        [JsonProperty("refund_transaction")]
+        public Transaction RefundTransaction { get; set; }
+
+        [JsonProperty("mispaid_btc")]
+        public Price MispaidBtc { get; set; }
+
+        [JsonProperty("mispaid_native")]
+        public Price MispaidNative { get; set; }
+
+        public Mispayment[] Mispayments { get; set; }
     }
 
     /// <summary>
@@ -41,6 +49,6 @@ namespace Coinbase.ObjectModel
     public class RefundResponse
     {
         [JsonProperty("order")]
-        public OrderRefundResponseDetails Order { get; set; }
+        public RefundOrder Order { get; set; }
     }
 }
