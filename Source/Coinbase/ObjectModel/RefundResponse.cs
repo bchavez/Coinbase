@@ -41,6 +41,8 @@ namespace Coinbase.ObjectModel
         public Price MispaidNative { get; set; }
 
         public Mispayment[] Mispayments { get; set; }
+
+        public string[] Errors { get; set; }
     }
 
     /// <summary>
