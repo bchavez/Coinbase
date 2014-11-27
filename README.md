@@ -174,7 +174,18 @@ public ActionResult Bitcoin_GetRequest()
     //Show Error.
 }
 ```
- 
+
+-------
+#### Refunds
+To refund an order to a wallet for a currency:
+
+```csharp
+var api = new CoinbaseApi( apiKey: "my_api_key", apiSecret: "my_api_secret" );
+var orderIdToRefund = "YOUR_ORDER_ID";
+var refundAddress = "YOUR_REFUND_ADDRESS";
+var refundCurrency = "YOUR_CURRENCY";
+var refundResult = api.Refund(orderIdToRefund, refundAddress, refundCurrency);
+```
 
 Reference
 ---------
