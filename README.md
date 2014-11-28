@@ -193,14 +193,14 @@ var refundOptions = new RefundOptions
         //bitcoin address other than the one that was in the original order
         //set ExteranlRefundAddress property.  
         //OPTIONAL:
-        ExternalRefundAddress = "BITCOIN_REFUND_ADDRESS";
+        ExternalRefundAddress = "BITCOIN_REFUND_ADDRESS"
     };
 
 var orderIdToRefund = "YOUR_ORDER_ID";
 
 var refundResult = api.Refund(orderIdToRefund, refundOptions);
 
-if( refundResult.Order.Errors.Length != 0 )
+if( refundResult.Order.Errors != null )
 {
     //Some Refund Error
 }
