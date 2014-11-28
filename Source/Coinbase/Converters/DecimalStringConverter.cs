@@ -7,6 +7,9 @@ namespace Coinbase.Converters
     {
         public override void WriteJson( JsonWriter writer, object value, JsonSerializer serializer )
         {
+            if( value == null )
+                writer.WriteNull();
+
             writer.WriteValue( value.ToString());
         }
 

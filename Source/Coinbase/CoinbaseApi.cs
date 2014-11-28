@@ -153,16 +153,11 @@ namespace Coinbase
         /// <param name="amount">A string amount that will be converted to BTC, such as ‘1’ or ‘1.234567’. Also must be >= ‘0.01’ or it will shown an error.</param>
         /// <param name="notes">Optional notes field. Included in the email that the recipient receives.</param>
         /// <returns></returns>
-        public SendMoneyResponse SendMoney(string to, decimal amount, string notes)
+        public SendMoneyResponse SendMoney(Payment payment)
         {
             var sendMoneyRequest = new SendMoneyRequest()
                 {
-                    transaction = new SendMoneyTransaction()
-                        {
-                            amount = Convert.ToString(amount),
-                            to = to,
-                            notes = notes
-                        }
+                    transaction = payment
                 };
 
             var client = CreateClient();

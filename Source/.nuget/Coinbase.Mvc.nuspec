@@ -14,7 +14,9 @@
     <summary> Removes need to have ASP.Net runtime present from the Coinbase main package.</summary>
     <releaseNotes>
         History:v0.3.8 - 11/13/2014:
-        * Added capability to issue refunds.
+        * Added Refund API functionality.
+        * Added SendMoney API functionality.
+        * Updated Nuget references.
 
         v0.3.7 - 11/13/2014:
         * Using new ObjectModel namespace refactoring.

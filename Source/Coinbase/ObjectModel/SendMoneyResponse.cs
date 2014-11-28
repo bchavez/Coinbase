@@ -1,64 +1,81 @@
-﻿namespace Coinbase.ObjectModel
+﻿using System;
+using Coinbase.Converters;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace Coinbase.ObjectModel
 {
-    public class Amount
+    public class MoneyAmount
     {
-        public string amount { get; set; }
-        public string currency { get; set; }
+        [JsonConverter(typeof(DecimalStringConverter))]
+        public decimal Amount { get; set; }
+        public Currency Currency { get; set; }
     }
 
     public class UserAddress
     {
-        public string id { get; set; }
-        public string email { get; set; }
-        public string name { get; set; }
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
     }
 
-    public class SendMoneyTransactionResponse
+    public class TransactionDesc
     {
-        public string id { get; set; }
-        public string created_at { get; set; }
-        public object hsh { get; set; }
-        public Amount amount { get; set; }
-        public bool request { get; set; }
-        public string status { get; set; }
-        public UserAddress sender { get; set; }
-        public UserAddress recipient { get; set; }
-        public string recipient_address { get; set; }
-        public string notes { get; set; }
-        public string idem { get; set; }
-        public string[] Errors { get; set; }
+        public string Id { get; set; }
+        
+        [JsonProperty("created_at")]
+        [JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime? CreatedAt { get; set; }
+
+        public string Hsh { get; set; }
+
+        public string Notes { get; set; }
+        public string Idem { get; set; }
+        public MoneyAmount Amount { get; set; }
+        public bool Request { get; set; }
+        public Status Status { get; set; }
+        public UserAddress Sender { get; set; }
+        public UserAddress Recipient { get; set; }
+
+        [JsonProperty("recipient_address")]
+        public string RecipientAddress { get; set; }
     }
 
     public class Fees
     {
-        public Amount coinbase { get; set; }
-        public Amount bank { get; set; }
+        public Price Coinbase { get; set; }
+        public Price Bank { get; set; }
     }
 
-    public class Transfer
+    public class TransferDesc
     {
-        public string id { get; set; }
-        public string created_at { get; set; }
-        public Fees fees { get; set; }
-        public string payout_date { get; set; }
-        public string transaction_id { get; set; }
+        public string Id { get; set; }
+        [JsonProperty("created_at")]
+        [JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime? CreatedAt { get; set; }
+        public Fees Fees { get; set; }
+
+        [JsonProperty("payout_date")]
+        [JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime? PayoutDate { get; set; }
+
+        [JsonProperty("transaction_id")]
+        public string TransactionId { get; set; }
+
         public string _type { get; set; }
-        public string code { get; set; }
+        public string Code { get; set; }
         public string type { get; set; }
-        public string status { get; set; }
-        public Amount btc { get; set; }
-        public Amount subtotal { get; set; }
-        public Amount total { get; set; }
-        public string description { get; set; }
+        public Status Status { get; set; }
+
+        public MoneyAmount Btc { get; set; }
+        public MoneyAmount Subtotal { get; set; }
+        public MoneyAmount Total { get; set; }
+        public string Description { get; set; }
     }
 
-    public class SendMoneyResponse
+    public class SendMoneyResponse : CoinbaseResponse
     {
-        public bool success { get; set; }
- 
-            public SendMoneyTransactionResponse transaction { get; set; }
-
-            public Transfer transfer { get; set; }
- 
+        public TransactionDesc Transaction { get; set; }
+        public TransferDesc Transfer { get; set; }
     }
 }

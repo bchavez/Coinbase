@@ -133,25 +133,44 @@ namespace Coinbase.Tests
         {
             // arrange
             var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
-            var toBtcAddress = "BITCOIN_ADDRESS";
-            var btcAmount = 0;// BTC amount
-            var notes = "OPTIONAL_MESSAGE";
-         
-            // act
-            var sendMoneyResponse = api.SendMoney(toBtcAddress, btcAmount, notes);
 
-            if (sendMoneyResponse.transaction.Errors != null)
+            var pmtInBtc = new Payment()
+                {
+                    To = "BITCOIN_ADDRESS_OR_EMAIL",
+                    Amount = 0.0m, // IN BTC
+                    Notes = "MY_MESSAGE"
+                };
+
+            //Optionally, make an equivalent payment of $20 in USD in BTC
+            //to the recipient.
+            var pmtInUSD = new Payment()
+                {
+                    To = "BITCOIN_ADDRESS_OR_EMAIL",
+                    AmountString = 20.00m, // IN USD
+                    AmountCurrencyIso = Currency.USD,
+
+                    //InstantBuy parameter signals that if your account does 
+                    //not currently have enough funds to cover the 
+                    //amount, first purchase the difference with
+                    //an instant buy, then send the bitcoin.
+                    InstantBuy = true,
+                };
+
+            // act
+            var response = api.SendMoney(pmtInBtc);
+
+            if ( response.Errors != null)
             {
                 //Some send money error
             }
-            else if (sendMoneyResponse.success)
+            else if (response.Success)
             {
                 //The send was successful
-                var sendTxn = sendMoneyResponse.transaction;
+                var sendTxn = response.Transaction;
             }
 
             // assert
-            sendMoneyResponse.Should().NotBeNull();
+            response.Should().NotBeNull();
         }
 
     }

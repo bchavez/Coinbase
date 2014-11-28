@@ -41,4 +41,17 @@ namespace Coinbase.Tests
         }
     }
 
+    [TestFixture]
+    public class RefundValidatorTests : AbstractValidationTest<RefundOptions>
+    {
+        [Test]
+        public void Test()
+        {
+            var refund = new RefundOptions();
+
+            this.Validator.ShouldHaveValidationErrorFor(r => r.RefundIsoCurrency, refund);
+        }
+    }
+
+
 }

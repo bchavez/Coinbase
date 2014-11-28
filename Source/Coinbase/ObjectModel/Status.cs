@@ -5,6 +5,7 @@ namespace Coinbase.ObjectModel
         Canceled,
         Completed = 0x01,
         New,
-        Mispaid
+        Mispaid,
+        Pending
     }
 }
