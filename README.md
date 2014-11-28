@@ -212,6 +212,30 @@ else if( refundResult.Order.Status == Status.Completed )
             
 ```
 
+-------
+#### Send money
+To send an arbitrary amount of money to an address. Useful in the case of partial refunds. 
+
+```csharp
+
+    var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
+    var toBtcAddress = "BITCOIN_ADDRESS";
+    var btcAmount = 0;// BTC amount
+    var notes = "OPTIONAL_MESSAGE";
+    var sendMoneyResponse = api.SendMoney(toBtcAddress, btcAmount, notes);
+
+    if (sendMoneyResponse.transaction.Errors != null)
+    {
+        //Some Refund Error
+    }
+    else if (sendMoneyResponse.success)
+    {
+        //The refund was successful
+        var refundTxn = sendMoneyResponse.transaction;
+    }
+
+```
+
 Reference
 ---------
 * [Coinbase API Documentation](https://coinbase.com/docs/api/overview)
