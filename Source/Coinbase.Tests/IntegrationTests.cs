@@ -142,12 +142,12 @@ namespace Coinbase.Tests
 
             if (sendMoneyResponse.transaction.Errors != null)
             {
-                //Some Refund Error
+                //Some send money error
             }
             else if (sendMoneyResponse.success)
             {
-                //The refund was successful
-                var refundTxn = sendMoneyResponse.transaction;
+                //The send was successful
+                var sendTxn = sendMoneyResponse.transaction;
             }
 
             // assert
