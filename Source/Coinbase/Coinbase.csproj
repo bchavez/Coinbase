@@ -75,7 +75,10 @@
     <Compile Include="ObjectModel\OrderResponse.cs" />
     <Compile Include="ObjectModel\Price.cs" />
     <Compile Include="ObjectModel\Refund.cs" />
+    <Compile Include="ObjectModel\RefundOptionsValidator.cs" />
     <Compile Include="ObjectModel\RefundResponse.cs" />
+    <Compile Include="ObjectModel\SendMoney.cs" />
+    <Compile Include="ObjectModel\SendMoneyResponse.cs" />
     <Compile Include="ObjectModel\Status.cs" />
     <Compile Include="ObjectModel\SubscriptionType.cs" />
     <Compile Include="ObjectModel\Transaction.cs" />

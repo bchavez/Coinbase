@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FluentValidation.Attributes;
+using Newtonsoft.Json;
 
 namespace Coinbase.ObjectModel
 {
@@ -16,6 +17,7 @@ namespace Coinbase.ObjectModel
     /// By default, refunds will be issued to the refund_address that is set on the order or the mispayment. This field is automatically present when the original incoming transaction was from a Coinbase user, or via the payment protocol. In these cases, we are able to provide a refund address automatically. If the refund_address is not present, you can specify an address to send the refund to with the external_refund_address parameters.
     /// If the refund does not process, order['errors'] will be present, specifying any problems.
     /// </summary>
+    [Validator(typeof(RefundOptionsValidator))]
     public class RefundOptions
     {
         /// <summary>
