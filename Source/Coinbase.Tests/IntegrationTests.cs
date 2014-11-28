@@ -134,6 +134,8 @@ namespace Coinbase.Tests
             // arrange
             var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
 
+            //Make a direct payment of BTC to another
+            //bit coin address
             var pmtInBtc = new Payment()
                 {
                     To = "BITCOIN_ADDRESS_OR_EMAIL",
@@ -146,9 +148,11 @@ namespace Coinbase.Tests
             var pmtInUSD = new Payment()
                 {
                     To = "BITCOIN_ADDRESS_OR_EMAIL",
+
+                    Amount = null, //Don't use when using currency other than BTC
+
                     AmountString = 20.00m, // IN USD
                     AmountCurrencyIso = Currency.USD,
-
                     //InstantBuy parameter signals that if your account does 
                     //not currently have enough funds to cover the 
                     //amount, first purchase the difference with
