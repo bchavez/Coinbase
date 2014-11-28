@@ -146,7 +146,34 @@ namespace Coinbase
             return resp.Data;
         }
 
-     
-    }
+        /// <summary>
+        /// Authenticated resource which lets you send money to an email or bitcoin address. https://www.coinbase.com/api/doc/1.0/transactions/send_money.html
+        /// </summary>
+        /// <param name="to">An email address or a bitcoin address</param>
+        /// <param name="amount">A string amount that will be converted to BTC, such as ‘1’ or ‘1.234567’. Also must be >= ‘0.01’ or it will shown an error.</param>
+        /// <param name="notes">Optional notes field. Included in the email that the recipient receives.</param>
+        /// <returns></returns>
+        public SendMoneyResponse SendMoney(string to, decimal amount, string notes)
+        {
+            var sendMoneyRequest = new SendMoneyRequest()
+                {
+                    transaction = new SendMoneyTransaction()
+                        {
+                            amount = Convert.ToString(amount),
+                            to = to,
+                            notes = notes
+                        }
+                };
 
+            var client = CreateClient();
+            var post = CreateRequest("transactions/send_money").AddBody(sendMoneyRequest);
+            var resp = client.Execute<SendMoneyResponse>(post);
+
+            if (resp.ErrorException != null)
+                throw resp.ErrorException;
+
+            return resp.Data;
+        }
+
+    }
 }

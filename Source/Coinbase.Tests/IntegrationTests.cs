@@ -126,5 +126,33 @@ namespace Coinbase.Tests
             // assert
             refundResult.Should().NotBeNull();
         }
+
+        [Test]
+        [Explicit]
+        public void send_money_test()
+        {
+            // arrange
+            var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
+            var toBtcAddress = "BITCOIN_ADDRESS";
+            var btcAmount = 0;// BTC amount
+            var notes = "OPTIONAL_MESSAGE";
+         
+            // act
+            var sendMoneyResponse = api.SendMoney(toBtcAddress, btcAmount, notes);
+
+            if (sendMoneyResponse.transaction.Errors != null)
+            {
+                //Some Refund Error
+            }
+            else if (sendMoneyResponse.success)
+            {
+                //The refund was successful
+                var refundTxn = sendMoneyResponse.transaction;
+            }
+
+            // assert
+            sendMoneyResponse.Should().NotBeNull();
+        }
+
     }
 }
