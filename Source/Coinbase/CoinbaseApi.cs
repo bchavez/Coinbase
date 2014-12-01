@@ -172,6 +172,7 @@ namespace Coinbase
 
         /// <summary>
         /// Authenticated resource which returns order details. 
+        /// See: https://coinbase.com/api/doc/1.0/orders/show.html
         /// You can pass in the order id (a Coinbase field) or custom (a merchant field) to find the appropriate order.
         /// If an order has received multiple payments (i.e., in the case of mispayments), this call will return an array that lists these.
         /// </summary>
