@@ -16,6 +16,7 @@
         History:v0.3.8 - 11/13/2014:
         * Added Refund API functionality.
         * Added SendMoney API functionality.
+        * Added GetOrder API functionality.
         * Updated Nuget references.
 
         v0.3.7 - 11/13/2014:
