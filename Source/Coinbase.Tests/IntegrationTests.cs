@@ -163,7 +163,7 @@ namespace Coinbase.Tests
             // act
             var response = api.SendMoney(pmtInBtc);
 
-            if (response.HasErrors)
+            if ( response.Errors != null)
             {
                 //Some send money error
             }
@@ -187,7 +187,7 @@ namespace Coinbase.Tests
             // act
             var orderResult = api.GetOrder("ORDER_ID_OR_CUSTOM");
 
-            if (orderResult.HasErrors)
+            if (orderResult.Error != null)
             {
                 //Some Error
             }
@@ -198,7 +198,7 @@ namespace Coinbase.Tests
             }
 
             // assert
-            orderResult.Should().NotBeNull();
+            orderResult.Order.Should().NotBeNull();
         }
     }
 }

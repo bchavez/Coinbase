@@ -123,10 +123,10 @@ namespace Coinbase
         /// This endpoint will only refund the full amount of the order or mispayment, specified as either the original BTC amount or native currency amount (such as USD). To issue partial refunds, you can use the regular api/v1/transactions/send_money endpoint.
         /// https://www.coinbase.com/api/doc/1.0/orders/refund.html
         /// </summary>
-        /// <param name="orderId">id_or_custom_field URL parameter</param>
+        /// <param name="orderToken">id_or_custom_field URL parameter</param>
         /// <param name="refundOptions">Refund options for this order ID</param>
         /// <returns>If the order has status completed and the refund processed successfully, the order data will contain the refund transaction details in RefundTransaction. If the refund does not process, order['errors'] will be present, specifying any problems.</returns>
-        public RefundResponse Refund(string orderId, RefundOptions refundOptions)
+        public RefundResponse Refund(string orderToken, RefundOptions refundOptions)
         {
             var client = CreateClient();
             var body = new RefundRequest()
@@ -134,7 +134,7 @@ namespace Coinbase
                     RefundOptions = refundOptions
                 };
             var post = CreateRequest("orders/{orderId}/refund")
-                .AddUrlSegment("orderId", orderId)
+                .AddUrlSegment("orderId", orderToken)
                 .AddBody(body);
 
             var resp = client.Execute<RefundResponse>(post);
@@ -173,19 +173,18 @@ namespace Coinbase
         /// <summary>
         /// Authenticated resource which returns order details. 
         /// See: https://coinbase.com/api/doc/1.0/orders/show.html
-        /// You can pass in the order id (a Coinbase field) or custom (a merchant field) to find the appropriate order.
         /// If an order has received multiple payments (i.e., in the case of mispayments), this call will return an array that lists these.
         /// </summary>
-        /// <param name="orderToken">orderId or custom</param>
+        /// <param name="orderToken">You can pass in the order id (a Coinbase field) or custom (a merchant field) to find the appropriate order.</param>
         /// <returns></returns>
-        public OrderResponse GetOrder(string orderToken)
+        public GetOrderResponse GetOrder(string orderToken)
         {
             var client = CreateClient();
 
             var post = CreateRequest("orders/{orderId}", Method.GET)
                         .AddUrlSegment("orderId", orderToken);
 
-            var resp = client.Execute<OrderResponse>(post);
+            var resp = client.Execute<GetOrderResponse>(post);
 
             if (resp.ErrorException != null)
                 throw resp.ErrorException;

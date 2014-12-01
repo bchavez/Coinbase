@@ -268,7 +268,7 @@ Show an individual merchant order. Useful for checking if internal system matche
 var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
 var orderResult = api.GetOrder("ORDER_ID_OR_CUSTOM");
 
-if (orderResult.HasErrors)
+if (orderResult.Error != null)
 {
     //Some Error
 }
@@ -277,7 +277,6 @@ else if (orderResult.Order.Status == Status.Completed)
     //The request was successful
     var orderTxn = orderResult.Order;
 }
-
 
 ```
 
