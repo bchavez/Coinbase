@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Globalization;
 using System.Net;
 using Coinbase.ObjectModel;
 using Coinbase.Serialization;
@@ -66,9 +65,9 @@ namespace Coinbase
             return new CoinbaseApiAuthenticator(apiKey, apiSecret);
         }
 
-        protected virtual IRestRequest CreateRequest( string action )
+        protected virtual IRestRequest CreateRequest( string action, Method method = Method.POST )
         {
-            var post = new RestRequest(action, Method.POST)
+            var post = new RestRequest(action, method)
                 {
                     RequestFormat = DataFormat.Json,
                     JsonSerializer = new JsonNetSerializer(settings),
@@ -164,11 +163,33 @@ namespace Coinbase
             var post = CreateRequest("transactions/send_money").AddBody(sendMoneyRequest);
             var resp = client.Execute<SendMoneyResponse>(post);
 
+
             if (resp.ErrorException != null)
                 throw resp.ErrorException;
 
             return resp.Data;
         }
 
+        /// <summary>
+        /// Authenticated resource which returns order details. 
+        /// You can pass in the order id (a Coinbase field) or custom (a merchant field) to find the appropriate order.
+        /// If an order has received multiple payments (i.e., in the case of mispayments), this call will return an array that lists these.
+        /// </summary>
+        /// <param name="orderToken">orderId or custom</param>
+        /// <returns></returns>
+        public OrderResponse GetOrder(string orderToken)
+        {
+            var client = CreateClient();
+
+            var post = CreateRequest("orders/{orderId}", Method.GET)
+                        .AddUrlSegment("orderId", orderToken);
+
+            var resp = client.Execute<OrderResponse>(post);
+
+            if (resp.ErrorException != null)
+                throw resp.ErrorException;
+
+            return resp.Data;
+        }
     }
 }
