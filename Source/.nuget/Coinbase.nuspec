@@ -12,7 +12,7 @@
     <description>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins for low-cost payment processing.</description>
     <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>
     <releaseNotes>
-        History:v0.3.8 - 11/13/2014:
+        History:v0.3.8 - 12/2/2014:
         * Added Refund API functionality.
         * Added SendMoney API functionality.
         * Added GetOrder API functionality.
