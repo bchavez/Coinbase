@@ -10,6 +10,9 @@ namespace Coinbase.Tests
     [TestFixture]
     public class IntegrationTests
     {
+        private const string ApiKey = "my_api_key";
+        private const string ApiSecretKey = "my_secret_key";
+
         [Test]
         [Explicit]
         public void integration_test_create_button()
@@ -93,7 +96,7 @@ namespace Coinbase.Tests
         public void create_refund_test()
         {
             // arrange
-            var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey);
 
             var refundOptions = new RefundOptions
                 {
@@ -132,7 +135,7 @@ namespace Coinbase.Tests
         public void send_money_test()
         {
             // arrange
-            var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey);
 
             //Make a direct payment of BTC to another
             //bit coin address
@@ -182,7 +185,7 @@ namespace Coinbase.Tests
         public void get_order_test()
         {
             // arrange
-            var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey);
 
             // act
             var orderResult = api.GetOrder("ORDER_ID_OR_CUSTOM");
@@ -199,6 +202,30 @@ namespace Coinbase.Tests
 
             // assert
             orderResult.Order.Should().NotBeNull();
+        }
+
+        [Test]
+        [Explicit]
+        public void get_order_with_refund_test()
+        {
+            // arrange
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey);
+
+            // act
+            var orderResult = api.GetOrder("ORDER_ID_OR_CUSTOM");
+
+            if (orderResult.Error != null)
+            {
+                //Some Error
+            }
+            else if (orderResult.Order.Status == Status.Completed)
+            {
+                //The request was successful
+                var orderTxn = orderResult.Order;
+            }
+
+            // assert
+            orderResult.Order.RefundTransaction.Should().NotBeNull();
         }
     }
 }
