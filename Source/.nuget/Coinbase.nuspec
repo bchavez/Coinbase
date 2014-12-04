@@ -14,13 +14,15 @@
     <releaseNotes>
         History: v0.3.11:
         * Improved Refund API support
-        * 
-        
+        *
+        - Pull Requests from: ryanmwilliams
+
         v0.3.10:
         * Added Refund API functionality.
         * Added SendMoney API functionality.
         * Added GetOrder API functionality.
         * Updated Nuget references.
+        - Pull Requests from: ryanmwilliams
 
         v0.3.7:
         ** BREAKING CHANGES **
@@ -33,6 +35,7 @@
         * Namespace refactorings: Order, ButtonReqeust, etc are now in Coinbase.ObjectModel.
         * Support for handling subscription payments.
         * Using FluentValidation (not signed) to ease with versioning/upgrades.
+        - Pull Requests from: ElanHasson
 
         v0.2.5:
         * Updated all Nuget Package Dependencies
