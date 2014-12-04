@@ -64,7 +64,8 @@ namespace Coinbase.ObjectModel
         /// Fees can be added as a string, such as ‘0.0005’.
         /// </summary>
         [JsonProperty("user_fee")]
-        public string UserFee { get; set; }
+        [JsonConverter(typeof(DecimalStringConverter))]
+        public decimal? UserFee { get; set; }
 
         /// <summary>
         /// Optional id of the user to get a referral credit in the case that this transaction makes the user eligible. 
