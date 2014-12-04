@@ -142,6 +142,11 @@ namespace Coinbase
             if (resp.ErrorException != null)
                 throw resp.ErrorException;
 
+            if( resp.Data.Order != null )
+            {
+                resp.Data.Success = true;
+            }
+
             return resp.Data;
         }
 
