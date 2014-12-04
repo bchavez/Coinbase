@@ -12,7 +12,7 @@ namespace Coinbase.Tests
     {
         private const string ApiKey = "my_api_key";
         private const string ApiSecretKey = "my_secret_key";
-
+ 
         [Test]
         [Explicit]
         public void integration_test_create_button()
@@ -116,11 +116,7 @@ namespace Coinbase.Tests
             // act
             var refundResult = api.Refund(orderIdToRefund, refundOptions);
 
-            if( refundResult.Order.Errors != null )
-            {
-                //Some Refund Error
-            }
-            else if( refundResult.Order.Status == Status.Completed )
+            if(refundResult.Success)
             {
                 //The refund was successful
                 var refundTxn = refundResult.Order.RefundTransaction;
