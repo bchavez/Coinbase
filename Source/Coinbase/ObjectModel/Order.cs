@@ -28,6 +28,9 @@ namespace Coinbase.ObjectModel
 
         public Transaction Transaction { get; set; }
 
+        [JsonProperty("refund_transaction")]
+        public Transaction RefundTransaction { get; set; }
+
         public Customer Customer { get; set; }
     }
 }
