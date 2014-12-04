@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Fluent.IO;
 using FluentBuild;
 using FluentFs.Core;

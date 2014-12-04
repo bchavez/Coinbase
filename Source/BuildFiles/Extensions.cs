@@ -1,4 +1,4 @@
-﻿using FluentBuild.ApplicationProperties;
+using FluentBuild.ApplicationProperties;
 using FluentFs.Core;
 
 namespace BuildFiles

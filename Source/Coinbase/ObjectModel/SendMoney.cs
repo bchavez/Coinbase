@@ -1,4 +1,4 @@
-﻿using Coinbase.Converters;
+using Coinbase.Converters;
 using Newtonsoft.Json;
 
 namespace Coinbase.ObjectModel

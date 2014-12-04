@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentBuild;
 using FluentBuild.AssemblyInfoBuilding;
 using FluentFs.Core;

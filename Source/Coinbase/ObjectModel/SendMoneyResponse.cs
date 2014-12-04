@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Coinbase.Converters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

@@ -1,4 +1,4 @@
-﻿using FluentValidation.Attributes;
+using FluentValidation.Attributes;
 using Newtonsoft.Json;
 
 namespace Coinbase.ObjectModel

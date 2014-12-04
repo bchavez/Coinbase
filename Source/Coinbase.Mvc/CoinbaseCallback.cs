@@ -1,4 +1,4 @@
-﻿using Coinbase.ObjectModel;
+using Coinbase.ObjectModel;
 
 namespace Coinbase.Mvc
 {

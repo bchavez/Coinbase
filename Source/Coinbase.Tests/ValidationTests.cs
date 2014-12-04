@@ -1,4 +1,4 @@
-﻿using Coinbase.ObjectModel;
+using Coinbase.ObjectModel;
 using FluentValidation;
 using FluentValidation.Attributes;
 using FluentValidation.TestHelper;
