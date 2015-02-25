@@ -13,6 +13,10 @@ namespace Coinbase
     {
         private readonly string apiKey;
         private readonly string apiSecret;
+	    private readonly string apiUrl;
+
+		private const string LiveUrl = "https://api.coinbase.com/v1/";
+		private const string TestUrl = "https://api.sandbox.coinbase.com/v1/";
 
         private JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -32,7 +36,13 @@ namespace Coinbase
             throw new InvalidOperationException( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs." );
         }
 
-        public CoinbaseApi( string apiKey, string apiSecret )
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="apiKey">Your API Key</param>
+		/// <param name="apiSecret">Your API Secret </param>
+		/// <param name="customApiEndpoint">A custom URL endpoint. Typically, you'd use this if you want to use the sandbox URL.</param>
+        public CoinbaseApi( string apiKey, string apiSecret, string apiUrl = LiveUrl )
         {
             this.apiKey = !string.IsNullOrWhiteSpace( apiKey ) ? apiKey : ConfigurationManager.AppSettings["CoinbaseApiKey"];
             this.apiSecret = !string.IsNullOrWhiteSpace( apiSecret ) ? apiSecret : ConfigurationManager.AppSettings["CoinbaseApiSecret"];
@@ -40,6 +50,7 @@ namespace Coinbase
             {
                 throw new ArgumentException( "The API key / secret must not be empty. A valid API key and API secret should be used in the CoinbaseApi constructor or an appSettings configuration element with <add key='CoinbaseApiKey' value='my_api_key' /> and <add key='CoinbaseApiSecret' value='my_api_secret' /> should exist.", "apiKey" );
             }
+			this.apiUrl = apiUrl;
         }
 
         public CoinbaseApi(string apiKey, string apiSecret, JsonSerializerSettings settings) : this(apiKey, apiSecret)
@@ -48,10 +59,8 @@ namespace Coinbase
         }
 
         protected virtual RestClient CreateClient()
-        {
-            const string BaseUri = "https://api.coinbase.com/v1/";
-            
-            var client = new RestClient( BaseUri );
+        {          
+            var client = new RestClient( apiUrl );
 #if DEBUG
             client.Proxy = new WebProxy( "http://localhost.:8888", false );
 #endif
