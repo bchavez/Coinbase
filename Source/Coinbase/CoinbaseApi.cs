@@ -29,8 +29,6 @@ namespace Coinbase
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-
-        public const string CheckoutPageUrl = "";
 		
 
         [Obsolete( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs.", true )]
