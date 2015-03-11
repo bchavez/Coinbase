@@ -4,9 +4,11 @@ namespace Coinbase.ObjectModel
     {
         public ButtonCreated Button { get; set; }
 
+		protected internal string CheckoutPageUrl { get; set; }
+
         public string GetCheckoutUrl()
         {
-            var url = CoinbaseApi.CheckoutPageUrl
+            var url = this.CheckoutPageUrl
                 .Replace("{code}", Button.Code);
 
             return url;

@@ -9,14 +9,19 @@ using RestSharp;
 
 namespace Coinbase
 {
+	public static class CoinbaseUrls
+	{
+		public const string LiveApiUrl = "https://api.coinbase.com/v1/";
+		public const string TestApiUrl = "https://api.sandbox.coinbase.com/v1/";
+		public const string LiveCheckoutUrl = "https://coinbase.com/checkouts/{code}";
+		public const string TestCheckoutUrl = "https://sandbox.coinbase.com/checkouts/{code}";
+	}
     public class CoinbaseApi
     {
         private readonly string apiKey;
         private readonly string apiSecret;
 	    private readonly string apiUrl;
-
-		private const string LiveUrl = "https://api.coinbase.com/v1/";
-		private const string TestUrl = "https://api.sandbox.coinbase.com/v1/";
+	    private readonly string apiCheckoutUrl;
 
         private JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -24,11 +29,8 @@ namespace Coinbase
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
-        public const string CheckoutPageUrl = "https://coinbase.com/checkouts/{code}";
-
-        public CoinbaseApi() : this(string.Empty, string.Empty)
-        {
-        }
+        public const string CheckoutPageUrl = "";
+		
 
         [Obsolete( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs.", true )]
         public CoinbaseApi(string apiSimpleKey)
@@ -36,13 +38,19 @@ namespace Coinbase
             throw new InvalidOperationException( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs." );
         }
 
+	    public CoinbaseApi(string apiKey = "", string apiSecret = "", bool useSandbox = false) :
+			this( apiKey, apiSecret, useSandbox ? CoinbaseUrls.TestApiUrl : null, useSandbox ? CoinbaseUrls.TestCheckoutUrl : null )
+	    {
+		    
+	    }
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="apiKey">Your API Key</param>
 		/// <param name="apiSecret">Your API Secret </param>
 		/// <param name="customApiEndpoint">A custom URL endpoint. Typically, you'd use this if you want to use the sandbox URL.</param>
-        public CoinbaseApi( string apiKey, string apiSecret, string apiUrl = LiveUrl )
+        public CoinbaseApi( string apiKey, string apiSecret, string apiUrl = CoinbaseUrls.LiveApiUrl, string checkoutUrl = CoinbaseUrls.LiveCheckoutUrl )
         {
             this.apiKey = !string.IsNullOrWhiteSpace( apiKey ) ? apiKey : ConfigurationManager.AppSettings["CoinbaseApiKey"];
             this.apiSecret = !string.IsNullOrWhiteSpace( apiSecret ) ? apiSecret : ConfigurationManager.AppSettings["CoinbaseApiSecret"];
@@ -51,9 +59,10 @@ namespace Coinbase
                 throw new ArgumentException( "The API key / secret must not be empty. A valid API key and API secret should be used in the CoinbaseApi constructor or an appSettings configuration element with <add key='CoinbaseApiKey' value='my_api_key' /> and <add key='CoinbaseApiSecret' value='my_api_secret' /> should exist.", "apiKey" );
             }
 			this.apiUrl = apiUrl;
+			this.apiCheckoutUrl = checkoutUrl;
         }
 
-        public CoinbaseApi(string apiKey, string apiSecret, JsonSerializerSettings settings) : this(apiKey, apiSecret)
+        public CoinbaseApi(string apiKey, string apiSecret, JsonSerializerSettings settings) : this(apiKey, apiSecret, useSandbox:false)
         {
             this.settings = settings;
         }
@@ -98,11 +107,13 @@ namespace Coinbase
                 .AddBody( buttonRequest );
             
             var resp = client.Execute<ButtonResponse>( post );
-
+			
             if ( resp.ErrorException != null )
                 throw resp.ErrorException;
             if ( resp.ErrorMessage != null )
                 throw new Exception(resp.ErrorMessage);
+
+	        resp.Data.CheckoutPageUrl = this.apiCheckoutUrl;
 
             return resp.Data;
         }
