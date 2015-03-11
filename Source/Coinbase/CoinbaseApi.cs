@@ -22,6 +22,7 @@ namespace Coinbase
         private readonly string apiSecret;
 	    private readonly string apiUrl;
 	    private readonly string apiCheckoutUrl;
+	    private readonly WebProxy proxy;
 
         private JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -38,8 +39,8 @@ namespace Coinbase
             throw new InvalidOperationException( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs." );
         }
 
-	    public CoinbaseApi(string apiKey = "", string apiSecret = "", bool useSandbox = false) :
-			this( apiKey, apiSecret, useSandbox ? CoinbaseUrls.TestApiUrl : null, useSandbox ? CoinbaseUrls.TestCheckoutUrl : null )
+	    public CoinbaseApi(string apiKey = "", string apiSecret = "", bool useSandbox = false, WebProxy proxy = null) :
+			this( apiKey, apiSecret, useSandbox ? CoinbaseUrls.TestApiUrl : null, useSandbox ? CoinbaseUrls.TestCheckoutUrl : null, proxy )
 	    {
 		    
 	    }
@@ -50,7 +51,12 @@ namespace Coinbase
 		/// <param name="apiKey">Your API Key</param>
 		/// <param name="apiSecret">Your API Secret </param>
 		/// <param name="customApiEndpoint">A custom URL endpoint. Typically, you'd use this if you want to use the sandbox URL.</param>
-        public CoinbaseApi( string apiKey, string apiSecret, string apiUrl = CoinbaseUrls.LiveApiUrl, string checkoutUrl = CoinbaseUrls.LiveCheckoutUrl )
+        public CoinbaseApi( 
+			string apiKey,
+			string apiSecret,
+			string apiUrl = CoinbaseUrls.LiveApiUrl,
+			string checkoutUrl = CoinbaseUrls.LiveCheckoutUrl,
+			WebProxy proxy = null)
         {
             this.apiKey = !string.IsNullOrWhiteSpace( apiKey ) ? apiKey : ConfigurationManager.AppSettings["CoinbaseApiKey"];
             this.apiSecret = !string.IsNullOrWhiteSpace( apiSecret ) ? apiSecret : ConfigurationManager.AppSettings["CoinbaseApiSecret"];
@@ -60,6 +66,7 @@ namespace Coinbase
             }
 			this.apiUrl = apiUrl;
 			this.apiCheckoutUrl = checkoutUrl;
+			this.proxy = proxy;
         }
 
         public CoinbaseApi(string apiKey, string apiSecret, JsonSerializerSettings settings) : this(apiKey, apiSecret, useSandbox:false)
@@ -69,12 +76,13 @@ namespace Coinbase
 
         protected virtual RestClient CreateClient()
         {          
-            var client = new RestClient( apiUrl );
-#if DEBUG
-            client.Proxy = new WebProxy( "http://localhost.:8888", false );
-#endif
-            client.Authenticator = GetAuthenticator();
-            client.AddHandler( "application/json", new JsonNetDeseralizer( settings ) );
+            var client = new RestClient( apiUrl )
+	            {
+		            Proxy = this.proxy,
+					Authenticator = GetAuthenticator()
+	            };
+
+	        client.AddHandler( "application/json", new JsonNetDeseralizer( settings ) );
             return client;
         }
 

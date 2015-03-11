@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Net;
 using Coinbase.ObjectModel;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -12,12 +13,13 @@ namespace Coinbase.Tests
     {
 		private const string ApiKey = "EGVDDCTWDcYsQKlI";
 		private const string ApiSecretKey = "OyRpgMk41FxdVzwMaM2ZvxL61nvfWoiX";
+		private WebProxy proxy = new WebProxy("http://localhost.:8888", false);
  
         [Test]
         [Explicit]
         public void integration_test_create_button()
         {
-            var api = new CoinbaseApi(ApiKey, ApiSecretKey, useSandbox: true );
+            var api = new CoinbaseApi(ApiKey, ApiSecretKey, useSandbox: true, proxy: proxy );
 
             var paymenRequest = new ButtonRequest
                 {
@@ -96,7 +98,7 @@ namespace Coinbase.Tests
         public void create_refund_test()
         {
             // arrange
-            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox:true);
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox:true, proxy: proxy);
 
             var refundOptions = new RefundOptions
                 {
@@ -131,7 +133,7 @@ namespace Coinbase.Tests
         public void send_money_test()
         {
             // arrange
-            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox:true);
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox:true, proxy: proxy);
 
             //Make a direct payment of BTC to another
             //bit coin address
@@ -181,7 +183,7 @@ namespace Coinbase.Tests
         public void get_order_test()
         {
             // arrange
-            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox: true);
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox: true, proxy: proxy);
 
             // act
             var orderResult = api.GetOrder("ORDER_ID_OR_CUSTOM");
@@ -205,7 +207,7 @@ namespace Coinbase.Tests
         public void get_order_with_refund_test()
         {
             // arrange
-            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox: true);
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox: true, proxy: proxy);
 
             // act
             var orderResult = api.GetOrder("ORDER_ID_OR_CUSTOM");
