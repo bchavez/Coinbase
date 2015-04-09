@@ -109,10 +109,10 @@ namespace Coinbase
         {
             var client = CreateClient();
 
-            var post = CreateRequest( "buttons" )
+            var req = CreateRequest( "buttons" )
                 .AddBody( buttonRequest );
             
-            var resp = client.Execute<ButtonResponse>( post );
+            var resp = client.Execute<ButtonResponse>( req );
 			
             if ( resp.ErrorException != null )
                 throw resp.ErrorException;
@@ -133,10 +133,10 @@ namespace Coinbase
 
             var client = CreateClient();
 
-            var post = CreateRequest( "buttons/{code}/create_order" )
+            var req = CreateRequest( "buttons/{code}/create_order" )
                 .AddUrlSegment( "code", code );
 
-            var resp = client.Execute<OrderResponse>(post);
+            var resp = client.Execute<OrderResponse>(req);
 
             if ( resp.ErrorException != null )
                 throw resp.ErrorException;
@@ -147,7 +147,7 @@ namespace Coinbase
         /// <summary>
         /// Authenticated resource which refunds an order or a mispayment to an order. Returns a snapshot of the order data, updated with refund transaction details.
         /// This endpoint will only refund the full amount of the order or mispayment, specified as either the original BTC amount or native currency amount (such as USD). To issue partial refunds, you can use the regular api/v1/transactions/send_money endpoint.
-        /// https://www.coinbase.com/api/doc/1.0/orders/refund.html
+        /// https://developers.coinbase.com/api#refunds
         /// </summary>
         /// <param name="orderToken">id_or_custom_field URL parameter</param>
         /// <param name="refundOptions">Refund options for this order ID</param>
@@ -159,11 +159,11 @@ namespace Coinbase
                 {
                     RefundOptions = refundOptions
                 };
-            var post = CreateRequest("orders/{orderId}/refund")
+            var req = CreateRequest("orders/{orderId}/refund")
                 .AddUrlSegment("orderId", orderToken)
                 .AddBody(body);
 
-            var resp = client.Execute<RefundResponse>(post);
+            var resp = client.Execute<RefundResponse>(req);
 
             if (resp.ErrorException != null)
                 throw resp.ErrorException;
@@ -177,7 +177,7 @@ namespace Coinbase
         }
 
         /// <summary>
-        /// Authenticated resource which lets you send money to an email or bitcoin address. https://www.coinbase.com/api/doc/1.0/transactions/send_money.html
+        /// Authenticated resource which lets you send money to an email or bitcoin address. https://developers.coinbase.com/api#send-money
         /// </summary>
         /// <param name="to">An email address or a bitcoin address</param>
         /// <param name="amount">A string amount that will be converted to BTC, such as ‘1’ or ‘1.234567’. Also must be >= ‘0.01’ or it will shown an error.</param>
@@ -191,8 +191,8 @@ namespace Coinbase
                 };
 
             var client = CreateClient();
-            var post = CreateRequest("transactions/send_money").AddBody(sendMoneyRequest);
-            var resp = client.Execute<SendMoneyResponse>(post);
+            var req = CreateRequest("transactions/send_money").AddBody(sendMoneyRequest);
+            var resp = client.Execute<SendMoneyResponse>(req);
 
 
             if (resp.ErrorException != null)
@@ -212,15 +212,63 @@ namespace Coinbase
         {
             var client = CreateClient();
 
-            var post = CreateRequest("orders/{orderId}", Method.GET)
+            var req = CreateRequest("orders/{orderId}", Method.GET)
                         .AddUrlSegment("orderId", orderToken);
 
-            var resp = client.Execute<GetOrderResponse>(post);
+            var resp = client.Execute<GetOrderResponse>(req);
 
             if (resp.ErrorException != null)
                 throw resp.ErrorException;
 
             return resp.Data;
+        }
+
+        /// <summary>
+        /// Authenticated resource that lets you convert bitcoin in your account to fiat currency (USD, EUR)
+        /// by crediting one of your bank accounts on Coinbase. You must link and verify a bank account 
+        /// through the website before this api call will work.
+        /// 
+        /// This API call is subject to the same rate limits as the web app.
+        /// 
+        /// To get the quote without completing the sell, use commit: false parameter. This is useful
+        /// for confirmation views. Visit POST /transfers/:id/commit for information on completing the transfer.
+        /// </summary>
+        /// <param name="sellRequest"></param>
+        /// <returns></returns>
+        public SellResponse Sell(SellRequest sellRequest)
+        {
+            var client = CreateClient();
+
+            var post = CreateRequest("sells")
+                .AddBody(sellRequest);
+
+            var resp = client.Execute<SellResponse>(post);
+
+            if( resp.ErrorException != null )
+                throw resp.ErrorException;
+
+            return resp.Data;
+        }
+
+        /// <summary>
+        /// Use this method only to commit a sell when the previous request had SellRequest.Commit = false.
+        /// This should commit the sell.
+        /// </summary>
+        /// <param name="transferId"></param>
+        /// <returns>HTTP status code</returns>
+        public HttpStatusCode SellCommit(string transferId)
+        {
+            var client = CreateClient();
+
+            var req = CreateRequest("transfers/{id}/commit")
+                .AddUrlSegment("id", transferId);
+
+            var resp = client.Execute(req);
+
+            if( resp.ErrorException != null )
+                throw resp.ErrorException;
+
+            return resp.StatusCode;
         }
     }
 }

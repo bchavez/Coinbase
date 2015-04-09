@@ -6,6 +6,7 @@ namespace Coinbase.ObjectModel
         Completed = 0x01,
         New,
         Mispaid,
-        Pending
+        Pending,
+        Created
     }
 }

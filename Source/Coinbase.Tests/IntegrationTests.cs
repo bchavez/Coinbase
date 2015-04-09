@@ -11,8 +11,8 @@ namespace Coinbase.Tests
     [TestFixture]
     public class IntegrationTests
     {
-		private const string ApiKey = "EGVDDCTWDcYsQKlI";
-		private const string ApiSecretKey = "OyRpgMk41FxdVzwMaM2ZvxL61nvfWoiX";
+        private const string ApiKey = "EGVDDCTWDcYsQKlI";
+        private const string ApiSecretKey = "OyRpgMk41FxdVzwMaM2ZvxL61nvfWoiX";
 		private WebProxy proxy = new WebProxy("http://localhost.:8888", false);
  
         [Test]
@@ -224,6 +224,32 @@ namespace Coinbase.Tests
 
             // assert
             orderResult.Order.RefundTransaction.Should().NotBeNull();
+        }
+
+        [Test]
+        [Explicit]
+        public void sell()
+        {
+            var api = new CoinbaseApi(apiKey: ApiKey, apiSecret: ApiSecretKey, useSandbox: true, proxy: proxy);
+
+            var req = new SellRequest
+                {
+                    Qty = 1,
+                };
+
+            var resp = api.Sell(req);
+
+            if( resp.Success )
+            {
+                //transfer details.
+                Console.WriteLine("Transfer Id: {0}", resp.Transfer.Id);
+            }
+            else
+            {
+                //Error
+                Console.WriteLine(string.Join(" ", resp.Errors));
+            }
+
         }
     }
 }

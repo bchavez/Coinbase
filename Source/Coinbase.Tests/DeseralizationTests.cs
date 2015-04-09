@@ -260,5 +260,84 @@ namespace Coinbase.Tests
             obj.ShouldBeEquivalentTo( truth );
         }
 
+        [Test]
+        public void should_be_able_to_parse_sell_response()
+        {
+            var json = @"{
+  ""success"": true,
+  ""transfer"": {
+    ""id"": ""5456c2cb46cd93593d00000b"",
+    ""type"": ""Sell"",
+    ""code"": ""5456c2cb46cd93593d00000b"",
+    ""created_at"": ""2013-01-28T16:32:35-08:00"",
+    ""fees"": {
+      ""coinbase"": {
+        ""cents"": 14,
+        ""currency_iso"": ""USD""
+      },
+      ""bank"": {
+        ""cents"": 15,
+        ""currency_iso"": ""USD""
+      }
+    },
+    ""status"": ""Created"",
+    ""payout_date"": ""2013-02-01T18:00:00-08:00"",
+    ""btc"": {
+      ""amount"": ""1.00000000"",
+      ""currency"": ""BTC""
+    },
+    ""subtotal"": {
+      ""amount"": ""13.50"",
+      ""currency"": ""USD""
+    },
+    ""total"": {
+      ""amount"": ""13.21"",
+      ""currency"": ""USD""
     }
+  }
+}";
+
+            var obj = JsonConvert.DeserializeObject<SellResponse>(json);
+
+            obj.Should().NotBeNull();
+            
+            var truth = new SellResponse()
+                {
+                    Success = true,
+                    Transfer = new TransferDesc
+                        {
+                            Id = "5456c2cb46cd93593d00000b",
+                            type = "Sell",
+                            Code = "5456c2cb46cd93593d00000b",
+                            CreatedAt = DateTime.Parse("2013-01-28T16:32:35-08:00"),
+                            Fees = new Fees
+                                {
+                                    Coinbase = new Price {Cents = 14, Currency = Currency.USD},
+                                    Bank = new Price {Cents = 15, Currency = Currency.USD}
+                                },
+                            Status = Status.Created,
+                            PayoutDate = DateTime.Parse("2013-02-01T18:00:00-08:00"),
+                            Btc = new MoneyAmount
+                                {
+                                    Amount = 1.00000000m,
+                                    Currency = Currency.BTC,
+                                },
+                            Subtotal = new MoneyAmount
+                                {
+                                    Amount = 13.50m,
+                                    Currency = Currency.USD
+                                },
+                            Total = new MoneyAmount
+                                {
+                                    Amount = 13.21m,
+                                    Currency = Currency.USD
+                                }
+                        }
+                };
+
+            obj.ShouldBeEquivalentTo(truth);
+        }
+    }
+
+   
 }
