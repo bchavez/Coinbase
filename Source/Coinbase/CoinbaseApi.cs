@@ -56,6 +56,16 @@ namespace Coinbase
 			string checkoutUrl = CoinbaseUrls.LiveCheckoutUrl,
 			WebProxy proxy = null)
         {
+            //Issue #11 -- Check .NET's SecurityProtocol compatibility with Coinbase API Server
+            //
+            //For now, we'll keep this disabled until we know more. About the proper way to deal with SSL3
+            //
+            //if( ServicePointManager.SecurityProtocol == SecurityProtocolType.Ssl3 )
+            //{
+            //    throw new NotSupportedException(
+            //        "ServicePointManager.SecurityProtocol is set to SSL3 which is not supported by Coinbase API Servers. Please configure ServicePointManager.SecurityProtocol to another value like TLS in your application startup. More information here: https://github.com/bchavez/Coinbase/issues/11");
+            //}
+
             this.apiKey = !string.IsNullOrWhiteSpace( apiKey ) ? apiKey : ConfigurationManager.AppSettings["CoinbaseApiKey"];
             this.apiSecret = !string.IsNullOrWhiteSpace( apiSecret ) ? apiSecret : ConfigurationManager.AppSettings["CoinbaseApiSecret"];
             if ( string.IsNullOrWhiteSpace( this.apiKey ) || string.IsNullOrWhiteSpace(this.apiSecret) )

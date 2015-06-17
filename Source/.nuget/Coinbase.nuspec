@@ -14,8 +14,7 @@
     <releaseNotes>
         History: v0.3.11:
         * Improved Refund API support
-        *
-        - Pull Requests from: ryanmwilliams
+        * Added Order.Status.Expired for merchant callbacks.
 
         v0.3.10:
         * Added Refund API functionality.

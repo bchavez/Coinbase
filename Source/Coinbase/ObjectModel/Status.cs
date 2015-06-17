@@ -7,6 +7,7 @@ namespace Coinbase.ObjectModel
         New,
         Mispaid,
         Pending,
-        Created
+        Created,
+        Expired
     }
 }
