@@ -24,14 +24,14 @@ namespace Coinbase
 	    internal readonly string apiCheckoutUrl;
 	    internal readonly WebProxy proxy;
 
-        private JsonSerializerSettings settings = new JsonSerializerSettings
+        public JsonSerializerSettings JsonSettings = new JsonSerializerSettings
             {
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
 	    public CoinbaseApi(string apiKey = "", string apiSecret = "", bool useSandbox = false, WebProxy proxy = null) :
-			this(apiKey: apiKey, apiSecret: apiSecret, proxy: proxy )
+			this(apiKey, apiSecret, null, null )
 	    {
 	        if( useSandbox )
 	        {
@@ -39,11 +39,6 @@ namespace Coinbase
 	            this.apiCheckoutUrl = CoinbaseUrls.TestCheckoutUrl;
 	        }
 	    }
-
-        public CoinbaseApi(string apiKey, string apiSecret, JsonSerializerSettings settings) : this(apiKey, apiSecret, useSandbox:false)
-        {
-            this.settings = settings;
-        }
 
         /// <summary>
 		/// 
@@ -74,8 +69,10 @@ namespace Coinbase
             {
                 throw new ArgumentException( "The API key / secret must not be empty. A valid API key and API secret should be used in the CoinbaseApi constructor or an appSettings configuration element with <add key='CoinbaseApiKey' value='my_api_key' /> and <add key='CoinbaseApiSecret' value='my_api_secret' /> should exist.", "apiKey" );
             }
-			this.apiUrl = apiUrl;
-			this.apiCheckoutUrl = checkoutUrl;
+
+            this.apiUrl = !string.IsNullOrWhiteSpace(apiUrl) ? apiUrl : CoinbaseUrls.LiveApiUrl;
+            this.apiCheckoutUrl = !string.IsNullOrWhiteSpace(checkoutUrl) ? checkoutUrl : CoinbaseUrls.LiveCheckoutUrl;
+
 			this.proxy = proxy;
         }
 
@@ -87,7 +84,7 @@ namespace Coinbase
 					Authenticator = GetAuthenticator()
 	            };
 
-	        client.AddHandler( "application/json", new JsonNetDeseralizer( settings ) );
+	        client.AddHandler( "application/json", new JsonNetDeseralizer( JsonSettings ) );
             return client;
         }
 
@@ -101,7 +98,7 @@ namespace Coinbase
             var post = new RestRequest(action, method)
                 {
                     RequestFormat = DataFormat.Json,
-                    JsonSerializer = new JsonNetSerializer(settings),
+                    JsonSerializer = new JsonNetSerializer(JsonSettings),
                 };               
 
             return post;
