@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 [assembly: AssemblyTitleAttribute("Coinbase API for .NET")]
 [assembly: AssemblyProductAttribute("Coinbase API")]
@@ -10,3 +11,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("MIT License")]
 [assembly: AssemblyDescriptionAttribute("http://www.github.com/bchavez/Coinbase")]
 [assembly: ComVisible(false)]
+[assembly: InternalsVisibleTo("Coinbase.Tests")]

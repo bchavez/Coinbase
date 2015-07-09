@@ -18,32 +18,34 @@ namespace Coinbase
 	}
     public class CoinbaseApi
     {
-        private readonly string apiKey;
-        private readonly string apiSecret;
-	    private readonly string apiUrl;
-	    private readonly string apiCheckoutUrl;
-	    private readonly WebProxy proxy;
+        internal readonly string apiKey;
+        internal readonly string apiSecret;
+	    internal readonly string apiUrl;
+	    internal readonly string apiCheckoutUrl;
+	    internal readonly WebProxy proxy;
 
         private JsonSerializerSettings settings = new JsonSerializerSettings
             {
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-		
-
-        [Obsolete( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs.", true )]
-        public CoinbaseApi(string apiSimpleKey)
-        {
-            throw new InvalidOperationException( "Simple API Keys are being deprecated in favor of the new API Key + Secret system. Read more in the API docs." );
-        }
 
 	    public CoinbaseApi(string apiKey = "", string apiSecret = "", bool useSandbox = false, WebProxy proxy = null) :
-			this( apiKey, apiSecret, useSandbox ? CoinbaseUrls.TestApiUrl : null, useSandbox ? CoinbaseUrls.TestCheckoutUrl : null, proxy )
+			this(apiKey: apiKey, apiSecret: apiSecret, proxy: proxy )
 	    {
-		    
+	        if( useSandbox )
+	        {
+	            this.apiUrl = CoinbaseUrls.TestApiUrl;
+	            this.apiCheckoutUrl = CoinbaseUrls.TestCheckoutUrl;
+	        }
 	    }
 
-		/// <summary>
+        public CoinbaseApi(string apiKey, string apiSecret, JsonSerializerSettings settings) : this(apiKey, apiSecret, useSandbox:false)
+        {
+            this.settings = settings;
+        }
+
+        /// <summary>
 		/// 
 		/// </summary>
 		/// <param name="apiKey">Your API Key</param>
@@ -75,11 +77,6 @@ namespace Coinbase
 			this.apiUrl = apiUrl;
 			this.apiCheckoutUrl = checkoutUrl;
 			this.proxy = proxy;
-        }
-
-        public CoinbaseApi(string apiKey, string apiSecret, JsonSerializerSettings settings) : this(apiKey, apiSecret, useSandbox:false)
-        {
-            this.settings = settings;
         }
 
         protected virtual RestClient CreateClient()

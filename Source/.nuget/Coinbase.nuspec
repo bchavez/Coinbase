@@ -12,7 +12,11 @@
     <description>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins for low-cost payment processing.</description>
     <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>
     <releaseNotes>
-        History: v0.3.11:
+        History: v0.3.12:
+        * Removed obsolete constuctor.
+        
+        
+        v0.3.11:
         * Improved Refund API support
         * Added Order.Status.Expired for merchant callbacks.
 
