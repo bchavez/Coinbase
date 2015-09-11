@@ -4,6 +4,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Coinbase.ObjectModel
 {
+	[DataContract]
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ButtonType
     {

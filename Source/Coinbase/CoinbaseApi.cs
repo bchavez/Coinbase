@@ -6,6 +6,7 @@ using Coinbase.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
+using RestSharp.Authenticators;
 
 namespace Coinbase
 {
@@ -27,7 +28,8 @@ namespace Coinbase
         public JsonSerializerSettings JsonSettings = new JsonSerializerSettings
             {
                 DefaultValueHandling = DefaultValueHandling.Ignore,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+				 
             };
 
 	    public CoinbaseApi(string apiKey = "", string apiSecret = "", bool useSandbox = false, WebProxy proxy = null) :

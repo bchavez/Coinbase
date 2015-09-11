@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<package>
+  <metadata>
+    <id>Coinbase.Mvc</id>
+    <version>0.0.0.0</version>
+    <authors>Brian Chavez, Elan Hasson</authors>
+    <owners>Brian Chavez, Elan Hasson</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/bchavez/Coinbase</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/bchavez/Coinbase/master/Docs/coinbase.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides support for instant payment notification handling for Asp.net MVC projects. </description>
+    <summary> Removes need to have ASP.Net runtime present from the Coinbase main package.</summary>
+    <releaseNotes>
+      History:
+      v0.3.14:
+      * Added debug symbols and source to symbolserver.org for easier debugging experience.
+      * Updated RestSharp reference.
+
+      v0.3.12:
+      * Removed obsolete constructor  .
+      * Fixed #18 - CoinbaseApi constructor having null baseURL.
+
+      v0.3.11:
+      * Improved Refund API support
+      * Added Order.Status.Expired for merchant callbacks.
+
+      v0.3.10 - 12/2/2014:
+      * Added Refund API functionality.
+      * Added SendMoney API functionality.
+      * Added GetOrder API functionality.
+      * Updated Nuget references.
+      - Pull Requests from: ryanmwilliams
+
+      v0.3.7 - 11/13/2014:
+      * Using new ObjectModel namespace refactoring.
+      * Compiled against .NET 4.5 which is required for latest MVC references.
+      * Using FluentValidation (not signed) to ease with versioning/upgrades.
+
+      v0.1.0 - 10/05/2014:
+      * Split out classes that have dependencies on ASP.Net into new package Coinbase.Mvc.
+      - Pull Requests from: ElanHasson
+
+    </releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>bitcoin coinbase api payment money merchant checkout cart gateway bank mvc IPN</tags>
+    <dependencies>
+
+      <group>
+          
+        <dependency id="Microsoft.AspNet.Mvc" />
+        <dependency id="Microsoft.AspNet.Razor"/>
+        <dependency id="Microsoft.AspNet.WebPages"  />
+        <dependency id="Microsoft.Web.Infrastructure" />
+        <dependency id="Newtonsoft.Json" version="[7,8)" />
+        <dependency id="Coinbase" version="$version$" />
+          
+      </group>
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="Coinbase.Mvc.dll" target="lib\net45" />
+    <file src="Coinbase.Mvc.pdb" target="lib\net45" />
+    <file src="Coinbase.Mvc.XML" target="lib\net45" />
+
+    <file src="..\Source\Coinbase.Mvc\**\*.cs"
+            exclude="..\Source\Coinbase.Mvc\obj\**" target="src" />
+  </files>
+
+</package>
