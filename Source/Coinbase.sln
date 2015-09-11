@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase", "Coinbase\Coinba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.Tests", "Coinbase.Tests\Coinbase.Tests.csproj", "{6BE02044-CDFA-4B33-A874-8D4AA86DFB84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildFiles", "BuildFiles\BuildFiles.csproj", "{337978F3-D635-41A5-B149-4521660A4EFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Builder", "Builder\Builder.csproj", "{337978F3-D635-41A5-B149-4521660A4EFB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{23B50146-7258-4807-89C8-BCA7C18BD6FA}"
 	ProjectSection(SolutionItems) = preProject

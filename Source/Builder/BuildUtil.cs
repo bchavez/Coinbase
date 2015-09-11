@@ -4,7 +4,7 @@ using System.Xml.XPath;
 using FluentBuild.Core;
 using FluentFs.Core;
 
-namespace BuildFiles
+namespace Builder
 {
     public class BuildUtil
     {

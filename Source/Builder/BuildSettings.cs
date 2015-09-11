@@ -3,7 +3,7 @@ using FluentBuild;
 using FluentBuild.AssemblyInfoBuilding;
 using FluentFs.Core;
 
-namespace BuildFiles
+namespace Builder
 {
     public class Folders
     {

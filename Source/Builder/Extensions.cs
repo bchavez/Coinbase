@@ -1,7 +1,7 @@
 using FluentBuild.ApplicationProperties;
 using FluentFs.Core;
 
-namespace BuildFiles
+namespace Builder
 {
     public static class ExtensionsForCommandLineProperties
     {

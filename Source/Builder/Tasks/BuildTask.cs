@@ -3,7 +3,7 @@ using Fluent.IO;
 using FluentBuild;
 using FluentFs.Core;
 
-namespace BuildFiles.Tasks
+namespace Builder.Tasks
 {
     public class BuildTask : BuildFile
     {

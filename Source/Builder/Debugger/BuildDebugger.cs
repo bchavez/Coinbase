@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using BuildFiles.Tasks;
+using Builder.Tasks;
 using FluentBuild;
 using FluentBuild.UtilitySupport;
 using NUnit.Framework;
 
-namespace BuildFiles.Debugger
+namespace Builder.Debugger
 {
     [TestFixture]
     public class BuildDebugger

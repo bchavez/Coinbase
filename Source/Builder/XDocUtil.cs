@@ -2,7 +2,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace BuildFiles
+namespace Builder
 {
     public class XDocUtil
     {
