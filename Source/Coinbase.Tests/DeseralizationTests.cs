@@ -4,6 +4,7 @@ using System.Linq;
 using Coinbase.Mvc;
 using Coinbase.ObjectModel;
 using FluentAssertions;
+using FluentAssertions.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ namespace Coinbase.Tests
   ""description"": ""Sample description"",
   ""style"": ""custom_large"",
   ""include_email"": true
-}";
+}".RemoveNewLines();
 
             var b = JsonConvert.DeserializeObject<ButtonRequest>( json );
 
@@ -57,13 +58,13 @@ namespace Coinbase.Tests
             Console.WriteLine( output );
 
 
-            output.Should().Be( json );
+            output.RemoveNewLines().Should().Be( json );
         }
 
         [Test]
         public void should_be_able_to_parse_button_response()
         {
-            var json = @"{
+	        var json = @"{
    ""success"":true,
    ""button"":{
       ""code"":""39b2d09f2bf9c88f113aa6fecb13d258"",
