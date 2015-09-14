@@ -1,5 +1,4 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/t6j3xe6cr0mu8si5?svg=true)](https://ci.appveyor.com/project/bchavez/coinbase) ![Nuget](https://img.shields.io/nuget/v/Coinbase.svg) ![Users](https://img.shields.io/nuget/dt/Coinbase.svg)
-
 Coinbase .NET/C# Library
 ======================
 ----------------------
@@ -15,7 +14,7 @@ A .NET implementation for the [Coinbase API](https://coinbase.com/docs/api/overv
 * .NET 4.0
 
 ### Download & Install
-Nuget Package [Coinbase](https://www.nuget.org/packages/Coinbase/)
+Nuget Package **[Coinbase](https://www.nuget.org/packages/Coinbase/)**
 
 ```
 
