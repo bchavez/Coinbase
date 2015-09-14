@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyrightAttribute("Brian Chavez © 2015")]
 [assembly: AssemblyVersionAttribute("0.3.14")]
 [assembly: AssemblyFileVersion("0.3.14")]
-[assembly: AssemblyInformationalVersion("0.3.14 built on 9/14/2015 5:49:19 PM UTC")]
+[assembly: AssemblyInformationalVersion("0.3.14 built on 9/14/2015 5:54:44 PM UTC")]
 [assembly: AssemblyTrademark("MIT License")]
 [assembly: AssemblyDescriptionAttribute("http://www.github.com/bchavez/Coinbase")]
 [assembly: InternalsVisibleTo("Coinbase.Tests")]
