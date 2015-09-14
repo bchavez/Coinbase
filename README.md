@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/t6j3xe6cr0mu8si5?svg=true)](https://ci.appveyor.com/project/bchavez/coinbase) ![Nuget](https://img.shields.io/nuget/v/Coinbase.svg) ![Users](https://img.shields.io/nuget/dt/Coinbase.svg)
+
 Coinbase .NET/C# Library
 ======================
 ----------------------
