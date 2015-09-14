@@ -1,6 +1,6 @@
 version: 0.0.{build}
 
-build_script: build.cmd
+build_script: build.cmd pack
 
 test:
   assemblies:
