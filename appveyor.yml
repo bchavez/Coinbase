@@ -1,2 +1,13 @@
-version: 0.3.{build}
+version: 0.0.{build}
+
 build_script: build.cmd
+
+test:
+  assemblies:
+    - __compile\Coinbase.Tests.dll
+
+artifacts:
+  - path: __package\*.nupkg
+
+nuget:
+  disable_publish_on_pr: true
