@@ -25,9 +25,9 @@ Install-Package Coinbase
 Building
 --------
 * Download the source code.
-* Run `build.bat`.
+* Run `build.cmd`.
 
-Upon successful build, the results will be in the `\__package` directory.
+Upon successful build, the results will be in the `\__compile` directory. If you want to build NuGet packages, run `build.cmd pack` and the NuGet packages will be in `__package`.
 
 
 Usage
