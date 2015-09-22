@@ -6,7 +6,7 @@
     <version>0.0.0.0</version>
     <authors>Brian Chavez, Elan Hasson</authors>
     <owners>Brian Chavez, Elan Hasson</owners>
-    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/bchavez/Coinbase/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/bchavez/Coinbase</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/bchavez/Coinbase/master/Docs/coinbase.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
