@@ -1,3 +1,4 @@
+using System;
 using FluentFs.Core;
 
 namespace Builder.Utils
@@ -33,4 +34,23 @@ namespace Builder.Utils
 			return dash > 0 ? version.Substring(dash + 1) : null;
 		}
 	}
+
+
+    public static class VersionGetter
+    {
+        public static string GetVersion()
+        {
+            var ver = Environment.GetEnvironmentVariable("FORCE_VERSION")?.Trim();
+            if (!string.IsNullOrWhiteSpace(ver))
+                return ver;
+            ver = Environment.GetEnvironmentVariable("APPVEYOR_REPO_TAG_NAME")?.Trim(' ', 'v');
+            if (!string.IsNullOrWhiteSpace(ver))
+                return ver;
+            ver = Environment.GetEnvironmentVariable("APPVEYOR_BUILD_VERSION")?.Trim();
+            if (!string.IsNullOrWhiteSpace(ver))
+                return $"{ver}-ci";
+            return "0.0.0-localbuild";
+        }
+    }
+
 }
