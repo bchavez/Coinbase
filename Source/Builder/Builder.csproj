@@ -104,9 +104,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NuGet\Coinbase.Mvc.nuspec">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="NuGet\Coinbase.Mvc.nuspec" />
     <None Include="NuGet\Coinbase.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>

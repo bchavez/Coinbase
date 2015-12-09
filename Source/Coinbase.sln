@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase", "Coinbase\Coinbase.csproj", "{CBB355B9-6D99-43D7-ABD8-EF1EA39A3956}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.Tests", "Coinbase.Tests\Coinbase.Tests.csproj", "{6BE02044-CDFA-4B33-A874-8D4AA86DFB84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Builder", "Builder\Builder.csproj", "{337978F3-D635-41A5-B149-4521660A4EFB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.Mvc", "Coinbase.Mvc\Coinbase.Mvc.csproj", "{D1905679-600D-4E8A-AE15-949CFAFF6781}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root", "Root", "{BE6D5482-3CAF-4F3D-9CF5-51AAA97AD504}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root", "Root", "{BE6D5482-3
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.Mvc", "Coinbase.Mvc\Coinbase.Mvc.csproj", "{D1905679-600D-4E8A-AE15-949CFAFF6781}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

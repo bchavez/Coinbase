@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace Coinbase.Mvc.Serialization
 {
+    [Obsolete("The Coinbase.Mvc DLL has been deprecated. This specialized MVC DLL is no longer needed. Please use the main Coinbase library here: https://www.nuget.org/packages/Coinbase/. The JsonNetBinderAttribute (when used with Notification model for callbacks) is no longer needed. Simply replace CoinbaseCallback with the Notification model (without any special model binder) like any other normal model.", true)]
     public class JsonNetBinderAttribute : CustomModelBinderAttribute
     {
         public override IModelBinder GetBinder()

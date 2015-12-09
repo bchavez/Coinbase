@@ -28,5 +28,12 @@ deploy:
           secure: 1nPS2ttf+N4+FUhd+GZycrL7YzSWQpZjnGOMCb5+pGJXSdx0IFvVF8xhTGna7B9t
       artifact: NuGet
       on:
-          branch: /v\d+\.\d+\.\d+/
+          branch: master
+          appveyor_repo_tag_name: /v\d+\.\d+\.\d+/
           appveyor_repo_tag: true
+
+on_failure:
+    - ps: |
+            # Enables RDP for debugging and setup some tools
+            # $blockRdp = $true; choco install notepad2; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+            

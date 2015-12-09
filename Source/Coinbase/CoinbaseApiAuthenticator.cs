@@ -1,8 +1,12 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Coinbase.ObjectModel;
+using Coinbase.Serialization;
+using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 
@@ -12,18 +16,45 @@ namespace Coinbase
     {
         private readonly string apiKey;
         private readonly string apiSecret;
+        private readonly bool useTimeApi;
+        private readonly JsonSerializerSettings jsonSettings;
 
-        public CoinbaseApiAuthenticator(string apiKey, string apiSecret)
+        public CoinbaseApiAuthenticator(string apiKey, string apiSecret, bool useTimeApi, JsonSerializerSettings jsonSettings)
         {
             this.apiKey = apiKey;
             this.apiSecret = apiSecret;
+            this.useTimeApi = useTimeApi;
+            this.jsonSettings = jsonSettings;
         }
+
 
         public void Authenticate(IRestClient client, IRestRequest request)
         {
-            var nonce = GetNonce();
+            var uri = client.BuildUri(request);
+            var path = uri.AbsolutePath;
 
-            var url = client.BuildUri(request);
+            if( path.EndsWith("/time") && path.Length <= 8 )
+            {
+                request.AddHeader("CB-VERSION", CoinbaseConstants.ApiVersionDate);
+                return;
+            }
+            string timestamp = null;
+            if( useTimeApi )
+            {
+                var timeReq = new RestRequest("/time", Method.GET)
+                    {
+                        JsonSerializer = new JsonNetSerializer(jsonSettings)
+                    };
+
+                var timeResp = client.Execute<CoinbaseResponse<Time>>(timeReq);
+                timestamp = timeResp.Data.Data.Epoch.ToString();
+            }
+            else
+            {
+                timestamp = GetCurrentUnixTimestampSeconds().ToString(CultureInfo.InvariantCulture);
+            }
+
+            var method = request.Method.ToString().ToUpper(CultureInfo.InvariantCulture);
 
             var body = string.Empty;
 
@@ -31,42 +62,54 @@ namespace Coinbase
             if( param != null )
                 body = param.Value.ToString();
 
-            var hmacSig = GenerateSignature(nonce, url.ToString(), body, this.apiSecret);
+            var hmacSig = GenerateSignature(timestamp, method, path, body, this.apiSecret);
 
-            request.AddHeader("ACCESS_KEY", this.apiKey)
-                .AddHeader("ACCESS_NONCE", nonce)
-                .AddHeader("ACCESS_SIGNATURE", hmacSig);
+            request.AddHeader("CB-ACCESS-KEY", this.apiKey)
+                .AddHeader("CB-ACCESS-SIGN", hmacSig)
+                .AddHeader("CB-ACCESS-TIMESTAMP", timestamp)
+                .AddHeader("CB-VERSION", CoinbaseConstants.ApiVersionDate);
         }
 
-        /// <summary>
-        /// The nonce is a positive integer number that must increase with every request you make.
-        /// The ACCESS_SIGNATURE header is a HMAC-SHA256 hash of the nonce concatentated with the full URL and body of the HTTP request, encoded using your API secret.
-        /// In some distributed scenarios, it might be necessary to override the implementation of this method to allow cluster of computers to make individual payment requests to coinbase
-        /// where synchronization of the nonce is necessary.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual string GetNonce()
+        public static string GenerateSignature(string timestamp, string method, string url, string body, string appSecret)
         {
-            return DateTime.UtcNow.Ticks.ToString();
+            return GetHMACInHex(appSecret, timestamp + method + url + body);
         }
 
-
-        public static string GenerateSignature( string nonce, string url, string body, string appSecret )
+        internal static string GetHMACInHex(string key, string data)
         {
-            return GetHMACInHex( appSecret, nonce + url + body );
-        }
+            var hmacKey = Encoding.UTF8.GetBytes(key);
 
-        internal static string GetHMACInHex( string key, string data )
-        {
-            var hmacKey = Encoding.UTF8.GetBytes( key );
-
-            using( var signatureStream = new MemoryStream( Encoding.UTF8.GetBytes( data ) ) )
+            using( var signatureStream = new MemoryStream(Encoding.UTF8.GetBytes(data)) )
             {
-                var hex = new HMACSHA256( hmacKey ).ComputeHash( signatureStream )
-                    .Aggregate( new StringBuilder(), ( sb, b ) => sb.AppendFormat( "{0:x2}", b ), sb => sb.ToString() );
+                var hex = new HMACSHA256(hmacKey).ComputeHash(signatureStream)
+                    .Aggregate(new StringBuilder(), (sb, b) => sb.AppendFormat("{0:x2}", b), sb => sb.ToString());
 
                 return hex;
             }
+        }
+
+
+
+        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        public static long GetCurrentUnixTimestampMillis()
+        {
+            return (long)(DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
+        }
+
+        public static DateTime DateTimeFromUnixTimestampMillis(long millis)
+        {
+            return UnixEpoch.AddMilliseconds(millis);
+        }
+
+        public static long GetCurrentUnixTimestampSeconds()
+        {
+            return (long)(DateTime.UtcNow - UnixEpoch).TotalSeconds;
+        }
+
+        public static DateTime DateTimeFromUnixTimestampSeconds(long seconds)
+        {
+            return UnixEpoch.AddSeconds(seconds);
         }
     }
 }

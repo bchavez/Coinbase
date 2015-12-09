@@ -36,10 +36,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentValidation, Version=5.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.5.6.2.0\lib\portable-net40+sl50+wp80+win8+wpa81\FluentValidation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -62,28 +58,7 @@
   <ItemGroup>
     <Compile Include="CoinbaseApi.cs" />
     <Compile Include="CoinbaseApiAuthenticator.cs" />
-    <Compile Include="ObjectModel\ButtonCreated.cs" />
-    <Compile Include="ObjectModel\ButtonDesc.cs" />
-    <Compile Include="ObjectModel\ButtonRequest.cs" />
-    <Compile Include="ObjectModel\ButtonResponse.cs" />
-    <Compile Include="ObjectModel\ButtonStyle.cs" />
-    <Compile Include="ObjectModel\ButtonType.cs" />
-    <Compile Include="ObjectModel\ButtonValidator.cs" />
     <Compile Include="ObjectModel\CoinbaseResponse.cs" />
-    <Compile Include="ObjectModel\Currency.cs" />
-    <Compile Include="ObjectModel\Customer.cs" />
-    <Compile Include="ObjectModel\Order.cs" />
-    <Compile Include="ObjectModel\OrderResponse.cs" />
-    <Compile Include="ObjectModel\Price.cs" />
-    <Compile Include="ObjectModel\Refund.cs" />
-    <Compile Include="ObjectModel\RefundOptionsValidator.cs" />
-    <Compile Include="ObjectModel\RefundResponse.cs" />
-    <Compile Include="ObjectModel\SellRequest.cs" />
-    <Compile Include="ObjectModel\SendMoney.cs" />
-    <Compile Include="ObjectModel\SendMoneyResponse.cs" />
-    <Compile Include="ObjectModel\Status.cs" />
-    <Compile Include="ObjectModel\SubscriptionType.cs" />
-    <Compile Include="ObjectModel\Transaction.cs" />
     <Compile Include="Converters\DecimalStringConverter.cs" />
     <Compile Include="Serialization\JsonNetDeseralizer.cs" />
     <Compile Include="Serialization\JsonNetSerializer.cs" />
