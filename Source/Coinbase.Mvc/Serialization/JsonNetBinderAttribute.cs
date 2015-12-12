@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Coinbase.Mvc.Serialization
 {
-    [Obsolete("The Coinbase.Mvc DLL has been deprecated. This specialized MVC DLL is no longer needed. Please use the main Coinbase library here: https://www.nuget.org/packages/Coinbase/. The JsonNetBinderAttribute (when used with Notification model for callbacks) is no longer needed. Simply replace CoinbaseCallback with the Notification model (without any special model binder) like any other normal model.", true)]
+    [Obsolete("The Coinbase.Mvc DLL has been deprecated. This specialized MVC DLL is no longer needed. Please use the main Coinbase library here: https://www.nuget.org/packages/Coinbase/. The JsonNetBinderAttribute is no longer needed. For MVC projects: Parse the Request.InputStream as a string and the pass the JSON string into api.GetNotification() to get the Notification callback object. For Web API: Simply mount the Notification class as an argument model to your callback API endpoint. You must still verify the callback is from Coinbase.", true)]
     public class JsonNetBinderAttribute : CustomModelBinderAttribute
     {
         public override IModelBinder GetBinder()
