@@ -103,9 +103,11 @@ var checkoutRequest = new CheckoutRequest
     {
         Name = "Best Candy Bar on Earth",
         Currency = Currency.USD,
-        Price = 79.99m,
-        Type = ButtonType.BuyNow,
-        Custom = purchaseId, //<< Here is how we identify the order, our purchaseId
+        Amount = 79.99m,
+        Metadata =
+            {// Here is how we identify the order, our purchaseId
+                {"purchaseId", purchaseId}
+            }, 
         Description = "Yummy Candy bar",
         Style = ButtonStyle.CustomLarge,
         CallbackUrl = "http://domain.com/bitcoin/callback"
