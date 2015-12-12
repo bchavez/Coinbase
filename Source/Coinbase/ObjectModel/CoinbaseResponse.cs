@@ -108,6 +108,11 @@ namespace Coinbase.ObjectModel
 
     public class CheckoutRequest
     {
+        public CheckoutRequest()
+        {
+            this.Metadata = new Dictionary<string, object>();
+        }
+
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public string Name { get; set; }

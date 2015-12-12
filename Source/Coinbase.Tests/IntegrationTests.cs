@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using Coinbase.ObjectModel;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -19,14 +21,23 @@ namespace Coinbase.Tests
         {
             var api = new CoinbaseApi(ApiKey, ApiSecretKey, useSandbox: true, proxy: proxy, useTimeApi: true);
 
+            var purchaseId = Guid.NewGuid().ToString("n");
 
-            var checkout = api.CreateCheckout(new CheckoutRequest
+            var request = new CheckoutRequest
                 {
                     Amount = 10.00m,
                     Currency = "USD",
                     Name = "Test Order",
+                    Metadata =
+                        {
+                            {"purchaseId", purchaseId}
+                        },
                     NotificationsUrl = ""
-                });
+                };
+
+            request.Dump();
+
+            var checkout = api.CreateCheckout(request);
             
             checkout.Dump();
             if( checkout.Errors.Length == 0 )
