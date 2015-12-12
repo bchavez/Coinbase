@@ -13,9 +13,15 @@
     <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>
     <releaseNotes>
         History:
+        v2.0.1:
+        ** BREAKING CHANGES **
+        * Coinbase API v2. Please see below:
+
         v2.0.1-beta-2
+        ** BREAKING CHANGES **
         * For MVC projects, please use Request.InputStream to extract the callback JSON and pass the JSON as an argument to api.GetNotification() and inspect the returnValue.UnverifiedOrder.
-        
+        * For Web API projects, you can use the Notification class directly as model.
+
         v2.0.1-beta-1
         ** BREAKING CHANGES **
         * Compatibility with Coinbase API v2.

@@ -4,7 +4,7 @@ Coinbase .NET/C# Library
 
 Project Description
 -------------------
-A .NET implementation for the [Coinbase API](https://coinbase.com/docs/api/overview)
+A .NET implementation for the [Coinbase API](https://developers.coinbase.com/api/v2). This library uses API version 2.
 
 ### License
 * [MIT License](https://github.com/bchavez/Dwolla/blob/master/LICENSE)
@@ -65,29 +65,22 @@ The following server code registers a payment request with Coinbase and retrieve
 ```csharp
 var api = new CoinbaseApi( apiKey: "my_api_key", apiSecret: "my_api_secret" );
 
-var paymenRequest = new ButtonRequest
+var checkout = api.CreateCheckout(new CheckoutRequest
     {
-        Name = "Order Name",
-        Currency = Currency.USD,
-        Price = 79.99m,
-        Type = ButtonType.BuyNow,
-        Custom = "Custom_Order_Id",
-        Description = "Order Description",
-        Style = ButtonStyle.CustomLarge,
-    };
+        Amount = 10.00m,
+        Currency = "USD",
+        Name = "Test Order",
+        NotificationsUrl = ""
+    });
 
-var buttonResponse = api.RegisterButton( paymenRequest );
-
-if ( buttonResponse.Success )
+if( !checkout.Errors.Any() )
 {
-    var redirectUrl = buttonResponse.GetCheckoutUrl();
-    //Redirect the user to the URL to complete the
-    //the purchase
+    var redirectUrl = api.GetCheckoutUrl(checkout);
+    //do redirect with redirectUrl
 }
 else
 {
-    //Something went wrong. Check errors and fix any issues.
-    Debug.WriteLine( string.Join( ",", buttonResponse.Errors ) );
+    //Error making checkout page.
 }
 ```
 
@@ -106,7 +99,7 @@ var api = new CoinbaseApi( apiKey: "my_api_key" );
 
 var purchaseId = Guid.NewGuid().ToString("n");
 
-var paymenRequest = new ButtonRequest
+var checkoutRequest = new CheckoutRequest
     {
         Name = "Best Candy Bar on Earth",
         Currency = Currency.USD,
@@ -119,12 +112,12 @@ var paymenRequest = new ButtonRequest
         SuccessUrl = "http://domain.com/bitcoin/success"
     };
 
-var buttonResponse = api.RegisterButton( paymenRequest );
+var checkout = api.CreateCheckout( checkoutRequest );
 
-if ( buttonResponse.Success )
+if ( !checkout.Errors.Any() )
 {
-    var redirectUrl = buttonResponse.GetCheckoutUrl();
-    return Redirect
+    var redirectUrl = api.GetCheckoutUrl(checkout);
+    Redirect(redirectUrl);
 }
 ```
 It's important to note that we're setting a `CallbackUrl` and a `SuccessUrl`. The `CallbackUrl` will be invoked **asynchronously** after the customer has completed their purchase. The `SuccessUrl` is invoked **synchronously** by the customer's browser after the customer has completed their payment transaction.
@@ -134,22 +127,45 @@ An MVC controller action that handles the callback **asynchronously** might look
 ```csharp
 //This method is invoked by Coinbase's servers.
 [Route( "bitcoin/callback" ), HttpPost]
-public ActionResult Bitcoin_Execute( [JsonNetBinder] CoinbaseCallback callback )
+public ActionResult Bitcoin_Execute()
 {
-    if( callback.Order.Status == Status.Completed )
+    Notification notification = null;
+    using( var sr = new StreamReader(Request.InputStream) )
     {
-        var purchaseId = callback.Order.Custom;
-        
-        //The bitcoin payment has completed, use the purchaseId
-        //to fulfill the order.
-
-        return new HttpStatusCodeResult( HttpStatusCode.OK );
+        notification = api.GetNotification(sr.ReadToEnd());
     }
+ 
+    var order = notification.UnverifiedOrder;
+
+    // Verify the order came from Coinbase servers
+    if( valid ){
+        //process the order callback
+		return new HttpStatusCodeResult( HttpStatusCode.OK );
+    }
+
+    //else, bad request.
     return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
 }
 
 ```
-**Note:** Don't forget the `[JsonNetBinder]` attribute on the callback parameter. It's needed to fully parse the callback with `Newtonsoft.Json`. Otherwise, some fields in the callback such as `CompletedAt` might be null.
+
+With **Web API v2**, it's slightly eaiser:
+```
+[Route( "bitcoin/callback" ), HttpPost]
+public IHttpActionResult Bitcoin_Execute(Notification notification)
+{
+    var order = notification.UnverifiedOrder;
+
+    // Verify the order came from Coinbase servers
+    if( valid ){
+        //process the order callback
+        return new HttpResponseMessage( HttpStatusCode.OK )
+    }
+
+    //else, bad request.
+    return new HttpResponseMessage( HttpStatusCode.BadRequest );
+}
+```
 
 
 -------
@@ -176,113 +192,32 @@ public ActionResult Bitcoin_GetRequest()
 ```
 
 -------
-#### Refunds
-To refund an order to a wallet for a currency:
+#### Raw API call example using SendRequest
+The example below demonstrates using `SendRequest` to [refund](https://developers.coinbase.com/api/v2#refund-an-order) an order:
 
 ```csharp
 
 var api = new CoinbaseApi(apiKey:"my_api_key", apiSecret:"my_api_secret");
 
-var refundOptions = new RefundOptions
+var options = new
     {
-        RefundIsoCurrency = Currency.BTC,
-        
-        //By default, refunds will be issued to the refund_address
-        //that is set on the order.
-        //Additionally, if you want to send the refund to a different
-        //bitcoin address other than the one that was in the original order
-        //set ExteranlRefundAddress property.  
-        //OPTIONAL:
-        ExternalRefundAddress = "BITCOIN_REFUND_ADDRESS"
+        currency = "BTC"
     };
 
-var orderIdToRefund = "YOUR_ORDER_ID";
+var orderId = "ORDER_ID_HERE";
 
-var refundResult = api.Refund(orderIdToRefund, refundOptions);
-
-if( refundResult.Order.Errors != null )
-{
-    //Some Refund Error
-}
-else if( refundResult.Order.Status == Status.Completed )
-{
-    //The refund was successful
-    var refundTxn = refundResult.Order.RefundTransaction;
-}
-            
+var response = api.SendRequest(options, $"/orders/{orderId}/refund");
+//process response as needed
 ```
 
--------
-#### Send money
-To send an arbitrary amount of money to an address. Useful in the case of partial refunds. 
+See the Coinbase docs for more complete parameter [information](https://developers.coinbase.com/api/v2#refund-an-order).
 
-```csharp
+Other API calls follow the same pattern of using anonymous types as request body parameters. For the complete list of API calls available, please see the main documentation page [here](https://developers.coinbase.com/api/v2).
 
-var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
-
-//Make a direct payment of BTC to another
-//bitcoin address
-var pmtInBtc = new Payment()
-    {
-        To = "BITCOIN_ADDRESS_OR_EMAIL",
-        Amount = 0.0m, // IN BTC
-        Notes = "MY_MESSAGE"
-    };
-
-//Optionally, make an equivalent payment of $20 USD in BTC
-//to the recipient.
-var pmtInUSD = new Payment()
-    {
-        To = "BITCOIN_ADDRESS_OR_EMAIL",
-
-        Amount = null, //Don't use when using currency other than BTC
-
-        AmountString = 20.00m, // IN USD
-        AmountCurrencyIso = Currency.USD,
-        //InstantBuy parameter signals that if your account does 
-        //not currently have enough funds to cover the 
-        //amount, first purchase the difference with
-        //an instant buy, then send the bitcoin.
-        InstantBuy = true,
-    };
-
-var response = api.SendMoney(pmtInBtc); // or pmtInUSD
-
-if ( response.Errors != null)
-{
-    //Some send money error
-}
-else if (response.Success)
-{
-    //The send was successful
-    var sendTxn = response.Transaction;
-}
-
-```
-
--------
-#### Get order
-Show an individual merchant order. Useful for checking if internal system matchees Coinbase system.
-
-```csharp
-var api = new CoinbaseApi(apiKey: "my_api_key", apiSecret: "my_api_secret");
-var orderResult = api.GetOrder("ORDER_ID_OR_CUSTOM");
-
-if (orderResult.Error != null)
-{
-    //Some Error
-}
-else if (orderResult.Order.Status == Status.Completed)
-{
-    //The request was successful
-    var orderTxn = orderResult.Order;
-}
-
-```
 
 Reference
 ---------
-* [Coinbase API Documentation](https://coinbase.com/docs/api/overview)
+* [Coinbase API Documentation](https://developers.coinbase.com/api/v2)
 
 
 Contributors

@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using System.Diagnostics;
-using System.Net;
 using Coinbase.ObjectModel;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -22,19 +20,44 @@ namespace Coinbase.Tests
             var api = new CoinbaseApi(ApiKey, ApiSecretKey, useSandbox: true, proxy: proxy, useTimeApi: true);
 
 
-            var resp = api.CreateCheckout(new CheckoutRequest
+            var checkout = api.CreateCheckout(new CheckoutRequest
                 {
-                   Amount = 10.00m,
-                   Currency = "USD",
-                   Name = "Test Order",
-                   NotificationsUrl = ""
+                    Amount = 10.00m,
+                    Currency = "USD",
+                    Name = "Test Order",
+                    NotificationsUrl = ""
                 });
-
             
-            resp.Dump();
+            checkout.Dump();
+            if( checkout.Errors.Length == 0 )
+            {
+                var redirectUrl = api.GetCheckoutUrl(checkout);
+                //do redirect with redirectUrl
+            }
+            else
+            {
+                //Error making checkout page.
+            }
 
-            var checkoutUrl = api.GetCheckoutUrl(resp);
+            var checkoutUrl = api.GetCheckoutUrl(checkout);
             checkoutUrl.Should().StartWith("https://sandbox.coinbase.com/checkouts");
+        }
+
+        [Test]
+        [Explicit]
+        public void refund_example()
+        {
+            var api = new CoinbaseApi(ApiKey, ApiSecretKey, useSandbox: true, proxy: proxy, useTimeApi: true);
+
+            var options = new
+                {
+                    currency = "BTC"
+                };
+
+            var orderId = "ORDER_ID_HERE";
+
+            var response = api.SendRequest(options, $"/orders/{orderId}/refund");
+            //process response as needed
         }
 
 
@@ -51,7 +74,7 @@ namespace Coinbase.Tests
 
             var note = JsonConvert.DeserializeObject<Notification>(json, api.JsonSettings);
 
-//            note.IsVerified.Should().BeFalse();
+            //            note.IsVerified.Should().BeFalse();
             note.UnverifiedOrder.Should().NotBeNull();
             
             //api.VerifyNotification(json, signature)
@@ -59,5 +82,4 @@ namespace Coinbase.Tests
 
         }
     }
-
 }
