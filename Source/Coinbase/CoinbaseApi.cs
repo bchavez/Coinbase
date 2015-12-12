@@ -128,10 +128,10 @@ namespace Coinbase
         /// Sends a Raw Json object model to the endpoint using an HTTP method.
         /// Recommended use is to use a JObject for the body or a serializable typesafe class.
         /// </summary>
-        /// <param name="body">The JSON request body</param>
         /// <param name="endpoint">The API endpoint. Ex: /checkout, /orders, /time</param>
+        /// <param name="body">The JSON request body</param>
         /// <param name="httpMethod">The HTTP method to use. Default: POST.</param>
-        public virtual CoinbaseResponse SendRequest(object body, string endpoint, Method httpMethod = Method.POST)
+        public virtual CoinbaseResponse SendRequest(string endpoint, object body, Method httpMethod = Method.POST)
         {
             var client = CreateClient();
 
@@ -148,10 +148,10 @@ namespace Coinbase
         /// Recommended use is to use a JObject for the body or a serializable typesafe class.
         /// </summary>
         /// <typeparam name="TResponse">Type T of CoinbaseResponse.Data</typeparam>
-        /// <param name="body">The JSON request body</param>
         /// <param name="endpoint">The API endpoint. Ex: /checkout, /orders, /time</param>
+        /// <param name="body">The JSON request body</param>
         /// <param name="httpMethod">The HTTP method to use. Default: POST.</param>
-        public virtual CoinbaseResponse<TResponse> SendRequest<TResponse>(object body, string endpoint, Method httpMethod = Method.POST)
+        public virtual CoinbaseResponse<TResponse> SendRequest<TResponse>(string endpoint, object body, Method httpMethod = Method.POST)
         {
             var client = CreateClient();
 
@@ -170,7 +170,7 @@ namespace Coinbase
         /// </summary>
         public virtual CoinbaseResponse CreateCheckout(CheckoutRequest checkout)
         {
-            return SendRequest(checkout, "checkouts");
+            return SendRequest("checkouts", checkout);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Coinbase
         /// </summary>
         public virtual Time GetTime()
         {
-            var resp = SendRequest<Time>(null, "time", Method.GET);
+            var resp = SendRequest<Time>("time", null, Method.GET);
             return resp.Data;
         }
 

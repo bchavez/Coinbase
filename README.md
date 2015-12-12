@@ -206,7 +206,7 @@ var options = new
 
 var orderId = "ORDER_ID_HERE";
 
-var response = api.SendRequest(options, $"/orders/{orderId}/refund");
+var response = api.SendRequest($"/orders/{orderId}/refund", options);
 //process response as needed
 ```
 
