@@ -35,32 +35,32 @@ namespace Coinbase.ObjectModel
 
     public class Notification
     {
-        [JsonIgnore]
-        internal bool IsVerified { get;  set; }
+        //[JsonIgnore]
+        //internal bool IsVerified { get;  set; }
 
         /// <summary>
         /// You must first verify the order before this property becomes available.
         /// Verify the notification by calling CoinbaseApi.VerifyNotification() with the Notification and the associated "X-Signature" (or CB-SIGNATURE) request header value.
         /// </summary>
-        [JsonIgnore]
-        internal JObject Order
-        {
-            get
-            {
-                if( !IsVerified )
-                {
-                    throw new ArgumentNullException(nameof(Order),
-                        "The coinbase Notification callback has not been verified. " +
-                        "You must first verify this notification before " +
-                        $"the {nameof(Order)} property becomes available. " +
-                        "Verify the notification by calling CoinbaseApi.VerifyNotification() " +
-                        "with the Notification and the associated 'X-Signature' (or 'CB-SIGNATURE')" +
-                        " HTTP request header value that coinbase has supplied." 
-                        );
-                }
-                return UnverifiedOrder;
-            }
-        }
+        //[JsonIgnore]
+        //internal JObject Order
+        //{
+        //    get
+        //    {
+        //        if( !IsVerified )
+        //        {
+        //            throw new ArgumentNullException(nameof(Order),
+        //                "The coinbase Notification callback has not been verified. " +
+        //                "You must first verify this notification before " +
+        //                $"the {nameof(Order)} property becomes available. " +
+        //                "Verify the notification by calling CoinbaseApi.VerifyNotification() " +
+        //                "with the Notification and the associated 'X-Signature' (or 'CB-SIGNATURE')" +
+        //                " HTTP request header value that coinbase has supplied." 
+        //                );
+        //        }
+        //        return UnverifiedOrder;
+        //    }
+        //}
 
         [JsonProperty("order")]
         public JObject UnverifiedOrder { get; set; }

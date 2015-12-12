@@ -197,5 +197,15 @@ namespace Coinbase
             return apiCheckoutUrl.Replace("{code}", id);
         }
 
+        /// <summary>
+        /// Gets a notification object from JSON.
+        /// </summary>
+        /// <param name="json">Received from Coinbase in the HTTP callback</param>
+        /// <returns></returns>
+        public virtual Notification GetNotification(string json)
+        {
+            return JsonConvert.DeserializeObject<Notification>(json, JsonSettings);
+        }
+
     }
 }
