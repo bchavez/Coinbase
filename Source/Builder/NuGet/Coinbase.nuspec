@@ -14,7 +14,8 @@
     <releaseNotes>
         History
         v2.0.4:
-        * CoinbaseResponse now uses JToken instead of JObject for better compatibility across other APIs that might return a JArray or JObject.
+        * Issue #21: CoinbaseResponse now uses JToken instead of JObject for better compatibility across other APIs that might return a JArray or JObject.
+        * Issue #21: Fixed "invalid signature" when calling some API endpoints.
         
         v2.0.3:
         * API Aesthetics: Easier usage of CheckoutRequest.Metadata
