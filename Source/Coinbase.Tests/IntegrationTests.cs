@@ -96,6 +96,7 @@ namespace Coinbase.Tests
         }
 
         [Test]
+        [Explicit]
         public void can_list_orders()
         {
             var api = new CoinbaseApi(ApiKey, ApiSecretKey, useSandbox: true, proxy: proxy, useTimeApi: true);
