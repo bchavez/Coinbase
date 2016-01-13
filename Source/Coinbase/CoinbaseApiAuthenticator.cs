@@ -59,7 +59,7 @@ namespace Coinbase
             var body = string.Empty;
 
             var param = request.Parameters.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
-            if( param != null )
+            if (param != null && param?.Value?.ToString() != "null" && !string.IsNullOrWhiteSpace(param?.Value?.ToString()))
                 body = param.Value.ToString();
 
             var hmacSig = GenerateSignature(timestamp, method, path, body, this.apiSecret);

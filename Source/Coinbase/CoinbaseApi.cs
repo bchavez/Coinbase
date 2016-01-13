@@ -157,7 +157,7 @@ namespace Coinbase
 
             var req = CreateRequest(endpoint, httpMethod)
                 .AddJsonBody(body);
-
+            
             var resp = client.Execute<CoinbaseResponse<TResponse>>(req);
 
             return resp.Data;

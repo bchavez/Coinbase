@@ -29,14 +29,14 @@ namespace Coinbase.ObjectModel
         public IDictionary<string, JToken> ExtraData { get; set; }
     }
 
-    public class CoinbaseResponse : CoinbaseResponse<JObject>
+    public class CoinbaseResponse : CoinbaseResponse<JToken>
     {
     }
 
-    public class Notification
+    public class Notification : CoinbaseResponse
     {
-        //[JsonIgnore]
-        //internal bool IsVerified { get;  set; }
+        [JsonIgnore]
+        public bool IsVerified => false;
 
         /// <summary>
         /// You must first verify the order before this property becomes available.
