@@ -58,15 +58,18 @@ namespace Coinbase
             var method = request.Method.ToString().ToUpper(CultureInfo.InvariantCulture);
 
             var body = string.Empty;
-			if (request.Method != Method.GET) {
-				var param = request.Parameters.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
-				if (param != null && param?.Value?.ToString() != "null" && !string.IsNullOrWhiteSpace(param?.Value?.ToString()))
-					body = param.Value.ToString();
-			} else {
-				path = uri.PathAndQuery;
-			}
-			
-			
+            if( request.Method != Method.GET )
+            {
+                var param = request.Parameters.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
+                if( param != null && param?.Value?.ToString() != "null" && !string.IsNullOrWhiteSpace(param?.Value?.ToString()) )
+                    body = param.Value.ToString();
+            }
+            else
+            {
+                path = uri.PathAndQuery;
+            }
+
+
             var hmacSig = GenerateSignature(timestamp, method, path, body, this.apiSecret);
 
             request.AddHeader("CB-ACCESS-KEY", this.apiKey)

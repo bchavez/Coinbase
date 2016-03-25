@@ -165,14 +165,23 @@ namespace Coinbase
         }
 
 
-		public virtual CoinbaseResponse<TResponse> SendGetRequest<TResponse>(string endpoint, params KeyValuePair<string,string> [] query_params) {
+        /// <summary>
+        /// Sends a get request to the endpoint using GET HTTP method.
+        /// </summary>
+        /// <typeparam name="TResponse">Type T of CoinbaseResponse.Data</typeparam>
+        /// <param name="endpoint">The API endpoint. Ex: /checkout, /orders, /time</param>
+        /// <param name="queryParams">Query URL parameters to include in the GET request.</param>
+		public virtual CoinbaseResponse<TResponse> SendGetRequest<TResponse>(string endpoint, params KeyValuePair<string,string> [] queryParams)
+        {
 			var client = CreateClient();
 
 			var req = CreateRequest(endpoint, Method.GET);
-			if (query_params != null) { 
-				
-				for (var i = 0; i < query_params.Length; i++)
-					req.AddQueryParameter(query_params[i].Key, query_params[i].Value);
+			if (queryParams != null) {
+
+			    foreach( var kvp in queryParams )
+			    {
+			        req.AddQueryParameter(kvp.Key, kvp.Value);
+			    }
 			}
 
 			var resp = client.Execute<CoinbaseResponse<TResponse>>(req);
