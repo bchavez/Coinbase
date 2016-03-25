@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Coinbase
         {
             var uri = client.BuildUri(request);
             var path = uri.AbsolutePath;
-
+			
             if( path.EndsWith("/time") && path.Length <= 8 )
             {
                 request.AddHeader("CB-VERSION", CoinbaseConstants.ApiVersionDate);
@@ -57,11 +58,15 @@ namespace Coinbase
             var method = request.Method.ToString().ToUpper(CultureInfo.InvariantCulture);
 
             var body = string.Empty;
-
-            var param = request.Parameters.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
-            if (param != null && param?.Value?.ToString() != "null" && !string.IsNullOrWhiteSpace(param?.Value?.ToString()))
-                body = param.Value.ToString();
-
+			if (request.Method != Method.GET) {
+				var param = request.Parameters.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
+				if (param != null && param?.Value?.ToString() != "null" && !string.IsNullOrWhiteSpace(param?.Value?.ToString()))
+					body = param.Value.ToString();
+			} else {
+				path = uri.PathAndQuery;
+			}
+			
+			
             var hmacSig = GenerateSignature(timestamp, method, path, body, this.apiSecret);
 
             request.AddHeader("CB-ACCESS-KEY", this.apiKey)

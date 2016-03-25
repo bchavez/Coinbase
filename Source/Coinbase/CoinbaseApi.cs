@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using Coinbase.ObjectModel;
@@ -163,12 +164,28 @@ namespace Coinbase
             return resp.Data;
         }
 
-        /// <summary>
-        /// Creates a new merchant order checkout product.
-        /// All checkouts and subsequent orders created using this endpoint are created for merchant’s primary account.
-        /// Using this endpoint to create checkouts and orders is useful when you want to build a merchant checkout experience with Coinbase’s merchant tools.
-        /// </summary>
-        public virtual CoinbaseResponse CreateCheckout(CheckoutRequest checkout)
+
+		public virtual CoinbaseResponse<TResponse> SendGetRequest<TResponse>(string endpoint, params KeyValuePair<string,string> [] query_params) {
+			var client = CreateClient();
+
+			var req = CreateRequest(endpoint, Method.GET);
+			if (query_params != null) { 
+				
+				for (var i = 0; i < query_params.Length; i++)
+					req.AddQueryParameter(query_params[i].Key, query_params[i].Value);
+			}
+
+			var resp = client.Execute<CoinbaseResponse<TResponse>>(req);
+
+			return resp.Data;
+		}
+
+		/// <summary>
+		/// Creates a new merchant order checkout product.
+		/// All checkouts and subsequent orders created using this endpoint are created for merchant’s primary account.
+		/// Using this endpoint to create checkouts and orders is useful when you want to build a merchant checkout experience with Coinbase’s merchant tools.
+		/// </summary>
+		public virtual CoinbaseResponse CreateCheckout(CheckoutRequest checkout)
         {
             return SendRequest("checkouts", checkout);
         }
