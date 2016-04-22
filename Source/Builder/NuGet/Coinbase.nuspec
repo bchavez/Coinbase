@@ -13,13 +13,16 @@
     <summary>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins low-cost payment processing. See, http://coinbase.com</summary>
     <releaseNotes>
         History
-        v2.0.5:
+        v2.0.6:
         * Update Newtonsoft Reference.
         
+        v2.0.5:
+        * Update Newtonsoft Reference.
+
         v2.0.4:
         * Issue #21: CoinbaseResponse now uses JToken instead of JObject for better compatibility across other APIs that might return a JArray or JObject.
         * Issue #21: Fixed "invalid signature" when calling some API endpoints.
-        
+
         v2.0.3:
         * API Aesthetics: Easier usage of CheckoutRequest.Metadata
 

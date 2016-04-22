@@ -57,13 +57,6 @@ namespace Builder
 								Console.WriteLine($"Creating AssemblyInfo file: {outputPath}");
 								aid.OutputPath(outputPath);
 							});
-						Task.CreateAssemblyInfo.Language.CSharp(aid =>
-						{
-							Projects.CoinbaseMvcProject.AssemblyInfo(aid);
-							var outputPath = Projects.CoinbaseMvcProject.Folder.SubFolder("Properties").File("AssemblyInfo.cs");
-							Console.WriteLine($"Creating AssemblyInfo file: {outputPath}");
-							aid.OutputPath(outputPath);
-						});
 					})
 				.Task(Clean).Desc("Cleans project files")
 				.Do(() =>
@@ -87,23 +80,11 @@ namespace Builder
 									p.OutputDirectory = Folders.Package.ToString();
 								})
 							.WithNuGetExePathOverride(nugetExe.FullName);
-
-						ng.Pack(Projects.CoinbaseMvcProject.NugetSpec.ToString(),
-							p =>
-								{
-									p.BasePath = Folders.CompileOutput.ToString();
-									p.Version = BuildContext.FullVersion;
-									p.Symbols = true;
-									p.OutputDirectory = Folders.Package.ToString();
-								})
-							.WithNuGetExePathOverride(nugetExe.FullName);
 					})
 				.NuGet(Push).Desc("Pushes NuGet packages")
 				.DependsOn(Pack).Do(ng =>
 					{
 						ng.Push(Projects.CoinbaseProject.NugetNupkg.ToString())
-							.WithNuGetExePathOverride(nugetExe.FullName);
-						ng.Push(Projects.CoinbaseMvcProject.NugetNupkg.ToString())
 							.WithNuGetExePathOverride(nugetExe.FullName);
 					})
 				.NuGet(Restore).Desc("Restores NuGet packages")
