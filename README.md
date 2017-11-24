@@ -6,11 +6,9 @@ Project Description
 -------------------
 A .NET implementation for the [Coinbase API](https://developers.coinbase.com/api/v2). This library uses API version 2.
 
-#### License
-* [MIT License](https://github.com/bchavez/Dwolla/blob/master/LICENSE)
-
-#### Requirements
-* .NET 4.0
+#### Supported Platforms
+* **.NET Standard 2.0** or later
+* **.NET Framework 4.5.2** or later
 
 #### Tip Jar
 * :dollar: **Bitcoin**: `1KgpR5rQmFpfvxQKdPsL9jU8FPf35xmjvn`
