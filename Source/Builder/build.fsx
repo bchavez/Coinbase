@@ -40,7 +40,7 @@ Target "msb" (fun _ ->
 
     let buildProps = [ 
                         "AssemblyOriginatorKeyFile", Projects.SnkFile
-                        "SignAssembly", BuildContext.IsTaggedBuild.ToString()
+//                        "SignAssembly", BuildContext.IsTaggedBuild.ToString()
                      ]
 
     !! CoinbaseProject.ProjectFile
@@ -128,7 +128,7 @@ Target "BuildInfo" (fun _ ->
 
     MakeBuildInfo CoinbaseProject Folders (fun bip -> 
         { bip with
-            ExtraAttrs = MakeAttributes(BuildContext.IsTaggedBuild) } )
+            ExtraAttrs = MakeAttributes(false) } )//BuildContext.IsTaggedBuild) } )
 
     XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/Version" BuildContext.FullVersion
 
