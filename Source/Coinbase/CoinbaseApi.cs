@@ -82,18 +82,16 @@ namespace Coinbase
             //    throw new NotSupportedException(
             //        "ServicePointManager.SecurityProtocol is set to SSL3 which is not supported by Coinbase API Servers. Please configure ServicePointManager.SecurityProtocol to another value like TLS in your application startup. More information here: https://github.com/bchavez/Coinbase/issues/11");
             //}
+            if( string.IsNullOrWhiteSpace(apiKey) ) throw new ArgumentException("The API key must be specified.", nameof(apiKey));
+            if( string.IsNullOrWhiteSpace(apiSecret) ) throw new ArgumentException("The API secret must be specified.", nameof(apiSecret));
 
-            this.apiKey = !string.IsNullOrWhiteSpace( apiKey ) ? apiKey : ConfigurationManager.AppSettings["CoinbaseApiKey"];
-            this.apiSecret = !string.IsNullOrWhiteSpace( apiSecret ) ? apiSecret : ConfigurationManager.AppSettings["CoinbaseApiSecret"];
-            if ( string.IsNullOrWhiteSpace( this.apiKey ) || string.IsNullOrWhiteSpace(this.apiSecret) )
-            {
-                throw new ArgumentException( "The API key / secret must not be empty. A valid API key and API secret should be used in the CoinbaseApi constructor or an appSettings configuration element with <add key='CoinbaseApiKey' value='my_api_key' /> and <add key='CoinbaseApiSecret' value='my_api_secret' /> should exist.", "apiKey" );
-            }
-
+            this.apiKey = apiKey;
+            this.apiSecret = apiSecret;
+            
             this.apiUrl = !string.IsNullOrWhiteSpace(apiUrl) ? apiUrl : CoinbaseConstants.LiveApiUrl;
             this.apiCheckoutUrl = !string.IsNullOrWhiteSpace(checkoutUrl) ? checkoutUrl : CoinbaseConstants.LiveCheckoutUrl;
 
-			this.proxy = proxy;
+			   this.proxy = proxy;
             this.useTimeApi = useTimeApi;
         }
 
