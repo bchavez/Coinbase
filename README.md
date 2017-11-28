@@ -46,7 +46,7 @@ Coinbase offers two ways to authenticate your application with their API:
 This library uses the **API key** authentication make calls to Coinbase servers.
 
 ----
-###Integration Options
+### Integration Options
 #### Redirect to Payment Page
 This integration option redirects the user's browser to Coinbase's servers to complete the checkout / payment process. Optionally, a **CallbackUrl** and/or **SuccessUrl** can be added to the payment that will notify a server on the success or failure of a payment.
 
