@@ -1,4 +1,5 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/t6j3xe6cr0mu8si5?svg=true)](https://ci.appveyor.com/project/bchavez/coinbase) [![Nuget](https://img.shields.io/nuget/v/Coinbase.svg)](https://www.nuget.org/packages/Coinbase/) [![Users](https://img.shields.io/nuget/dt/Coinbase.svg)](https://www.nuget.org/packages/Coinbase/)
+[![Build status](https://ci.appveyor.com/api/projects/status/t6j3xe6cr0mu8si5?svg=true)](https://ci.appveyor.com/project/bchavez/coinbase) [![Nuget](https://img.shields.io/nuget/v/Coinbase.svg)](https://www.nuget.org/packages/Coinbase/) [![Users](https://img.shields.io/nuget/dt/Coinbase.svg)](https://www.nuget.org/packages/Coinbase/) <img src="https://raw.githubusercontent.com/bchavez/Coinbase/master/Docs/coinbase.png" align='right' />
+
 Coinbase .NET/C# Library
 ======================
 
@@ -6,34 +7,24 @@ Project Description
 -------------------
 A .NET implementation for the [Coinbase API](https://developers.coinbase.com/api/v2). This library uses API version 2.
 
+:loudspeaker: ***HEY!*** If you're looking for the [**Coinbase Commerce** API, check this link!](https://github.com/bchavez/Coinbase.Commerce)
+
 #### Supported Platforms
 * **.NET Standard 2.0** or later
 * **.NET Framework 4.5.2** or later
 
-#### Tip Jar
-* :dollar: **Bitcoin**: `1KgpR5rQmFpfvxQKdPsL9jU8FPf35xmjvn`
-* :pound: **Litecoin**: `LXWELKEw124ryu3hbwzBJPUy81odeLthkv`
-* :euro: **Ethereum**: `0xeb294D2BCb1Cf25cBEBd0bF55160aA655F82D8c0`
+#### Crypto Tip Jar
+<a href="https://commerce.coinbase.com/checkout/119320d7-db0a-45c9-97d8-fe4088348288"><img src="https://raw.githubusercontent.com/bchavez/Coinbase/master/Docs/tipjar.png" /></a>
 * :dog2: **Dogecoin**: `DGVC2drEMt41sEzEHSsiE3VTrgsQxGn5qe`
 
 
 
 ### Download & Install
-Nuget Package **[Coinbase](https://www.nuget.org/packages/Coinbase/)**
+**Nuget Package [Coinbase](https://www.nuget.org/packages/Coinbase/)**
 
 ```
-
 Install-Package Coinbase
-
 ```
-
-Building
---------
-* Download the source code.
-* Run `build.cmd`.
-
-Upon successful build, the results will be in the `\__compile` directory. If you want to build NuGet packages, run `build.cmd pack` and the NuGet packages will be in `__package`.
-
 
 Usage
 -----
@@ -226,6 +217,15 @@ Other API calls follow the same pattern of using anonymous types as request body
 Reference
 ---------
 * [Coinbase API Documentation](https://developers.coinbase.com/api/v2)
+
+
+Building
+--------
+* Download the source code.
+* Run `build.cmd`.
+
+Upon successful build, the results will be in the `\__compile` directory. If you want to build NuGet packages, run `build.cmd pack` and the NuGet packages will be in `__package`.
+
 
 
 Contributors
