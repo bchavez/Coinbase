@@ -181,7 +181,7 @@ Target "test" (fun _ ->
 Target "citest" (fun _ ->
     trace "CI TEST"
     RunTests()
-    UploadTestResultsXml TestResultsType.Xunit Folders.Test
+    UploadTestResultsXml TestResultsType.NUnit3 Folders.Test
 )
 
 
