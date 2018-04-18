@@ -22,7 +22,7 @@ A .NET implementation for the [Coinbase API](https://developers.coinbase.com/api
 ### Download & Install
 **Nuget Package [Coinbase](https://www.nuget.org/packages/Coinbase/)**
 
-```
+```powershell
 Install-Package Coinbase
 ```
 
