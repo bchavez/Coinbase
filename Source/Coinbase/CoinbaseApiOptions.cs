@@ -9,10 +9,17 @@ namespace Coinbase
 {
     public class CoinbaseOptions
     {
+        public CoinbaseOptions(string apiUrl = CoinbaseConstants.LiveApiUrl, WebProxy proxy = null, 
+            bool useSandbox = false)
+        {
+            this.ApiUrl = apiUrl;
+            this.UseSandbox = useSandbox;
+            this.Proxy = proxy;
+        }
         /// <summary>
         /// Coinbase Api Endpint
         /// </summary>
-        public string ApiUrl { get; set; } = CoinbaseConstants.LiveApiUrl;
+        public string ApiUrl { get; set; }
 
         /// <summary>
         /// Flag to use Test Endpoints
@@ -23,16 +30,18 @@ namespace Coinbase
         /// Web Proxy for to use in the Coinbase Api
         /// </summary>
         public WebProxy Proxy { get; set; }
-
-        /// Use Coinbase's Time API in signing requests. Results in 2 requests per call 
-        /// (one to get time, one to send signed request). Uses coinbase server to prevent clock skew. If useTimeApi=false
-        /// you must make sure your server time does not drift apart from Coinbase's server time. Read more here: 
-        /// https://developers.coinbase.com/api/v2#api-key
-        public bool UseTimeApi { get; set; } = true;
     }
 
     public class CoinbaseApiOptions : CoinbaseOptions
     {
+
+        public CoinbaseApiOptions(string apiKey, string apiSecret,
+            string checkoutUrl = CoinbaseConstants.LiveCheckoutUrl,
+            string apiUrl = CoinbaseConstants.LiveApiUrl, WebProxy proxy = null,
+            bool useSandbox = false, bool useTimeApi = true) : base(apiUrl, proxy, useSandbox)
+        {
+            this.UseTimeApi = useTimeApi;
+        }
         /// <summary>
         /// Coinbase Checkout Endpoint
         /// </summary>
@@ -47,6 +56,12 @@ namespace Coinbase
         /// Api Secret
         /// </summary>
         public string ApiSecret { get; set; }
+
+        /// Use Coinbase's Time API in signing requests. Results in 2 requests per call 
+        /// (one to get time, one to send signed request). Uses coinbase server to prevent clock skew. If useTimeApi=false
+        /// you must make sure your server time does not drift apart from Coinbase's server time. Read more here: 
+        /// https://developers.coinbase.com/api/v2#api-key
+        public bool UseTimeApi { get; set; }
     }
 
     public class CoinbaseOAuthOptions : CoinbaseOptions

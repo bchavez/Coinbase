@@ -32,6 +32,47 @@ namespace Coinbase
         /// <summary>
         /// The main class for making Coinbase API calls.
         /// </summary>
+        /// <param name="apiKey">Your API key</param>
+        /// <param name="apiSecret">Your API secret</param>
+        /// <param name="useTimeApi">Use Coinbase's Time API in signing requests. Results in 2 requests per call 
+        /// (one to get time, one to send signed request). Uses coinbase server to prevent clock skew. If useTimeApi=false
+        /// you must make sure your server time does not drift apart from Coinbase's server time. Read more here: 
+        /// https://developers.coinbase.com/api/v2#api-key </param>
+        [Obsolete("Use CoinbaseApiOptions Constructor")]
+        public CoinbaseApi(string apiKey = "", string apiSecret = "", bool useSandbox = false, WebProxy proxy = null, bool useTimeApi = true) :
+           this(apiKey, apiSecret, null, null, useTimeApi, proxy)
+        {
+            if(useSandbox)
+            {
+                this.apiCheckoutUrl = CoinbaseConstants.TestCheckoutUrl;
+            }
+        }
+
+        /// <summary>
+        /// The main class for making Coinbase API calls.
+        /// </summary>
+        /// <param name="apiKey">Your API Key</param>
+        /// <param name="apiSecret">Your API Secret </param>
+        /// <param name="customApiEndpoint">A custom URL endpoint. Typically, you'd use this if you want to use the sandbox URL.</param>
+        /// <param name="useTimeApi">Use Coinbase's Time API in signing requests. Results in 2 requests per call 
+        /// (one to get time, one to send signed request). Uses coinbase server to prevent clock skew. If useTimeApi=false
+        /// you must make sure your server time does not drift apart from Coinbase's server time. Read more here: 
+        /// https://developers.coinbase.com/api/v2#api-key </param>
+        [Obsolete("Use CoinbaseApiOptions Constructor")]
+        public CoinbaseApi(
+           string apiKey,
+           string apiSecret,
+           string apiUrl = CoinbaseConstants.LiveApiUrl,
+           string checkoutUrl = CoinbaseConstants.LiveCheckoutUrl,
+           bool useTimeApi = true,
+           WebProxy proxy = null) : base(new CoinbaseApiOptions(apiKey, apiSecret, checkoutUrl, apiUrl, proxy, false, useTimeApi ))
+        {
+            this.apiCheckoutUrl = !string.IsNullOrWhiteSpace(checkoutUrl) ? checkoutUrl : CoinbaseConstants.LiveCheckoutUrl;
+        }
+        
+        /// <summary>
+        /// The main class for making Coinbase API calls.
+        /// </summary>
         public CoinbaseApi(CoinbaseApiOptions options) : base(options)
         {
             //Issue #11 -- Check .NET's SecurityProtocol compatibility with Coinbase API Server

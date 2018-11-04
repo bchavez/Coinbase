@@ -123,16 +123,7 @@ namespace Coinbase.Tests
 
         protected CoinbaseApiOptions GetDefaultCoinbaseApiOptions()
         {
-            var apiOptions = new CoinbaseApiOptions
-            {
-                ApiKey = ApiKey,
-                ApiSecret = ApiSecretKey,
-                UseSandbox = true,
-                Proxy = proxy,
-                UseTimeApi = true
-            };
-
-            return apiOptions;
+            return new CoinbaseApiOptions(ApiKey, ApiSecretKey, useSandbox: true, proxy: proxy, useTimeApi: true);
         }
     }
 }
