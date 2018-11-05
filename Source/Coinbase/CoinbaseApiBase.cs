@@ -18,7 +18,7 @@ namespace Coinbase
 {
     public abstract class CoinbaseApiBase
     {
-        
+
         public JsonSerializerSettings JsonSettings = new JsonSerializerSettings
         {
             DefaultValueHandling = DefaultValueHandling.Ignore,
@@ -31,7 +31,7 @@ namespace Coinbase
         public CoinbaseApiBase(CoinbaseOptions options)
         {
             this.apiUrl = options.ApiUrl;
-            if(string.IsNullOrEmpty(options.ApiUrl))
+            if (string.IsNullOrEmpty(options.ApiUrl))
             {
                 this.apiUrl = options.UseSandbox ? CoinbaseConstants.TestApiUrl : CoinbaseConstants.LiveApiUrl;
             }
@@ -166,7 +166,7 @@ namespace Coinbase
             return resp.Data;
         }
 
-        protected TResponse GetResponse<TResponse, TData>(RestClient client, IRestRequest req) 
+        protected TResponse GetResponse<TResponse, TData>(RestClient client, IRestRequest req)
             where TResponse : CoinbaseResponse<TData>, new()
         {
             var resp = client.Execute<TResponse>(req);
@@ -174,30 +174,40 @@ namespace Coinbase
             return resp.Data;
         }
 
+        //TODO: Create Error Handler
         protected void HandleKnownExceptions(IRestResponse response)
         {
             IDeserializer deserializer = null;
-            ErrorResponse error = null;
+            ErrorResponse errorResponse = null;
             switch (response.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
                     deserializer = new JsonNetDeseralizer(JsonSettings);
-                    error = deserializer.Deserialize<ErrorResponse>(response);
-                    if(error.Id == "expired_token")
-                        throw new TokenExpiredException(response.StatusCode, error);
-                    break;
+                    errorResponse = deserializer.Deserialize<ErrorResponse>(response);
+                    var expiredToken = errorResponse.Errors.FirstOrDefault(e => e.Id == "expired_token");
+                    if (expiredToken != null)
+                    {
+                        throw new TokenExpiredException(response.StatusCode, errorResponse);
+                    }
+                    throw new CoinbaseApiException(response.StatusCode, errorResponse);
                 case HttpStatusCode.Forbidden:
                     deserializer = new JsonNetDeseralizer(JsonSettings);
-                    error = deserializer.Deserialize<ErrorResponse>(response);
-
-                    if(error.Id == "invalid_scope")
-                        throw new InvalidScopeException(response.StatusCode, error);
-                    break;
+                    errorResponse = deserializer.Deserialize<ErrorResponse>(response);
+                    var invalidScope = errorResponse.Errors.FirstOrDefault(e => e.Id == "invalid_scope");
+                    if (invalidScope != null)
+                    {
+                        throw new InvalidScopeException(response.StatusCode, errorResponse);
+                    }
+                    throw new CoinbaseApiException(response.StatusCode, errorResponse);
                 case HttpStatusCode.PaymentRequired:
                     deserializer = new JsonNetDeseralizer(JsonSettings);
-                    error = deserializer.Deserialize<ErrorResponse>(response);
-                    throw new Transaction2FaRequiredException(response.StatusCode, error);
-                    break;
+                    errorResponse = deserializer.Deserialize<ErrorResponse>(response);
+                    var twoFactorRequired = errorResponse.Errors.FirstOrDefault(e => e.Id == "two_factor_required");
+                    if (twoFactorRequired != null)
+                    {
+                        throw new Transaction2FaRequiredException(response.StatusCode, errorResponse);
+                    }
+                    throw new CoinbaseApiException(response.StatusCode, errorResponse);
             }
         }
     }

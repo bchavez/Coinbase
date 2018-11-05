@@ -40,7 +40,7 @@ namespace Coinbase.ObjectModel
         /// </summary>
         /// <param name="name">The name/key of the parameter</param>
         /// <param name="value"> the parameter value</param>
-        public void AddParameter(string name, string value)
+        public void AddParameter(string name, object value)
         {
             this.AddParameter(name, value, ParameterType.GetOrPost);
         }
@@ -50,7 +50,7 @@ namespace Coinbase.ObjectModel
         /// </summary>
         /// <param name="name">The name/key of the parameter</param>
         /// <param name="value"> the parameter value</param>
-        public void AddHeader(string name, string value)
+        public void AddHeader(string name, object value)
         {
             this.AddParameter(name, value, ParameterType.HttpHeader);
         }
@@ -61,7 +61,7 @@ namespace Coinbase.ObjectModel
         /// <param name="name">The name/key of the parameter</param>
         /// <param name="value"> the parameter value</param>
         /// <param name="type">Parameter Type: e.g Querystring, Body, Header</param>
-        public void AddParameter(string name, string value, ParameterType type)
+        public void AddParameter(string name, object value, ParameterType type)
         {
             var parameter = new Parameter();
             parameter.Type = type;
