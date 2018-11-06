@@ -46,7 +46,8 @@ namespace Coinbase
          if ( !string.IsNullOrWhiteSpace(config?.OAuthToken) )
          {
             this.oauthToken = config.OAuthToken;
-            this.client = this.GetOAuthClient();
+            this.client = this.CreateClient()
+               .WithOAuthBearerToken(oauthToken);
          }
          else if (!string.IsNullOrWhiteSpace(config?.ApiKey))
          {
@@ -112,15 +113,12 @@ namespace Coinbase
             .WithHeader("User-Agent", UserAgent);
       }
 
-      public virtual IFlurlClient GetOAuthClient()
+      /// <summary>
+      /// Get the underlying configured client to make raw HTTP calls.
+      /// </summary>
+      public IFlurlClient GetClient()
       {
-         return this.CreateClient()
-            .WithOAuthBearerToken(oauthToken);
-      }
-
-      public virtual IFlurlClient GetApiKeyClient()
-      {
-         return null;
+         return this.client;
       }
       
 
