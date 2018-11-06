@@ -51,7 +51,7 @@ namespace Coinbase.Tests
       [SetUp]
       public void BeforeEachTest()
       {
-         api = new CoinbaseApi(new Config{OAuthToken = oauthKey});
+         api = new CoinbaseApi(new OAuthConfig{OAuthToken = oauthKey});
       }
 
       [TearDown]

@@ -9,26 +9,13 @@ using Flurl.Http.Configuration;
 
 namespace Coinbase
 {
-   public class Config
-   {
-      public string ApiKey { get; set; }
-      public string ApiSecret { get; set; }
-      public string OAuthToken { get; set; }
-      public string ApiUrl { get; set; } = CoinbaseApi.Endpoint;
-      public bool UseTimeApi { get; set; } = true;
-   }
    public partial class CoinbaseApi : IDisposable
    {
       public const string ApiVersionDate = "2017-08-07";
 
-      protected internal readonly string apiKey;
-      protected internal readonly string apiSecret;
-      protected internal readonly string oauthToken;
-      protected internal readonly bool useTimeApi;
+      protected internal readonly Config config;
 
       public const string Endpoint = "https://api.coinbase.com/v2/";
-
-      protected internal string apiUrl;
 
       protected internal Url AccountsEndpoint;
       protected internal Url PaymentMethodsEndpoint;
@@ -38,40 +25,32 @@ namespace Coinbase
       protected internal Url TimeEndpoint;
       protected internal Url NotificationsEndpoint;
 
+      public CoinbaseApi(OAuthConfig config): this(config as Config){}
+
+      public CoinbaseApi(ApiKeyConfig config) : this(config as Config){}
+
+      public CoinbaseApi() : this(null as Config){}
+
       /// <summary>
       /// The main class for making Coinbase API calls.
       /// </summary>
-      public CoinbaseApi(Config config = null)
+      protected CoinbaseApi(Config config)
       {
-         if ( !string.IsNullOrWhiteSpace(config?.OAuthToken) )
-         {
-            this.oauthToken = config.OAuthToken;
-            this.client = this.CreateClient()
-               .WithOAuthBearerToken(oauthToken);
-         }
-         else if (!string.IsNullOrWhiteSpace(config?.ApiKey))
-         {
-            if (string.IsNullOrWhiteSpace(config?.ApiSecret)) throw new ArgumentException("The API secret must be specified.", nameof(apiSecret));
+         this.config = config ?? new Config();
+         this.config.EnsureValid();
 
-            this.apiKey = config.ApiKey;
-            this.apiSecret = config.ApiSecret;
+         this.client = this.GetNewClient();
 
-            this.client = this.CreateClient()
-               .Configure(ApiKeyAuth);
-         }
-
-         this.useTimeApi = config?.UseTimeApi ?? true;
-         this.apiUrl = config?.ApiUrl ?? Endpoint;
-         this.AccountsEndpoint = apiUrl.AppendPathSegment("accounts");
-         this.PaymentMethodsEndpoint = apiUrl.AppendPathSegment("payment-methods");
-         this.CurrenciesEndpoint = apiUrl.AppendPathSegment("currencies");
-         this.ExchangeRatesEndpoint = apiUrl.AppendPathSegment("exchange-rates");
-         this.PricesEndpoint = apiUrl.AppendPathSegment("prices");
-         this.TimeEndpoint = apiUrl.AppendPathSegment("time");
-         this.NotificationsEndpoint = apiUrl.AppendPathSegment("notifications");
+         this.AccountsEndpoint = this.config.ApiUrl.AppendPathSegment("accounts");
+         this.PaymentMethodsEndpoint = this.config.ApiUrl.AppendPathSegment("payment-methods");
+         this.CurrenciesEndpoint = this.config.ApiUrl.AppendPathSegment("currencies");
+         this.ExchangeRatesEndpoint = this.config.ApiUrl.AppendPathSegment("exchange-rates");
+         this.PricesEndpoint = this.config.ApiUrl.AppendPathSegment("prices");
+         this.TimeEndpoint = this.config.ApiUrl.AppendPathSegment("time");
+         this.NotificationsEndpoint = this.config.ApiUrl.AppendPathSegment("notifications");
       }
 
-      private void ApiKeyAuth(ClientFlurlHttpSettings config)
+      private void ApiKeyAuth(ClientFlurlHttpSettings client, ApiKeyConfig config)
       {
          async Task SetHeaders(HttpCall http)
          {
@@ -80,7 +59,7 @@ namespace Coinbase
             var url = http.Request.RequestUri.PathAndQuery;
 
             string timestamp;
-            if (useTimeApi)
+            if (config.UseTimeApi)
             {
                var timeResult = await this.Data.GetCurrentTimeAsync().ConfigureAwait(false);
                timestamp = timeResult.Data.Epoch.ToString();
@@ -90,15 +69,15 @@ namespace Coinbase
                timestamp = ApiKeyAuthenticator.GetCurrentUnixTimestampSeconds().ToString(CultureInfo.CurrentCulture);
             }
 
-            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, this.apiSecret).ToLower();
+            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, config.ApiSecret).ToLower();
 
             http.FlurlRequest
-               .WithHeader(HeaderNames.AccessKey, this.apiKey)
+               .WithHeader(HeaderNames.AccessKey, config.ApiKey)
                .WithHeader(HeaderNames.AccessSign, signature)
                .WithHeader(HeaderNames.AccessTimestamp, timestamp);
          }
 
-         config.BeforeCallAsync = SetHeaders;
+         client.BeforeCallAsync = SetHeaders;
       }
 
       internal static readonly string UserAgent =
@@ -116,9 +95,28 @@ namespace Coinbase
       /// <summary>
       /// Get the underlying configured client to make raw HTTP calls.
       /// </summary>
-      public IFlurlClient GetClient()
+      public IFlurlClient GetCurrentClient()
       {
          return this.client;
+      }
+
+      /// <summary>
+      /// Get a new configured client to make raw HTTP calls.
+      /// </summary>
+      public IFlurlClient GetNewClient()
+      {
+         var c = this.CreateClient();
+
+         if( this.config is OAuthConfig oauth )
+         {
+            return c.WithOAuthBearerToken(oauth.OAuthToken);
+         }
+         if( this.config is ApiKeyConfig key )
+         {
+            return c.Configure(settings => ApiKeyAuth(settings, key));
+         }
+
+         return c;
       }
       
 

@@ -32,7 +32,7 @@ namespace Coinbase.Tests.Integration
                settings.HttpClientFactory = new ProxyFactory(webProxy);
             });
 
-         api = new CoinbaseApi(new Config{ ApiKey = apiKey, ApiSecret = apiSecret});
+         api = new CoinbaseApi(new ApiKeyConfig{ ApiKey = apiKey, ApiSecret = apiSecret});
       }
    }
 

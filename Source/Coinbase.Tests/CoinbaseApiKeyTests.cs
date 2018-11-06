@@ -11,7 +11,7 @@ namespace Coinbase.Tests
       [SetUp]
       public void BeforeEachTest()
       {
-         api = new CoinbaseApi(new Config{ ApiKey = "", ApiSecret = ""});
+         api = new CoinbaseApi(new ApiKeyConfig{ ApiKey = "", ApiSecret = ""});
       }
 
       [TearDown]
