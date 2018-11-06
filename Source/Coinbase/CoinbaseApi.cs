@@ -1,234 +1,209 @@
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Net;
-using Coinbase.ObjectModel;
-using Coinbase.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using RestSharp;
-using RestSharp.Authenticators;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
+using Coinbase.Models;
+using Flurl;
+using Flurl.Http;
+using Flurl.Http.Configuration;
 
 namespace Coinbase
 {
-   public static class CoinbaseConstants
+   public class Config
    {
-      public const string LiveApiUrl = "https://api.coinbase.com/v2/";
-      public const string TestApiUrl = "https://api.sandbox.coinbase.com/v2/";
-      public const string LiveCheckoutUrl = "https://coinbase.com/checkouts/{code}";
-      public const string TestCheckoutUrl = "https://sandbox.coinbase.com/checkouts/{code}";
-      public const string ApiVersionDate = "2015-11-17";
+      public string ApiKey { get; set; }
+      public string ApiSecret { get; set; }
+      public string OAuthToken { get; set; }
+      public string ApiUrl { get; set; } = CoinbaseApi.Endpoint;
+      public bool UseTimeApi { get; set; } = true;
    }
-
-   public class CoinbaseApi
+   public partial class CoinbaseApi : IDisposable
    {
-      internal readonly string apiKey;
-      internal readonly string apiSecret;
-      internal readonly string apiUrl;
-      internal readonly string apiCheckoutUrl;
-      internal readonly WebProxy proxy;
+      public const string ApiVersionDate = "2017-08-07";
 
-      public JsonSerializerSettings JsonSettings = new JsonSerializerSettings
-         {
-            DefaultValueHandling = DefaultValueHandling.Ignore,
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
-         };
+      protected internal readonly string apiKey;
+      protected internal readonly string apiSecret;
+      protected internal readonly string oauthToken;
+      protected internal readonly bool useTimeApi;
 
-      private bool useTimeApi;
+      public const string Endpoint = "https://api.coinbase.com/v2/";
+
+      protected internal string apiUrl;
+
+      protected internal Url AccountsEndpoint;
+      protected internal Url PaymentMethodsEndpoint;
+      protected internal Url CurrenciesEndpoint;
+      protected internal Url ExchangeRatesEndpoint;
+      protected internal Url PricesEndpoint;
+      protected internal Url TimeEndpoint;
+      protected internal Url NotificationsEndpoint;
 
       /// <summary>
       /// The main class for making Coinbase API calls.
       /// </summary>
-      /// <param name="apiKey">Your API key</param>
-      /// <param name="apiSecret">Your API secret</param>
-      /// <param name="useTimeApi">Use Coinbase's Time API in signing requests. Results in 2 requests per call 
-      /// (one to get time, one to send signed request). Uses coinbase server to prevent clock skew. If useTimeApi=false
-      /// you must make sure your server time does not drift apart from Coinbase's server time. Read more here: 
-      /// https://developers.coinbase.com/api/v2#api-key </param>
-      public CoinbaseApi(string apiKey = "", string apiSecret = "", bool useSandbox = false, WebProxy proxy = null, bool useTimeApi = true) :
-         this(apiKey, apiSecret, null, null, useTimeApi, proxy)
+      public CoinbaseApi(Config config = null)
       {
-         if( useSandbox )
+         if ( !string.IsNullOrWhiteSpace(config?.OAuthToken) )
          {
-            this.apiUrl = CoinbaseConstants.TestApiUrl;
-            this.apiCheckoutUrl = CoinbaseConstants.TestCheckoutUrl;
+            this.oauthToken = config.OAuthToken;
+            this.client = this.GetOAuthClient();
          }
-      }
-
-      /// <summary>
-      /// The main class for making Coinbase API calls.
-      /// </summary>
-      /// <param name="apiKey">Your API Key</param>
-      /// <param name="apiSecret">Your API Secret </param>
-      /// <param name="customApiEndpoint">A custom URL endpoint. Typically, you'd use this if you want to use the sandbox URL.</param>
-      /// <param name="useTimeApi">Use Coinbase's Time API in signing requests. Results in 2 requests per call 
-      /// (one to get time, one to send signed request). Uses coinbase server to prevent clock skew. If useTimeApi=false
-      /// you must make sure your server time does not drift apart from Coinbase's server time. Read more here: 
-      /// https://developers.coinbase.com/api/v2#api-key </param>
-      public CoinbaseApi(
-         string apiKey,
-         string apiSecret,
-         string apiUrl = CoinbaseConstants.LiveApiUrl,
-         string checkoutUrl = CoinbaseConstants.LiveCheckoutUrl,
-         bool useTimeApi = true,
-         WebProxy proxy = null)
-      {
-         //Issue #11 -- Check .NET's SecurityProtocol compatibility with Coinbase API Server
-         //
-         //For now, we'll keep this disabled until we know more. About the proper way to deal with SSL3
-         //
-         //if( ServicePointManager.SecurityProtocol == SecurityProtocolType.Ssl3 )
-         //{
-         //    throw new NotSupportedException(
-         //        "ServicePointManager.SecurityProtocol is set to SSL3 which is not supported by Coinbase API Servers. Please configure ServicePointManager.SecurityProtocol to another value like TLS in your application startup. More information here: https://github.com/bchavez/Coinbase/issues/11");
-         //}
-         if( string.IsNullOrWhiteSpace(apiKey) ) throw new ArgumentException("The API key must be specified.", nameof(apiKey));
-         if( string.IsNullOrWhiteSpace(apiSecret) ) throw new ArgumentException("The API secret must be specified.", nameof(apiSecret));
-
-         this.apiKey = apiKey;
-         this.apiSecret = apiSecret;
-
-         this.apiUrl = !string.IsNullOrWhiteSpace(apiUrl) ? apiUrl : CoinbaseConstants.LiveApiUrl;
-         this.apiCheckoutUrl = !string.IsNullOrWhiteSpace(checkoutUrl) ? checkoutUrl : CoinbaseConstants.LiveCheckoutUrl;
-
-         this.proxy = proxy;
-         this.useTimeApi = useTimeApi;
-      }
-
-      protected virtual RestClient CreateClient()
-      {
-         var client = new RestClient(apiUrl)
-            {
-               Proxy = this.proxy,
-               Authenticator = GetAuthenticator()
-            };
-
-         client.AddHandler("application/json", new JsonNetDeseralizer(JsonSettings));
-         return client;
-      }
-
-      protected virtual IAuthenticator GetAuthenticator()
-      {
-         return new CoinbaseApiAuthenticator(apiKey, apiSecret, useTimeApi, JsonSettings);
-      }
-
-      protected virtual IRestRequest CreateRequest(string action, Method method = Method.POST)
-      {
-         var post = new RestRequest(action, method)
-            {
-               RequestFormat = DataFormat.Json,
-               JsonSerializer = new JsonNetSerializer(JsonSettings),
-            };
-
-         return post;
-      }
-
-      /// <summary>
-      /// Sends a Raw Json object model to the endpoint using an HTTP method.
-      /// Recommended use is to use a JObject for the body or a serializable typesafe class.
-      /// </summary>
-      /// <param name="endpoint">The API endpoint. Ex: /checkout, /orders, /time</param>
-      /// <param name="body">The JSON request body</param>
-      /// <param name="httpMethod">The HTTP method to use. Default: POST.</param>
-      public virtual CoinbaseResponse SendRequest(string endpoint, object body, Method httpMethod = Method.POST)
-      {
-         var client = CreateClient();
-
-         var req = CreateRequest(endpoint, httpMethod)
-            .AddJsonBody(body);
-
-         var resp = client.Execute<CoinbaseResponse>(req);
-
-         return resp.Data;
-      }
-
-      /// <summary>
-      /// Sends a Raw Json object model to the endpoint using an HTTP method.
-      /// Recommended use is to use a JObject for the body or a serializable typesafe class.
-      /// </summary>
-      /// <typeparam name="TResponse">Type T of CoinbaseResponse.Data</typeparam>
-      /// <param name="endpoint">The API endpoint. Ex: /checkout, /orders, /time</param>
-      /// <param name="body">The JSON request body</param>
-      /// <param name="httpMethod">The HTTP method to use. Default: POST.</param>
-      public virtual CoinbaseResponse<TResponse> SendRequest<TResponse>(string endpoint, object body, Method httpMethod = Method.POST)
-      {
-         var client = CreateClient();
-
-         var req = CreateRequest(endpoint, httpMethod)
-            .AddJsonBody(body);
-
-         var resp = client.Execute<CoinbaseResponse<TResponse>>(req);
-
-         return resp.Data;
-      }
-
-
-      /// <summary>
-      /// Sends a get request to the endpoint using GET HTTP method.
-      /// </summary>
-      /// <typeparam name="TResponse">Type T of CoinbaseResponse.Data</typeparam>
-      /// <param name="endpoint">The API endpoint. Ex: /checkout, /orders, /time</param>
-      /// <param name="queryParams">Query URL parameters to include in the GET request.</param>
-      public virtual CoinbaseResponse<TResponse> SendGetRequest<TResponse>(string endpoint, params KeyValuePair<string, string>[] queryParams)
-      {
-         var client = CreateClient();
-
-         var req = CreateRequest(endpoint, Method.GET);
-         if( queryParams != null )
+         else if (!string.IsNullOrWhiteSpace(config?.ApiKey))
          {
-            foreach( var kvp in queryParams )
+            if (string.IsNullOrWhiteSpace(config?.ApiSecret)) throw new ArgumentException("The API secret must be specified.", nameof(apiSecret));
+
+            this.apiKey = config.ApiKey;
+            this.apiSecret = config.ApiSecret;
+
+            this.client = this.CreateClient()
+               .Configure(ApiKeyAuth);
+         }
+
+         this.useTimeApi = config?.UseTimeApi ?? true;
+         this.apiUrl = config?.ApiUrl ?? Endpoint;
+         this.AccountsEndpoint = apiUrl.AppendPathSegment("accounts");
+         this.PaymentMethodsEndpoint = apiUrl.AppendPathSegment("payment-methods");
+         this.CurrenciesEndpoint = apiUrl.AppendPathSegment("currencies");
+         this.ExchangeRatesEndpoint = apiUrl.AppendPathSegment("exchange-rates");
+         this.PricesEndpoint = apiUrl.AppendPathSegment("prices");
+         this.TimeEndpoint = apiUrl.AppendPathSegment("time");
+         this.NotificationsEndpoint = apiUrl.AppendPathSegment("notifications");
+      }
+
+      private void ApiKeyAuth(ClientFlurlHttpSettings config)
+      {
+         async Task SetHeaders(HttpCall http)
+         {
+            var body = http.RequestBody;
+            var method = http.Request.Method.Method.ToUpperInvariant();
+            var url = http.Request.RequestUri.PathAndQuery;
+
+            string timestamp;
+            if (useTimeApi)
             {
-               req.AddQueryParameter(kvp.Key, kvp.Value);
+               var timeResult = await this.GetCurrentTimeAsync().ConfigureAwait(false);
+               timestamp = timeResult.Data.Epoch.ToString();
             }
+            else
+            {
+               timestamp = ApiKeyAuthenticator.GetCurrentUnixTimestampSeconds().ToString(CultureInfo.CurrentCulture);
+            }
+
+            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, this.apiSecret).ToLower();
+
+            http.FlurlRequest
+               .WithHeader(HeaderNames.AccessKey, this.apiKey)
+               .WithHeader(HeaderNames.AccessSign, signature)
+               .WithHeader(HeaderNames.AccessTimestamp, timestamp);
          }
 
-         var resp = client.Execute<CoinbaseResponse<TResponse>>(req);
+         config.BeforeCallAsync = SetHeaders;
+      }
 
-         return resp.Data;
+      internal static readonly string UserAgent =
+         $"{AssemblyVersionInformation.AssemblyProduct}/{AssemblyVersionInformation.AssemblyVersion} ({AssemblyVersionInformation.AssemblyTitle}; {AssemblyVersionInformation.AssemblyDescription})";
+
+      private IFlurlClient client;
+
+      protected internal virtual IFlurlClient CreateClient()
+      {
+         return new FlurlClient()
+            .WithHeader(HeaderNames.Version, ApiVersionDate)
+            .WithHeader("User-Agent", UserAgent);
+      }
+
+      public virtual IFlurlClient GetOAuthClient()
+      {
+         return this.CreateClient()
+            .WithOAuthBearerToken(oauthToken);
+      }
+
+      public virtual IFlurlClient GetApiKeyClient()
+      {
+         return null;
+      }
+
+
+
+      /// <summary>
+      /// Get the total price to buy one bitcoin or ether.
+      /// Note that exchange rates fluctuates so the price is only correct for seconds at the time.This buy price includes standard Coinbase fee (1%) but excludes any other fees including bank fees.
+      /// </summary>
+      /// <param name="currencyPair">Currency pair such as BTC-USD, ETH-USD, etc.</param>
+      public virtual Task<Response<Money>> GetBuyPriceAsync(string currencyPair, CancellationToken cancellationToken = default)
+      {
+         return this.PricesEndpoint
+            .AppendPathSegments(currencyPair, "buy")
+            .GetJsonAsync<Response<Money>>(cancellationToken);
       }
 
       /// <summary>
-      /// Creates a new merchant order checkout product.
-      /// All checkouts and subsequent orders created using this endpoint are created for merchant’s primary account.
-      /// Using this endpoint to create checkouts and orders is useful when you want to build a merchant checkout experience with Coinbase’s merchant tools.
+      /// Get the total price to sell one bitcoin or ether.
+      /// Note that exchange rates fluctuates so the price is only correct for seconds at the time.This sell price includes standard Coinbase fee (1%) but excludes any other fees including bank fees.
       /// </summary>
-      public virtual CoinbaseResponse CreateCheckout(CheckoutRequest checkout)
+      /// <param name="currencyPair">Currency pair such as BTC-USD, ETH-USD, etc.</param>
+      public virtual Task<Response<Money>> GetSellPriceAsync(string currencyPair, CancellationToken cancellationToken = default)
       {
-         return SendRequest("checkouts", checkout);
+         return this.PricesEndpoint
+            .AppendPathSegments(currencyPair, "sell")
+            .GetJsonAsync<Response<Money>>(cancellationToken);
       }
+
+      /// <summary>
+      /// Get the current market price for bitcoin. This is usually somewhere in between the buy and sell price.
+      ///Note that exchange rates fluctuates so the price is only correct for seconds at the time.
+      /// </summary>
+      /// <param name="currencyPair"></param>
+      /// <param name="cancellationToken"></param>
+      public virtual Task<Response<Money>> GetSpotPriceAsync(string currencyPair, DateTime? date = null, CancellationToken cancellationToken = default)
+      {
+         var req =this.PricesEndpoint
+            .AppendPathSegments(currencyPair, "spot");
+
+         if( !(date is null) )
+         {
+            req = req.SetQueryParam("date", date.Value.ToString("yyyy-MM-dd"));
+         }
+
+         return req.GetJsonAsync<Response<Money>>(cancellationToken);
+      }
+
+      /// <summary>
+      /// Get current exchange rates. Default base currency is USD but it can be defined as any supported currency. Returned rates will define the exchange rate for one unit of the base currency.
+      /// </summary>
+      /// <param name="currency">Base currency (default: USD)</param>
+      public virtual Task<Response<ExchangeRates>> GetExchangeRatesAsync(string currency = null, CancellationToken cancellationToken = default)
+      {
+         var req = this.ExchangeRatesEndpoint;
+
+         if( !(currency is null) )
+         {
+            req.SetQueryParam("currency", currency);
+         }
+
+         return req.GetJsonAsync<Response<ExchangeRates>>(cancellationToken);
+      }
+
+      /// <summary>
+      /// List known currencies. Currency codes will conform to the ISO 4217 standard where possible. Currencies which have or had no representation in ISO 4217 may use a custom code (e.g. BTC).
+      /// </summary>
+      public virtual Task<PagedResponse<Currency>> GetCurrenciesAsync()
+      {
+         return this.CurrenciesEndpoint.GetJsonAsync<PagedResponse<Currency>>();
+      }
+
 
       /// <summary>
       /// Get the API server time.
       /// </summary>
-      public virtual Time GetTime()
+      public virtual Task<Response<Time>> GetCurrentTimeAsync(CancellationToken cancellationToken = default)
       {
-         var resp = SendRequest<Time>("time", null, Method.GET);
-         return resp.Data;
+         return this.TimeEndpoint.GetJsonAsync<Response<Time>>(cancellationToken);
       }
 
-      /// <summary>
-      /// Get the final checkout redirect URL from a CoinbaseResponse. The response
-      /// from CreateCheckout() call should be used.
-      /// </summary>
-      /// <param name="checkoutResponse">The response from calling CreateCheckout()</param>
-      /// <returns>The redirect URL for the customer checking out</returns>
-      public virtual string GetCheckoutUrl(CoinbaseResponse checkoutResponse)
+      public void Dispose()
       {
-         var id = checkoutResponse.Data["id"]?.ToString();
-         if( string.IsNullOrWhiteSpace(id) )
-            throw new ArgumentException("The checkout response must have an ID field. None was found.", nameof(checkoutResponse));
-
-         return apiCheckoutUrl.Replace("{code}", id);
-      }
-
-      /// <summary>
-      /// Gets a notification object from JSON.
-      /// </summary>
-      /// <param name="json">Received from Coinbase in the HTTP callback</param>
-      /// <returns></returns>
-      public virtual Notification GetNotification(string json)
-      {
-         return JsonConvert.DeserializeObject<Notification>(json, JsonSettings);
+         client?.Dispose();
       }
    }
 }

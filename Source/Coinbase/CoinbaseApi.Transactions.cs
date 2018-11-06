@@ -1,0 +1,162 @@
+﻿using System;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Coinbase.Models;
+using Flurl.Http;
+
+namespace Coinbase
+{
+   public interface ITransactionsEndpoint
+   {
+      /// <summary>
+      /// Lists account’s transactions.
+      /// </summary>
+      Task<PagedResponse<Transaction>> ListTransactionsAsync(string accountId, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Show an individual transaction for an account. See transaction resource for more information.
+      /// </summary>
+      Task<Response<Transaction>> GetTransactionAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Send funds to a bitcoin address, bitcoin cash address, litecoin address, ethereum address, or email address. No transaction fees are required for off blockchain bitcoin transactions.
+      /// It’s recommended to always supply a unique idem field for each transaction.This prevents you from sending the same transaction twice if there has been an unexpected network outage or other issue.
+      /// When used with OAuth2 authentication, this endpoint requires two factor authentication unless used with wallet:transactions:send:bypass-2fa scope.
+      ///If the user is able to buy bitcoin, they can send funds from their fiat account using instant exchange feature.Buy fees will be included in the created transaction and the recipient will receive the user defined amount.
+      /// </summary>
+      Task<Response<Transaction>> SendMoneyAsync(string accountId, CreateTransaction createTransaction, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Transfer bitcoin, bitcoin cash, litecoin or ethereum between two of a user’s accounts. Following transfers are allowed:
+      /// * wallet to wallet
+      /// * wallet to vault
+      /// </summary>
+      Task<Response<Transaction>> TransferMoneyAsync(string accountId, CreateTransfer createTransfer, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Requests money from an email address.
+      /// </summary>
+      Task<Response<Transaction>> RequestMoneyAsync(string accountId, RequestMoney requestMoney, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Lets the recipient of a money request complete the request by sending money to the user who requested the money. This can only be completed by the user to whom the request was made, not the user who sent the request.
+      /// </summary>
+      Task<HttpResponseMessage> CompleteRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Lets the user resend a money request. This will notify recipient with a new email.
+      /// </summary>
+      Task<HttpResponseMessage> ResendRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Lets a user cancel a money request. Money requests can be canceled by the sender or the recipient.
+      /// </summary>
+      Task<HttpResponseMessage> CancelRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
+   }
+
+
+   public partial class CoinbaseApi : ITransactionsEndpoint
+   {
+      public ITransactionsEndpoint Transactions => this;
+
+      /// <summary>
+      /// Lists account’s transactions.
+      /// </summary>
+      Task<PagedResponse<Transaction>> ITransactionsEndpoint.ListTransactionsAsync(string accountId, CancellationToken cancellationToken)
+      {
+         return this.AccountsEndpoint
+            .AppendPathSegments(accountId, "transactions")
+            .WithClient(this.client)
+            .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
+      }
+
+      /// <summary>
+      /// Show an individual transaction for an account. See transaction resource for more information.
+      /// </summary>
+      Task<Response<Transaction>> ITransactionsEndpoint.GetTransactionAsync(string accountId, string transactionId, CancellationToken cancellationToken)
+      {
+         return this.AccountsEndpoint
+            .AppendPathSegments(accountId, "transactions", transactionId)
+            .WithClient(this.client)
+            .GetJsonAsync<Response<Transaction>>(cancellationToken);
+      }
+
+      /// <summary>
+      /// Send funds to a bitcoin address, bitcoin cash address, litecoin address, ethereum address, or email address. No transaction fees are required for off blockchain bitcoin transactions.
+      /// It’s recommended to always supply a unique idem field for each transaction.This prevents you from sending the same transaction twice if there has been an unexpected network outage or other issue.
+      /// When used with OAuth2 authentication, this endpoint requires two factor authentication unless used with wallet:transactions:send:bypass-2fa scope.
+      ///If the user is able to buy bitcoin, they can send funds from their fiat account using instant exchange feature.Buy fees will be included in the created transaction and the recipient will receive the user defined amount.
+      /// </summary>
+      Task<Response<Transaction>> ITransactionsEndpoint.SendMoneyAsync(string accountId, CreateTransaction createTransaction, CancellationToken cancellationToken)
+      {
+         return this.AccountsEndpoint
+            .AppendPathSegments(accountId, "transactions")
+            .WithClient(this.client)
+            .PostJsonAsync(createTransaction, cancellationToken)
+            .ReceiveJson<Response<Transaction>>();
+
+      }
+
+      /// <summary>
+      /// Transfer bitcoin, bitcoin cash, litecoin or ethereum between two of a user’s accounts. Following transfers are allowed:
+      /// * wallet to wallet
+      /// * wallet to vault
+      /// </summary>
+      Task<Response<Transaction>> ITransactionsEndpoint.TransferMoneyAsync(string accountId, CreateTransfer createTransfer, CancellationToken cancellationToken)
+      {
+         return this.AccountsEndpoint
+            .AppendPathSegments(accountId, "transactions")
+            .WithClient(this.client)
+            .PostJsonAsync(createTransfer, cancellationToken)
+            .ReceiveJson<Response<Transaction>>();
+      }
+
+      /// <summary>
+      /// Requests money from an email address.
+      /// </summary>
+      Task<Response<Transaction>> ITransactionsEndpoint.RequestMoneyAsync(string accountId, RequestMoney requestMoney, CancellationToken cancellationToken)
+      {
+         return this.AccountsEndpoint
+            .AppendPathSegments(accountId, "transactions")
+            .WithClient(this.client)
+            .PostJsonAsync(requestMoney, cancellationToken)
+            .ReceiveJson<Response<Transaction>>();
+      }
+
+      /// <summary>
+      /// Lets the recipient of a money request complete the request by sending money to the user who requested the money. This can only be completed by the user to whom the request was made, not the user who sent the request.
+      /// </summary>
+      Task<HttpResponseMessage> ITransactionsEndpoint.CompleteRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
+      {
+         return this.AccountsEndpoint
+            .AppendPathSegments(accountId, "transactions", transactionId, "complete")
+            .WithClient(this.client)
+            .PostJsonAsync(null, cancellationToken);
+      }
+
+
+      /// <summary>
+      /// Lets the user resend a money request. This will notify recipient with a new email.
+      /// </summary>
+      Task<HttpResponseMessage> ITransactionsEndpoint.ResendRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
+      {
+         return this.AccountsEndpoint
+            .AppendPathSegments(accountId, "transactions", transactionId, "resend")
+            .WithClient(this.client)
+            .PostJsonAsync(null, cancellationToken);
+      }
+
+      /// <summary>
+      /// Lets a user cancel a money request. Money requests can be canceled by the sender or the recipient.
+      /// </summary>
+      Task<HttpResponseMessage> ITransactionsEndpoint.CancelRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
+      {
+         return this.AccountsEndpoint
+            .AppendPathSegments(accountId, "transactions", transactionId)
+            .WithClient(this.client)
+            .DeleteAsync(cancellationToken);
+      }
+
+   }
+}
