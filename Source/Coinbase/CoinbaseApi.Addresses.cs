@@ -36,7 +36,7 @@ namespace Coinbase
       public IAddressesEndpoint Addresses => this;
 
       /// <inheritdoc />
-      Task<PagedResponse<AddressEntity>> IAddressesEndpoint.ListAddressesAsync(string accountId, CancellationToken cancellationToken = default)
+      Task<PagedResponse<AddressEntity>> IAddressesEndpoint.ListAddressesAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "addresses")
@@ -45,7 +45,7 @@ namespace Coinbase
       }
 
       /// <inheritdoc />
-      Task<Response<AddressEntity>> IAddressesEndpoint.GetAddressAsync(string accountId, string addressId, CancellationToken cancellationToken = default)
+      Task<Response<AddressEntity>> IAddressesEndpoint.GetAddressAsync(string accountId, string addressId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "addresses", addressId)
@@ -54,7 +54,7 @@ namespace Coinbase
       }
 
       /// <inheritdoc />
-      Task<PagedResponse<Transaction>> IAddressesEndpoint.ListAddressTransactionsAsync(string accountId, string addressId, CancellationToken cancellationToken = default)
+      Task<PagedResponse<Transaction>> IAddressesEndpoint.ListAddressTransactionsAsync(string accountId, string addressId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "addresses", addressId, "transactions")
@@ -63,7 +63,7 @@ namespace Coinbase
       }
 
       /// <inheritdoc />
-      Task<Response<AddressEntity>> IAddressesEndpoint.CreateAddressAsync(string accountId, CreateAddress createAddress, CancellationToken cancellationToken = default)
+      Task<Response<AddressEntity>> IAddressesEndpoint.CreateAddressAsync(string accountId, CreateAddress createAddress, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "addresses")

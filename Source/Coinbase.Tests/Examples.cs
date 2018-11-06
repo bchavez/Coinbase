@@ -1184,9 +1184,308 @@ namespace Coinbase.Tests
             ResourcePath = "/v2/payment-methods/83562370-3e5c-51db-87da-752af5ab9559"
       };
 
+
+      public const string Notification1 = @"  {
+      ""id"": ""6bf0ca21-0b2f-5e8a-b95e-7bd7eaccc338"",
+      ""type"": ""wallet:buys:completed"",
+      ""data"": {
+        ""id"": ""67e0eaec-07d7-54c4-a72c-2e92826897df"",
+        ""status"": ""completed"",
+        ""payment_method"": {
+          ""id"": ""83562370-3e5c-51db-87da-752af5ab9559"",
+          ""resource"": ""payment_method"",
+          ""resource_path"": ""/v2/payment-methods/83562370-3e5c-51db-87da-752af5ab9559""
+        },
+        ""transaction"": {
+          ""id"": ""441b9494-b3f0-5b98-b9b0-4d82c21c252a"",
+          ""resource"": ""transaction"",
+          ""resource_path"": ""/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/441b9494-b3f0-5b98-b9b0-4d82c21c252a""
+        },
+        ""amount"": {
+          ""amount"": ""1.00000000"",
+          ""currency"": ""BTC""
+        },
+        ""total"": {
+          ""amount"": ""10.25"",
+          ""currency"": ""USD""
+        },
+        ""subtotal"": {
+          ""amount"": ""10.10"",
+          ""currency"": ""USD""
+        },
+        ""created_at"": ""2015-01-31T20:49:02Z"",
+        ""updated_at"": ""2015-02-11T16:54:02-08:00"",
+        ""resource"": ""buy"",
+        ""resource_path"": ""/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/buys/67e0eaec-07d7-54c4-a72c-2e92826897df"",
+        ""committed"": true,
+        ""instant"": false,
+        ""fees"": [
+          {
+            ""type"": ""coinbase"",
+            ""amount"": {
+              ""amount"": ""0.00"",
+              ""currency"": ""USD""
+            }
+          },
+          {
+            ""type"": ""bank"",
+            ""amount"": {
+              ""amount"": ""0.15"",
+              ""currency"": ""USD""
+            }
+          }
+        ],
+        ""payout_at"": ""2015-02-18T16:54:00-08:00""
+      },
+      ""user"": {
+        ""id"": ""f01c821e-bb35-555f-a4da-548672963119"",
+        ""resource"": ""user"",
+        ""resource_path"": ""/v2/users/f01c821e-bb35-555f-a4da-548672963119""
+      },
+      ""account"": {
+        ""id"": ""8d5f086c-d7d5-58ee-890e-c09b3d8d4434"",
+        ""resource"": ""account"",
+        ""resource_path"": ""/v2/accounts/8d5f086c-d7d5-58ee-890e-c09b3d8d4434""
+      },
+      ""delivery_attempts"": 0,
+      ""created_at"": ""2015-11-10T19:15:06Z"",
+      ""resource"": ""notification"",
+      ""resource_path"": ""/v2/notifications/6bf0ca21-0b2f-5e8a-b95e-7bd7eaccc338""
+    }";
+
+      public static Notification Notification1Model => new Notification
+         {
+            Id = "6bf0ca21-0b2f-5e8a-b95e-7bd7eaccc338",
+            Type = "wallet:buys:completed",
+            Data = new JObject
+               {
+                  {"id", "67e0eaec-07d7-54c4-a72c-2e92826897df"},
+                  {"status", "completed"},
+                  {
+                     "payment_method", new JObject
+                        {
+                           {"id", "83562370-3e5c-51db-87da-752af5ab9559"},
+                           {"resource", "payment_method"},
+                           {"resource_path", "/v2/payment-methods/83562370-3e5c-51db-87da-752af5ab9559"}
+                        }
+                  },
+                  {
+                     "transaction", new JObject
+                        {
+                           {"id", "41b9494-b3f0-5b98-b9b0-4d82c21c252a"},
+                           {"resource", "transaction"},
+                           {"resource_path", "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/441b9494-b3f0-5b98-b9b0-4d82c21c252a"}
+                        }
+                  },
+                  {
+                     "amount", new JObject
+                        {
+                           {"amount", "1.00000000"},
+                           {"currency", "BTC"}
+                        }
+                  },
+                  {
+                     "total", new JObject
+                        {
+                           {"amount", "1.00000000"},
+                           {"currency", "BTC"}
+                        }
+                  },
+                  {
+                     "subtotal", new JObject
+                        {
+                           {"amount", "1.00000000"},
+                           {"currency", "BTC"}
+                        }
+                  },
+                  {"created_at", "2015-01-31T20:49:02Z"},
+                  {"updated_at", "2015-02-11T16:54:02-08:00"},
+                  {"resource", "buy"},
+                  {"resource_path", "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/buys/67e0eaec-07d7-54c4-a72c-2e92826897df"},
+                  {"committed", true},
+                  {"instant", false},
+                  {
+                     "fees", new JArray
+                        {
+                           new JObject
+                              {
+                                 {"type", "coinbase"},
+                                 {
+                                    "amount", new JObject
+                                       {
+                                          {"amount", "0.00"},
+                                          {"currency", "USD"}
+                                       }
+                                 },
+                              },
+                           new JObject
+                              {
+                                 {"type", "bank"},
+                                 {
+                                    "amount", new JObject
+                                       {
+                                          {"amount", "0.15"},
+                                          {"currency", "USD"}
+                                       }
+                                 },
+                              }
+                        }
+                  },
+                  {"payout_at", "2015-02-18T16:54:00-08:00"},
+               },
+            User = new Entity
+               {
+                  Id = "f01c821e-bb35-555f-a4da-548672963119",
+                  Resource = "user",
+                  ResourcePath = "/v2/users/f01c821e-bb35-555f-a4da-548672963119"
+               },
+            Account = new Entity
+               {
+                  Id = "8d5f086c-d7d5-58ee-890e-c09b3d8d4434",
+                  Resource = "account",
+                  ResourcePath = "/v2/accounts/8d5f086c-d7d5-58ee-890e-c09b3d8d4434"
+            },
+            DeliveryAttempts = 0,
+            CreatedAt = DateTimeOffset.Parse("2015-11-10T19:15:06Z"),
+            Resource = "notification",
+            ResourcePath = "/v2/notifications/6bf0ca21-0b2f-5e8a-b95e-7bd7eaccc338"
+         };
+
+
+      public const string Notification2 = @"{
+    ""id"": ""6bf0ca21-0b2f-5e8a-b95e-7bd7eaccc338"",
+    ""type"": ""wallet:buys:completed"",
+    ""data"": {
+      ""id"": ""67e0eaec-07d7-54c4-a72c-2e92826897df"",
+      ""status"": ""completed"",
+      ""payment_method"": {
+        ""id"": ""83562370-3e5c-51db-87da-752af5ab9559"",
+        ""resource"": ""payment_method"",
+        ""resource_path"": ""/v2/payment-methods/83562370-3e5c-51db-87da-752af5ab9559""
+      },
+      ""transaction"": {
+        ""id"": ""441b9494-b3f0-5b98-b9b0-4d82c21c252a"",
+        ""resource"": ""transaction"",
+        ""resource_path"": ""/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/441b9494-b3f0-5b98-b9b0-4d82c21c252a""
+      },
+      ""amount"": {
+        ""amount"": ""1.00000000"",
+        ""currency"": ""BTC""
+      },
+      ""total"": {
+        ""amount"": ""10.25"",
+        ""currency"": ""USD""
+      },
+      ""subtotal"": {
+        ""amount"": ""10.10"",
+        ""currency"": ""USD""
+      },
+      ""created_at"": ""2015-01-31T20:49:02Z"",
+      ""updated_at"": ""2015-02-11T16:54:02-08:00"",
+      ""resource"": ""buy"",
+      ""resource_path"": ""/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/buys/67e0eaec-07d7-54c4-a72c-2e92826897df"",
+      ""committed"": true,
+      ""instant"": false,
+      ""fee"": {
+        ""amount"": ""0.15"",
+        ""currency"": ""USD""
+      },
+      ""payout_at"": ""2015-02-18T16:54:00-08:00""
+    },
+    ""user"": {
+      ""id"": ""f01c821e-bb35-555f-a4da-548672963119"",
+      ""resource"": ""user"",
+      ""resource_path"": ""/v2/users/f01c821e-bb35-555f-a4da-548672963119""
+    },
+    ""account"": {
+      ""id"": ""8d5f086c-d7d5-58ee-890e-c09b3d8d4434"",
+      ""resource"": ""account"",
+      ""resource_path"": ""/v2/accounts/8d5f086c-d7d5-58ee-890e-c09b3d8d4434""
+    },
+    ""delivery_attempts"": 0,
+    ""created_at"": ""2015-11-10T19:15:06Z"",
+    ""resource"": ""notification"",
+    ""resource_path"": ""/v2/notifications/6bf0ca21-0b2f-5e8a-b95e-7bd7eaccc338""
+  }";
+
+      public static Notification Notification2Model => new Notification
+      {
+         Id = "6bf0ca21-0b2f-5e8a-b95e-7bd7eaccc338",
+         Type = "wallet:buys:completed",
+         Data = new JObject
+               {
+                  {"id", "67e0eaec-07d7-54c4-a72c-2e92826897df"},
+                  {"status", "completed"},
+                  {
+                     "payment_method", new JObject
+                        {
+                           {"id", "83562370-3e5c-51db-87da-752af5ab9559"},
+                           {"resource", "payment_method"},
+                           {"resource_path", "/v2/payment-methods/83562370-3e5c-51db-87da-752af5ab9559"}
+                        }
+                  },
+                  {
+                     "transaction", new JObject
+                        {
+                           {"id", "41b9494-b3f0-5b98-b9b0-4d82c21c252a"},
+                           {"resource", "transaction"},
+                           {"resource_path", "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/441b9494-b3f0-5b98-b9b0-4d82c21c252a"}
+                        }
+                  },
+                  {
+                     "amount", new JObject
+                        {
+                           {"amount", "1.00000000"},
+                           {"currency", "BTC"}
+                        }
+                  },
+                  {
+                     "total", new JObject
+                        {
+                           {"amount", "10.25"},
+                           {"currency", "USD"}
+                        }
+                  },
+                  {
+                     "subtotal", new JObject
+                        {
+                           {"amount", "10.10"},
+                           {"currency", "USD"}
+                        }
+                  },
+                  {"created_at", "2015-01-31T20:49:02Z"},
+                  {"updated_at", "2015-02-11T16:54:02-08:00"},
+                  {"resource", "buy"},
+                  {"resource_path", "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/buys/67e0eaec-07d7-54c4-a72c-2e92826897df"},
+                  {"committed", true},
+                  {"instant", false},
+                  {"fee",new JObject
+                        {
+                           { "amount", "0.15"},
+                           {"currency", "USD" }
+                        }},
+                  {"payout_at", "2015-02-18T16:54:00-08:00"},
+               },
+         User = new Entity
+         {
+            Id = "f01c821e-bb35-555f-a4da-548672963119",
+            Resource = "user",
+            ResourcePath = "/v2/users/f01c821e-bb35-555f-a4da-548672963119"
+         },
+         Account = new Entity
+         {
+            Id = "8d5f086c-d7d5-58ee-890e-c09b3d8d4434",
+            Resource = "account",
+            ResourcePath = "/v2/accounts/8d5f086c-d7d5-58ee-890e-c09b3d8d4434"
+         },
+         DeliveryAttempts = 0,
+         CreatedAt = DateTimeOffset.Parse("2015-11-10T19:15:06Z"),
+         Resource = "notification",
+         ResourcePath = "/v2/notifications/6bf0ca21-0b2f-5e8a-b95e-7bd7eaccc338"
+      };
+
+
    }
-
-
 
 
 }

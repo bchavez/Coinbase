@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Coinbase
 {
-   public static class Authenticator
+   public static class ApiKeyAuthenticator
    {
 
       public static string GenerateSignature(string timestamp, string method, string url, string body, string appSecret)

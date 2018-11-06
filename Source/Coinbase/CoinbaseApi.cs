@@ -36,6 +36,7 @@ namespace Coinbase
       protected internal Url ExchangeRatesEndpoint;
       protected internal Url PricesEndpoint;
       protected internal Url TimeEndpoint;
+      protected internal Url NotificationsEndpoint;
 
       /// <summary>
       /// The main class for making Coinbase API calls.
@@ -66,6 +67,7 @@ namespace Coinbase
          this.ExchangeRatesEndpoint = apiUrl.AppendPathSegment("exchange-rates");
          this.PricesEndpoint = apiUrl.AppendPathSegment("prices");
          this.TimeEndpoint = apiUrl.AppendPathSegment("time");
+         this.NotificationsEndpoint = apiUrl.AppendPathSegment("notifications");
       }
 
       private void ApiKeyAuth(ClientFlurlHttpSettings config)

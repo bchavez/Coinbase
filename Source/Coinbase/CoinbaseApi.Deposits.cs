@@ -23,7 +23,7 @@ namespace Coinbase
       Task<Response<Deposit>> DepositFundsAsync(string accountId, DepositFunds depositFunds, CancellationToken cancellationToken = default);
       /// <summary>
       /// Completes a deposit that is created in commit: false state
-      /// </summary
+      /// </summary>
       Task<Response<Deposit>> CommitDepositAsync(string accountId, string depositId, CancellationToken cancellationToken = default);
    }
 
@@ -34,7 +34,7 @@ namespace Coinbase
       private const string deposits = "deposits";
 
       /// <inheritdoc />
-      Task<PagedResponse<Deposit>> IDepositsEndpoint.ListDepositsAsync(string accountId, CancellationToken cancellationToken = default)
+      Task<PagedResponse<Deposit>> IDepositsEndpoint.ListDepositsAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, deposits)
@@ -43,7 +43,7 @@ namespace Coinbase
       }
 
       /// <inheritdoc />
-      Task<Response<Deposit>> IDepositsEndpoint.GetDepositAsync(string accountId, string depositId, CancellationToken cancellationToken = default)
+      Task<Response<Deposit>> IDepositsEndpoint.GetDepositAsync(string accountId, string depositId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, deposits, depositId)
@@ -52,7 +52,7 @@ namespace Coinbase
       }
 
       /// <inheritdoc />
-      Task<Response<Deposit>> IDepositsEndpoint.DepositFundsAsync(string accountId, DepositFunds depositFunds, CancellationToken cancellationToken = default)
+      Task<Response<Deposit>> IDepositsEndpoint.DepositFundsAsync(string accountId, DepositFunds depositFunds, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, deposits)
@@ -62,7 +62,7 @@ namespace Coinbase
       }
 
       /// <inheritdoc />
-      Task<Response<Deposit>> IDepositsEndpoint.CommitDepositAsync(string accountId, string depositId, CancellationToken cancellationToken = default)
+      Task<Response<Deposit>> IDepositsEndpoint.CommitDepositAsync(string accountId, string depositId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, deposits, depositId, "commit")

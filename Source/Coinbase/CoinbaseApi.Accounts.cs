@@ -47,7 +47,7 @@ namespace Coinbase
       /// <summary>
       /// Lists current user’s accounts to which the authentication method has access to.
       /// </summary>
-      Task<PagedResponse<Account>> IAccountsEndpoint.ListAccountsAsync(CancellationToken cancellationToken = default)
+      Task<PagedResponse<Account>> IAccountsEndpoint.ListAccountsAsync(CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .WithClient(this.client)
@@ -57,7 +57,7 @@ namespace Coinbase
       /// <summary>
       /// Show current user’s account. To access the primary account for a given currency, a currency string (BTC or ETH) can be used instead of the account id in the URL.
       /// </summary>
-      Task<Response<Account>> IAccountsEndpoint.GetAccountAsync(string accountId, CancellationToken cancellationToken = default)
+      Task<Response<Account>> IAccountsEndpoint.GetAccountAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegment(accountId)
@@ -68,7 +68,7 @@ namespace Coinbase
       /// <summary>
       /// Promote an account as primary account.
       /// </summary>
-      Task<Response<Account>> IAccountsEndpoint.SetAccountAsPrimaryAsync(string accountId, CancellationToken cancellationToken = default)
+      Task<Response<Account>> IAccountsEndpoint.SetAccountAsPrimaryAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "primary")
@@ -79,7 +79,7 @@ namespace Coinbase
       /// <summary>
       /// Modifies user’s account.
       /// </summary>
-      Task<Response<Account>> IAccountsEndpoint.UpdateAccountAsync(string accountId, UpdateAccount updateAccount, CancellationToken cancellationToken = default)
+      Task<Response<Account>> IAccountsEndpoint.UpdateAccountAsync(string accountId, UpdateAccount updateAccount, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegment(accountId)
@@ -95,7 +95,7 @@ namespace Coinbase
       /// * Fiat account
       /// * Vault with a pending withdrawal
       /// </summary>
-      Task<HttpResponseMessage> IAccountsEndpoint.DeleteAccountAsync(string accountId, CancellationToken cancellationToken = default)
+      Task<HttpResponseMessage> IAccountsEndpoint.DeleteAccountAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegment(accountId)

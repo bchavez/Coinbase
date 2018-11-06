@@ -22,7 +22,7 @@ namespace Coinbase
       Task<Response<Withdrawal>> WithdrawalFundsAsync(string accountId, WithdrawalFunds withdrawalFunds, CancellationToken cancellationToken = default);
       /// <summary>
       /// Completes a deposit that is created in commit: false state
-      /// </summary
+      /// </summary>
       Task<Response<Withdrawal>> CommitWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken = default);
    }
 
@@ -32,7 +32,7 @@ namespace Coinbase
 
       private const string withdrawals = "withdrawals";
 
-      Task<PagedResponse<Withdrawal>> IWithdrawalsEndpoint.ListWithdrawalsAsync(string accountId, CancellationToken cancellationToken = default)
+      Task<PagedResponse<Withdrawal>> IWithdrawalsEndpoint.ListWithdrawalsAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals)
@@ -40,7 +40,7 @@ namespace Coinbase
             .GetJsonAsync<PagedResponse<Withdrawal>>(cancellationToken);
       }
 
-      Task<Response<Withdrawal>> IWithdrawalsEndpoint.GetWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken = default)
+      Task<Response<Withdrawal>> IWithdrawalsEndpoint.GetWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals, withdrawalId)
@@ -48,7 +48,7 @@ namespace Coinbase
             .GetJsonAsync<Response<Withdrawal>>(cancellationToken);
       }
 
-      Task<Response<Withdrawal>> IWithdrawalsEndpoint.WithdrawalFundsAsync(string accountId, WithdrawalFunds withdrawalFunds, CancellationToken cancellationToken = default)
+      Task<Response<Withdrawal>> IWithdrawalsEndpoint.WithdrawalFundsAsync(string accountId, WithdrawalFunds withdrawalFunds, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals)
@@ -58,7 +58,7 @@ namespace Coinbase
 
       }
 
-      Task<Response<Withdrawal>> IWithdrawalsEndpoint.CommitWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken = default)
+      Task<Response<Withdrawal>> IWithdrawalsEndpoint.CommitWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals, withdrawalId, "commit")

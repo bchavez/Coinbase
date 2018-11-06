@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="CoinbaseApiKeyTests.cs" />
     <Compile Include="Endpoints\AccountTests.cs" />
+    <Compile Include="Endpoints\NotificationTests.cs" />
     <Compile Include="Integration\DataTests.cs" />
     <Compile Include="Endpoints\PaymentMethodTest.cs" />
     <Compile Include="Endpoints\WithdrawlTests.cs" />

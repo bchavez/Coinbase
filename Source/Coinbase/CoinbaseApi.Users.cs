@@ -38,7 +38,7 @@ namespace Coinbase
       /// <summary>
       /// Get any user’s public information with their ID.
       /// </summary>
-      Task<Response<User>> IUsersEndpoint.GetUserAsync(string userId, CancellationToken cancellationToken = default)
+      Task<Response<User>> IUsersEndpoint.GetUserAsync(string userId, CancellationToken cancellationToken)
       {
          if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentNullException(nameof(userId));
 
@@ -50,7 +50,7 @@ namespace Coinbase
       /// <summary>
       /// Get current user’s public information. To get user’s email or private information, use permissions wallet:user:email and wallet:user:read. If current request has a wallet:transactions:send scope, then the response will contain a boolean sends_disabled field that indicates if the user’s send functionality has been disabled.
       /// </summary>
-      Task<Response<User>> IUsersEndpoint.GetCurrentUserAsync(CancellationToken cancellationToken = default)
+      Task<Response<User>> IUsersEndpoint.GetCurrentUserAsync(CancellationToken cancellationToken)
       {
          return this.apiUrl
             .AppendPathSegment("user")
@@ -60,7 +60,7 @@ namespace Coinbase
       /// <summary>
       /// Get current user’s authorization information including granted scopes and send limits when using OAuth2 authentication.
       /// </summary>
-      Task<Response<Auth>> IUsersEndpoint.GetAuthInfoAsync(CancellationToken cancellationToken = default)
+      Task<Response<Auth>> IUsersEndpoint.GetAuthInfoAsync(CancellationToken cancellationToken)
       {
          return this.apiUrl
             .AppendPathSegments("user", "auth")
@@ -70,7 +70,7 @@ namespace Coinbase
       /// <summary>
       /// Modify current user and their preferences.
       /// </summary>
-      Task<Response<User>> IUsersEndpoint.UpdateUserAsync(UserUpdate update, CancellationToken cancellationToken = default)
+      Task<Response<User>> IUsersEndpoint.UpdateUserAsync(UserUpdate update, CancellationToken cancellationToken)
       {
          return this.apiUrl
             .AppendPathSegment("user")

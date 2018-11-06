@@ -12,11 +12,11 @@ namespace Coinbase
       /// <summary>
       /// Lists current user’s payment methods.
       /// </summary>
-      Task<PagedResponse<PaymentMethod>> ListPaymentMethods(CancellationToken cancellationToken = default);
+      Task<PagedResponse<PaymentMethod>> ListPaymentMethodsAsync(CancellationToken cancellationToken = default);
       /// <summary>
       /// Show current user’s payment method.
       /// </summary>
-      Task<Response<PaymentMethod>> GetPaymentMethod(string paymentMethodId, CancellationToken cancellationToken = default);
+      Task<Response<PaymentMethod>> GetPaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken = default);
    }
 
    public partial class CoinbaseApi : IPaymentMethodsEndpoint
@@ -24,14 +24,14 @@ namespace Coinbase
       public IPaymentMethodsEndpoint PaymentMethods => this;
 
 
-      public Task<PagedResponse<PaymentMethod>> ListPaymentMethods(CancellationToken cancellationToken = default)
+      Task<PagedResponse<PaymentMethod>> IPaymentMethodsEndpoint.ListPaymentMethodsAsync(CancellationToken cancellationToken)
       {
          return this.PaymentMethodsEndpoint
             .WithClient(this.client)
             .GetJsonAsync<PagedResponse<PaymentMethod>>(cancellationToken);
       }
 
-      public Task<Response<PaymentMethod>> GetPaymentMethod(string paymentMethodId, CancellationToken cancellationToken = default)
+      Task<Response<PaymentMethod>> IPaymentMethodsEndpoint.GetPaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
       {
          return this.PaymentMethodsEndpoint
             .AppendPathSegment(paymentMethodId)

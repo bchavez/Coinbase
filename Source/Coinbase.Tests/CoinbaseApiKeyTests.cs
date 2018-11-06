@@ -30,10 +30,5 @@ namespace Coinbase.Tests
       }
 
 
-      [Test]
-      public void Test()
-      {
-         
-      }
    }
 }

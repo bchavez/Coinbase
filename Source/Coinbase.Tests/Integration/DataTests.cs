@@ -36,6 +36,7 @@ namespace Coinbase.Tests.Integration
       }
    }
 
+   [Explicit]
    public class UserTests : IntegrationTests
    {
       [Test]

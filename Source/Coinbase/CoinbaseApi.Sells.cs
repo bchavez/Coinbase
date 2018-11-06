@@ -43,7 +43,7 @@ namespace Coinbase
       /// <summary>
       /// Lists sells for an account.
       /// </summary>
-      Task<PagedResponse<Sell>> ISellsEndpoint.ListSellsAsync(string accountId, CancellationToken cancellationToken = default)
+      Task<PagedResponse<Sell>> ISellsEndpoint.ListSellsAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "sells")
@@ -54,7 +54,7 @@ namespace Coinbase
       /// <summary>
       /// Get an individual sell.
       /// </summary>
-      Task<Response<Sell>> ISellsEndpoint.GetSellAsync(string accountId, string sellId, CancellationToken cancellationToken = default)
+      Task<Response<Sell>> ISellsEndpoint.GetSellAsync(string accountId, string sellId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "sells", sellId)
@@ -70,7 +70,7 @@ namespace Coinbase
       /// Given the price of digital currency depends on the time of the call and amount of the sell, it’s recommended to use the commit: false parameter to create an uncommitted sell to get a quote and then to commit that with a separate request.
       ///If you need to query the sell price without locking in the sell, you can use quote: true option. This returns an unsaved sell and unlike commit: false, this sell can’t be completed. This option is useful when you need to show the detailed sell price quote for the user when they are filling a form or similar situation.
       /// </summary>
-      Task<Response<Sell>> ISellsEndpoint.PlaceSellOrderAsync(string accountId, PlaceSell placeSell, CancellationToken cancellationToken = default)
+      Task<Response<Sell>> ISellsEndpoint.PlaceSellOrderAsync(string accountId, PlaceSell placeSell, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "sells")
@@ -84,7 +84,7 @@ namespace Coinbase
       /// If the exchange rate has changed since the sell was created, this call will fail with the error “The exchange rate updated while you were waiting.The new total is shown below”.
       /// The sell’s total will also be updated.You can repeat the /commit call to accept the new values and commit the sell at the new rates.
       /// </summary>
-      Task<Response<Sell>> ISellsEndpoint.CommitSellAsync(string accountId, string sellId, CancellationToken cancellationToken = default)
+      Task<Response<Sell>> ISellsEndpoint.CommitSellAsync(string accountId, string sellId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "sells", sellId, "commit")

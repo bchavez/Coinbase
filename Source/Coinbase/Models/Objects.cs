@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Coinbase.Models
 {
+
    public class Entity : Json
    {
       [JsonProperty("id")]
@@ -117,7 +118,7 @@ namespace Coinbase.Models
       public bool InstantExchange { get; set; }
 
       [JsonProperty("details")]
-      public IDictionary<string,JToken> Details { get; set; }
+      public IDictionary<string, JToken> Details { get; set; }
 
       [JsonProperty("application")]
       public IDictionary<string, JToken> Application { get; set; }
@@ -129,7 +130,7 @@ namespace Coinbase.Models
       public Entity Buy { get; set; }
    }
 
-   
+
 
    public partial class Buy : Entity
    {
@@ -140,7 +141,7 @@ namespace Coinbase.Models
       public Entity PaymentMethod { get; set; }
 
       [JsonProperty("transaction")]
-      public  Entity Transaction { get; set; }
+      public Entity Transaction { get; set; }
 
       [JsonProperty("amount")]
       public Money Amount { get; set; }
@@ -598,4 +599,36 @@ namespace Coinbase.Models
       [JsonProperty("commit")]
       public bool Commit { get; set; }
    }
+
+   public partial class Notification : Entity
+   {
+      [JsonProperty("type")]
+      public string Type { get; set; }
+
+      [JsonProperty("data")]
+      public JObject Data { get; set; }
+
+      [JsonProperty("user")]
+      public Entity User { get; set; }
+
+      [JsonProperty("account")]
+      public Entity Account { get; set; }
+
+      [JsonProperty("delivery_attempts")]
+      public int DeliveryAttempts { get; set; }
+
+      [JsonProperty("delivery_response")]
+      public JObject DeliveryResponse { get; set; }
+
+      [JsonProperty("created_at")]
+      public DateTimeOffset CreatedAt { get; set; }
+
+      [JsonProperty("updated_at")]
+      public DateTimeOffset UpdatedAt { get; set; }
+
+      [JsonProperty("additional_data")]
+      public JObject AdditionalData { get; set; }
+   }
+
+
 }
