@@ -60,7 +60,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_currencies()
       {
-         var r = await api.GetCurrenciesAsync();
+         var r = await api.Data.GetCurrenciesAsync();
          var usd = r.Data.Where(c => c.Id == "USD").First();
          usd.Name.Should().StartWith("United States");
       }
@@ -68,7 +68,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_exchange_rates()
       {
-         var r = await api.GetExchangeRatesAsync("ETH");
+         var r = await api.Data.GetExchangeRatesAsync("ETH");
          r.Data.Currency.Should().Be("ETH");
          r.Data.Rates["USD"].Should().BeGreaterThan(5);
       }
@@ -76,7 +76,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_buyprice()
       {
-         var r = await api.GetBuyPriceAsync("ETH-USD");
+         var r = await api.Data.GetBuyPriceAsync("ETH-USD");
          r.Dump();
          r.Data.Amount.Should().BeGreaterThan(5);
          r.Data.Currency.Should().Be("USD");
@@ -85,7 +85,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_sellprice()
       {
-         var r = await api.GetSellPriceAsync("ETH-USD");
+         var r = await api.Data.GetSellPriceAsync("ETH-USD");
          r.Dump();
          r.Data.Amount.Should().BeGreaterThan(5);
          r.Data.Currency.Should().Be("USD");
@@ -94,7 +94,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_spotprice()
       {
-         var r = await api.GetSpotPriceAsync("ETH-USD");
+         var r = await api.Data.GetSpotPriceAsync("ETH-USD");
          r.Dump();
          r.Data.Amount.Should().BeGreaterThan(5);
          r.Data.Currency.Should().Be("USD");
@@ -104,7 +104,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_time()
       {
-         var r = await api.GetCurrentTimeAsync();
+         var r = await api.Data.GetCurrentTimeAsync();
          r.Dump();
          r.Data.Iso.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromHours(1));
       }

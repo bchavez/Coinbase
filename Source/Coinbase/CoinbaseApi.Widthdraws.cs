@@ -26,6 +26,7 @@ namespace Coinbase
       Task<Response<Withdrawal>> CommitWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken = default);
    }
 
+
    public partial class CoinbaseApi : IWithdrawalsEndpoint
    {
       public IWithdrawalsEndpoint Withdrawals => this;

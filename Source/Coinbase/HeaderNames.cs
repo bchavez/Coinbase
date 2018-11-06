@@ -7,5 +7,6 @@ namespace Coinbase
       public const string AccessTimestamp = "CB-ACCESS-TIMESTAMP";
       public const string Version = "CB-VERSION";
       public const string NotificationSignature = "CB-SIGNATURE";
+      public const string TwoFactorToken = "CB-2FA-Token";
    }
 }
