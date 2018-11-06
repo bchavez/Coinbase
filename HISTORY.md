@@ -1,3 +1,12 @@
+## v5.0.0-beta-1
+**BREAKING CHANGES**
+* Complete re-write of Conbase's API according to current documentation.
+* Supported Platforms: .NET Standard 2.0 or .NET Framework 4.5 or later.
+* Replaced RestSharp dependency with Flurl.Http.
+* OAuth and API Key + Secret authentication mechanisms both supported.
+* Please see GitHub readme for more information: https://github.com/bchavez/Coinbase
+* Newtonsoft reference updated.
+
 ## v3.0.1
 * .NET Core compatibility.
 * Migrated from .NET Framework 4.0 to 4.5.2.
