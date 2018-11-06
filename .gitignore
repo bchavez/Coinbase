@@ -209,3 +209,4 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 /Source/Builder/NuGet/RethinkDb.Driver.nuspec
+/Source/Coinbase.Tests/.secrets.txt
