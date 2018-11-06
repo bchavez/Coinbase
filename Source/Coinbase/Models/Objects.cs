@@ -158,12 +158,6 @@ namespace Coinbase.Models
       [JsonProperty("updated_at")]
       public DateTimeOffset UpdatedAt { get; set; }
 
-      [JsonProperty("resource")]
-      public string Resource { get; set; }
-
-      [JsonProperty("resource_path")]
-      public string ResourcePath { get; set; }
-
       [JsonProperty("committed")]
       public bool Committed { get; set; }
 

@@ -87,6 +87,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerTest.cs" />
     <Compile Include="Endpoints\UserTests.cs" />
+    <Compile Include="WebhookTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coinbase\Coinbase.csproj">
