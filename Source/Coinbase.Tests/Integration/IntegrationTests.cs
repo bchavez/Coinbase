@@ -43,6 +43,13 @@ namespace Coinbase.Tests.Integration
       public async Task check_account_list()
       {
          var r = await client.Accounts.ListAccountsAsync();
+         r.Dump();
+      }
+
+      [Test]
+      public async Task check_account_transactions()
+      {
+         var r = await client.Transactions.ListTransactionsAsync("fff");
 
          r.Dump();
       }
