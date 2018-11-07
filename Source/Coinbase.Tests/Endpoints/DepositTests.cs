@@ -15,7 +15,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{Deposit1}");
 
-         var r = await api.Deposits.ListDepositsAsync("fff");
+         var r = await client.Deposits.ListDepositsAsync("fff");
 
          var truth = new PagedResponse<Deposit>
             {
@@ -37,7 +37,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Deposit1);
 
-         var r = await api.Deposits.GetDepositAsync("fff", "uuu");
+         var r = await client.Deposits.GetDepositAsync("fff", "uuu");
 
          var truth = new Response<Deposit>
          {
@@ -63,7 +63,7 @@ namespace Coinbase.Tests.Endpoints
                Currency = "USD",
                PaymentMethod = "B28EB04F-BD70-4308-90A1-96065283A001"
          };
-         var r = await api.Deposits.DepositFundsAsync("fff", create );
+         var r = await client.Deposits.DepositFundsAsync("fff", create );
 
          var truth = new Response<Deposit>
          {
@@ -85,7 +85,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Deposit1);
 
-         var r = await api.Deposits.CommitDepositAsync("fff", "uuu");
+         var r = await client.Deposits.CommitDepositAsync("fff", "uuu");
 
          var truth = new Response<Deposit>
             {

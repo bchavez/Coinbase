@@ -44,14 +44,14 @@ namespace Coinbase.Tests
 
    public class OAuthServerTest : ServerTest
    {
-      protected CoinbaseApi api;
+      protected CoinbaseApi client;
 
       public string oauthKey = "369ECD3F-2D00-4D7A-ACDB-92C2DC35A878";
 
       [SetUp]
       public void BeforeEachTest()
       {
-         api = new CoinbaseApi(new OAuthConfig{OAuthToken = oauthKey});
+         client = new CoinbaseApi(new OAuthConfig{OAuthToken = oauthKey});
       }
 
       [TearDown]

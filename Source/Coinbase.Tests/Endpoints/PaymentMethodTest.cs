@@ -15,7 +15,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{PayMethod1},{PayMethod2}");
 
-         var r = await api.PaymentMethods.ListPaymentMethodsAsync();
+         var r = await client.PaymentMethods.ListPaymentMethodsAsync();
 
          var truth = new PagedResponse<PaymentMethod>
             {
@@ -38,7 +38,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(PayMethod2);
 
-         var r = await api.PaymentMethods.GetPaymentMethodAsync("fff");
+         var r = await client.PaymentMethods.GetPaymentMethodAsync("fff");
          
          var truth = new Response<PaymentMethod>
          {

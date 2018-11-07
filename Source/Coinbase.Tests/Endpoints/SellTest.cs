@@ -15,7 +15,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{Sell1}");
 
-         var r = await api.Sells.ListSellsAsync("fff");
+         var r = await client.Sells.ListSellsAsync("fff");
 
          var truth = new PagedResponse<Sell>
             {
@@ -37,7 +37,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Sell1);
 
-         var r = await api.Sells.GetSellAsync("fff", "uuu");
+         var r = await client.Sells.GetSellAsync("fff", "uuu");
 
          var truth = new Response<Sell>
          {
@@ -63,7 +63,7 @@ namespace Coinbase.Tests.Endpoints
                Currency = "BTC",
                PaymentMethod = "B28EB04F-BD70-4308-90A1-96065283A001"
          };
-         var r = await api.Sells.PlaceSellOrderAsync("fff", create );
+         var r = await client.Sells.PlaceSellOrderAsync("fff", create );
 
          var truth = new Response<Sell>
          {
@@ -85,7 +85,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Sell2);
 
-         var r = await api.Sells.CommitSellAsync("fff", "uuu");
+         var r = await client.Sells.CommitSellAsync("fff", "uuu");
 
          var truth = new Response<Sell>
             {

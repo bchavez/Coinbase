@@ -15,7 +15,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{Notification1}");
 
-         var r = await api.Notifications.ListNotificationsAsync();
+         var r = await client.Notifications.ListNotificationsAsync();
 
          var truth = new PagedResponse<Notification>
             {
@@ -37,7 +37,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Notification2);
 
-         var r = await api.Notifications.GetNotificationAsync("fff");
+         var r = await client.Notifications.GetNotificationAsync("fff");
          
          var truth = new Response<Notification>
          {

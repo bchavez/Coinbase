@@ -15,7 +15,7 @@ namespace Coinbase.Tests.Endpoints
 
          const string userId = "9da7a204-544e-5fd1-9a12-61176c5d4cd8";
 
-         var user = await api.Users.GetUserAsync(userId);
+         var user = await client.Users.GetUserAsync(userId);
 
          var truth = new Response<User>
             {
@@ -33,7 +33,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Examples.User);
 
-         var user = await api.Users.GetCurrentUserAsync();
+         var user = await client.Users.GetCurrentUserAsync();
 
          var truth = new Response<User>
             {
@@ -51,7 +51,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Examples.Auth);
 
-         var user = await api.Users.GetAuthInfoAsync();
+         var user = await client.Users.GetAuthInfoAsync();
 
          var truth = new Response<Auth>
             {
@@ -69,7 +69,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Examples.UserWithNameChange("bbb ccc"));
 
-         var user = await api.Users.UpdateUserAsync(new UserUpdate{ Name = "bbb ccc"});
+         var user = await client.Users.UpdateUserAsync(new UserUpdate{ Name = "bbb ccc"});
 
          var truth = new Response<User>
             {

@@ -6,12 +6,12 @@ namespace Coinbase.Tests
    public class CoinbaseApiKeyTests : ServerTest
    {
       public string apiKey = "DBBD0428-B818-4F53-A5F4-F553DC4C374C";
-      private CoinbaseApi api;
+      private CoinbaseApi client;
 
       [SetUp]
       public void BeforeEachTest()
       {
-         api = new CoinbaseApi(new ApiKeyConfig{ ApiKey = "", ApiSecret = ""});
+         client = new CoinbaseApi(new ApiKeyConfig{ ApiKey = "", ApiSecret = ""});
       }
 
       [TearDown]

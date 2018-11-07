@@ -16,7 +16,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{Address1},{Address2}");
 
-         var accounts = await api.Addresses.ListAddressesAsync("ffff");
+         var accounts = await client.Addresses.ListAddressesAsync("ffff");
 
          var truth = new PagedResponse<AddressEntity>
          {
@@ -35,7 +35,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Address1);
 
-         var account = await api.Addresses.GetAddressAsync("ffff", Address1Model.Id);
+         var account = await client.Addresses.GetAddressAsync("ffff", Address1Model.Id);
 
          var truth = new Response<AddressEntity>
          {
@@ -55,7 +55,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{Transaction1}");
 
-         var txs = await api.Addresses.ListAddressTransactionsAsync("fff", "uuu");
+         var txs = await client.Addresses.ListAddressTransactionsAsync("fff", "uuu");
 
          var truth = new PagedResponse<Transaction>
          {
@@ -75,7 +75,7 @@ namespace Coinbase.Tests.Endpoints
          SetupServerSingleResponse(Address1WithName("ddd"));
 
          var create = new CreateAddress { Name = "ddd"};
-         var add = await api.Addresses.CreateAddressAsync("fff", create);
+         var add = await client.Addresses.CreateAddressAsync("fff", create);
 
          var truth = new Response<AddressEntity>
             {

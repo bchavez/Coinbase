@@ -15,7 +15,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{Withdrawal1}");
 
-         var r = await api.Withdrawals.ListWithdrawalsAsync("fff");
+         var r = await client.Withdrawals.ListWithdrawalsAsync("fff");
 
          var truth = new PagedResponse<Withdrawal>
             {
@@ -37,7 +37,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Withdrawal1);
 
-         var r = await api.Withdrawals.GetWithdrawalAsync("fff", "uuu");
+         var r = await client.Withdrawals.GetWithdrawalAsync("fff", "uuu");
 
          var truth = new Response<Withdrawal>
          {
@@ -63,7 +63,7 @@ namespace Coinbase.Tests.Endpoints
                Currency = "USD",
                PaymentMethod = "B28EB04F-BD70-4308-90A1-96065283A001"
          };
-         var r = await api.Withdrawals.WithdrawalFundsAsync("fff", create );
+         var r = await client.Withdrawals.WithdrawalFundsAsync("fff", create );
 
          var truth = new Response<Withdrawal>
          {
@@ -85,7 +85,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Withdrawal1);
 
-         var r = await api.Withdrawals.CommitWithdrawalAsync("fff", "uuu");
+         var r = await client.Withdrawals.CommitWithdrawalAsync("fff", "uuu");
 
          var truth = new Response<Withdrawal>
             {
