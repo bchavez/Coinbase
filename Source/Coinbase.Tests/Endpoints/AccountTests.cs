@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
 using NUnit.Framework;
-using Flurl.Http;
 using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
@@ -20,8 +19,8 @@ namespace Coinbase.Tests.Endpoints
 
          var truth = new PagedResponse<Account>
             {
-               Pagination = Examples.PaginationModel,
-               Data = new[] {Examples.Account1Model, Examples.Account2Model}
+               Pagination = PaginationModel,
+               Data = new[] {Account1Model, Account2Model}
             };
 
          truth.Should().BeEquivalentTo(accounts);

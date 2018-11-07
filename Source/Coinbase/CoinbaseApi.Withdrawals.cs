@@ -37,7 +37,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals)
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<PagedResponse<Withdrawal>>(cancellationToken);
       }
 
@@ -45,7 +45,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals, withdrawalId)
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<Response<Withdrawal>>(cancellationToken);
       }
 
@@ -53,7 +53,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals)
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(withdrawalFunds, cancellationToken)
             .ReceiveJson<Response<Withdrawal>>();
 
@@ -63,7 +63,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals, withdrawalId, "commit")
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(null, cancellationToken)
             .ReceiveJson<Response<Withdrawal>>();
       }

@@ -44,7 +44,7 @@ namespace Coinbase
 
          return this.config.ApiUrl
             .AppendPathSegments("users",userId)
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<Response<User>>(cancellationToken);
       }
       /// <summary>
@@ -54,7 +54,7 @@ namespace Coinbase
       {
          return this.config.ApiUrl
             .AppendPathSegment("user")
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<Response<User>>(cancellationToken);
       }
       /// <summary>
@@ -64,7 +64,7 @@ namespace Coinbase
       {
          return this.config.ApiUrl
             .AppendPathSegments("user", "auth")
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<Response<Auth>>(cancellationToken);
       }
       /// <summary>
@@ -74,7 +74,7 @@ namespace Coinbase
       {
          return this.config.ApiUrl
             .AppendPathSegment("user")
-            .WithClient(this.client)
+            .WithClient(this)
             .PutJsonAsync(update, cancellationToken)
             .ReceiveJson<Response<User>>();
       }

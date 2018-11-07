@@ -9,7 +9,7 @@ using Flurl.Http.Configuration;
 
 namespace Coinbase
 {
-   public partial class CoinbaseApi : IDisposable
+   public partial class CoinbaseApi : FlurlClient, ICoinbaseClient//IDisposable
    {
       public const string ApiVersionDate = "2017-08-07";
 
@@ -39,7 +39,7 @@ namespace Coinbase
          this.config = config ?? new Config();
          this.config.EnsureValid();
 
-         this.client = this.GetNewClient();
+         this.ConfigureClient();
 
          this.AccountsEndpoint = this.config.ApiUrl.AppendPathSegment("accounts");
          this.PaymentMethodsEndpoint = this.config.ApiUrl.AppendPathSegment("payment-methods");
@@ -50,7 +50,7 @@ namespace Coinbase
          this.NotificationsEndpoint = this.config.ApiUrl.AppendPathSegment("notifications");
       }
 
-      private void ApiKeyAuth(ClientFlurlHttpSettings client, ApiKeyConfig config)
+      private void ApiKeyAuth(ClientFlurlHttpSettings client, ApiKeyConfig keyConfig)
       {
          async Task SetHeaders(HttpCall http)
          {
@@ -59,7 +59,7 @@ namespace Coinbase
             var url = http.Request.RequestUri.PathAndQuery;
 
             string timestamp;
-            if (config.UseTimeApi)
+            if (keyConfig.UseTimeApi)
             {
                var timeResult = await this.Data.GetCurrentTimeAsync().ConfigureAwait(false);
                timestamp = timeResult.Data.Epoch.ToString();
@@ -69,10 +69,10 @@ namespace Coinbase
                timestamp = ApiKeyAuthenticator.GetCurrentUnixTimestampSeconds().ToString(CultureInfo.CurrentCulture);
             }
 
-            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, config.ApiSecret).ToLower();
+            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, keyConfig.ApiSecret).ToLower();
 
             http.FlurlRequest
-               .WithHeader(HeaderNames.AccessKey, config.ApiKey)
+               .WithHeader(HeaderNames.AccessKey, keyConfig.ApiKey)
                .WithHeader(HeaderNames.AccessSign, signature)
                .WithHeader(HeaderNames.AccessTimestamp, timestamp);
          }
@@ -83,46 +83,35 @@ namespace Coinbase
       internal static readonly string UserAgent =
          $"{AssemblyVersionInformation.AssemblyProduct}/{AssemblyVersionInformation.AssemblyVersion} ({AssemblyVersionInformation.AssemblyTitle}; {AssemblyVersionInformation.AssemblyDescription})";
 
-      private IFlurlClient client;
 
-      protected internal virtual IFlurlClient CreateClient()
+      protected internal virtual void ConfigureClient()
       {
-         return new FlurlClient()
-            .WithHeader(HeaderNames.Version, ApiVersionDate)
+         this.WithHeader(HeaderNames.Version, ApiVersionDate)
             .WithHeader("User-Agent", UserAgent);
-      }
 
-      /// <summary>
-      /// Get the underlying configured client to make raw HTTP calls.
-      /// </summary>
-      public IFlurlClient GetCurrentClient()
-      {
-         return this.client;
-      }
-
-      /// <summary>
-      /// Get a new configured client to make raw HTTP calls.
-      /// </summary>
-      public IFlurlClient GetNewClient()
-      {
-         var c = this.CreateClient();
-
-         if( this.config is OAuthConfig oauth )
+         if (this.config is OAuthConfig oauth)
          {
-            return c.WithOAuthBearerToken(oauth.OAuthToken);
+            this.WithOAuthBearerToken(oauth.OAuthToken);
          }
-         if( this.config is ApiKeyConfig key )
+         if (this.config is ApiKeyConfig key)
          {
-            return c.Configure(settings => ApiKeyAuth(settings, key));
+            this.Configure(settings => ApiKeyAuth(settings, key));
          }
+      }  
+   }
 
-         return c;
-      }
-      
-
-      public void Dispose()
-      {
-         client?.Dispose();
-      }
+   public interface ICoinbaseClient : IFlurlClient
+   {
+      IAccountsEndpoint Accounts { get; }
+      IAddressesEndpoint Addresses { get; }
+      IBuysEndpoint Buys { get; }
+      IDataEndpoint Data { get; }
+      IDepositsEndpoint Deposits { get; }
+      INotificationsEndpoint Notifications { get; }
+      IPaymentMethodsEndpoint PaymentMethods { get; }
+      ISellsEndpoint Sells { get; }
+      ITransactionsEndpoint Transactions { get; }
+      IUsersEndpoint Users { get; }
+      IWithdrawalsEndpoint Withdrawals { get; }
    }
 }

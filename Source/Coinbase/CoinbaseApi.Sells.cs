@@ -47,7 +47,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "sells")
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<PagedResponse<Sell>>(cancellationToken);
       }
 
@@ -58,7 +58,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "sells", sellId)
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<Response<Sell>>(cancellationToken);
       }
 
@@ -74,7 +74,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "sells")
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(placeSell, cancellationToken)
             .ReceiveJson<Response<Sell>>();
       }
@@ -88,7 +88,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "sells", sellId, "commit")
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(null, cancellationToken)
             .ReceiveJson<Response<Sell>>();
       }

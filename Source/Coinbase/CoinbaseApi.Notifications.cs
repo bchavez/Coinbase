@@ -27,7 +27,7 @@ namespace Coinbase
       Task<PagedResponse<Notification>> INotificationsEndpoint.ListNotificationsAsync(CancellationToken cancellationToken)
       {
          return this.NotificationsEndpoint
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<PagedResponse<Notification>>(cancellationToken);
       }
 
@@ -35,7 +35,7 @@ namespace Coinbase
       {
          return this.NotificationsEndpoint
             .AppendPathSegment(notificationId)
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<Response<Notification>>(cancellationToken);
       }
 

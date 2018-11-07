@@ -1,6 +1,7 @@
 ﻿using System;
 using Coinbase;
 using Flurl.Http;
+using static Coinbase.HeaderNames;
 
 namespace Examples
 {
@@ -9,12 +10,13 @@ namespace Examples
       static void Main(string[] args)
       {
          Console.WriteLine("Hello World!");
-         var api = new CoinbaseApi();
+         var client = new CoinbaseApi();
 
-         var c = api.GetCurrentClient();
-         c.WithHeader(HeaderNames.TwoFactorToken, "ffff");
+         client.WithHeader(TwoFactorToken, "ffff");
 
-         api.Accounts.GetAccountAsync("fff");
+         client.Accounts.GetAccountAsync("fff");
+
+         client.Users.GetAuthInfoAsync();
       }
    }
 }

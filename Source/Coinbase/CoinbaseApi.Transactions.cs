@@ -67,7 +67,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions")
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
       }
 
@@ -78,7 +78,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions", transactionId)
-            .WithClient(this.client)
+            .WithClient(this)
             .GetJsonAsync<Response<Transaction>>(cancellationToken);
       }
 
@@ -92,7 +92,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions")
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(createTransaction, cancellationToken)
             .ReceiveJson<Response<Transaction>>();
 
@@ -107,7 +107,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions")
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(createTransfer, cancellationToken)
             .ReceiveJson<Response<Transaction>>();
       }
@@ -119,7 +119,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions")
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(requestMoney, cancellationToken)
             .ReceiveJson<Response<Transaction>>();
       }
@@ -131,7 +131,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions", transactionId, "complete")
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(null, cancellationToken);
       }
 
@@ -143,7 +143,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions", transactionId, "resend")
-            .WithClient(this.client)
+            .WithClient(this)
             .PostJsonAsync(null, cancellationToken);
       }
 
@@ -154,7 +154,7 @@ namespace Coinbase
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions", transactionId)
-            .WithClient(this.client)
+            .WithClient(this)
             .DeleteAsync(cancellationToken);
       }
 
