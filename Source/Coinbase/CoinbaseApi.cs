@@ -102,7 +102,8 @@ namespace Coinbase
       protected internal virtual void ConfigureClient()
       {
          this.WithHeader(HeaderNames.Version, ApiVersionDate)
-            .WithHeader("User-Agent", UserAgent);
+            .WithHeader("User-Agent", UserAgent)
+            .AllowAnyHttpStatus(); //Issue 33
 
          if (this.config is OAuthConfig oauth)
          {

@@ -46,5 +46,12 @@ namespace Coinbase.Tests.Integration
 
          r.Dump();
       }
+
+      [Test]
+      public async Task check_invalid_account()
+      {
+         var r = await client.Accounts.GetAccountAsync("fff");
+         r.Dump();
+      }
    }
 }

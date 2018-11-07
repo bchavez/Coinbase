@@ -1,3 +1,7 @@
+## v5.0.0-beta-3
+* Fixes issue 33. AllowAnyHttpStatusCode() to allow parsing of error body instead of throwing.
+* Corrected `currency` model in `accounts` to parse object instead of string.
+
 ## v5.0.0-beta-2
 * Promotes `CoinbaseApi` as a full client. Allows mutation of request before request is sent.
 
