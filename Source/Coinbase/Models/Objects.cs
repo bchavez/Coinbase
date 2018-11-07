@@ -101,6 +101,17 @@ namespace Coinbase.Models
       public string Network { get; set; }
    }
 
+    public partial class To : Json
+    {
+        [JsonProperty("address")]
+        public string Address { get; set; }
+
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
+
+        [JsonProperty("resource")]
+        public string Resource { get; set; }
+    }
 
    public partial class Transaction : Entity
    {
@@ -129,7 +140,7 @@ namespace Coinbase.Models
       public Network Network { get; set; }
 
       [JsonProperty("to")]
-      public Entity To { get; set; }
+      public To To { get; set; }
 
       [JsonProperty("from")]
       public Entity From { get; set; }
