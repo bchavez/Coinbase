@@ -38,5 +38,13 @@ namespace Coinbase.Tests.Integration
          var r = await client.Users.GetAuthInfoAsync();
          r.Dump();
       }
+
+      [Test]
+      public async Task check_account_list()
+      {
+         var r = await client.Accounts.ListAccountsAsync();
+
+         r.Dump();
+      }
    }
 }
