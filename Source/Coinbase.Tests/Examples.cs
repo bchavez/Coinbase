@@ -78,7 +78,7 @@ namespace Coinbase.Tests
       ""name"": ""My Vault"",
       ""primary"": false,
       ""type"": ""vault"",
-      ""currency"": ""BTC"",
+      ""currency"": {""code"":""BTC""},
       ""balance"": {
         ""amount"": ""4.00000000"",
         ""currency"": ""BTC""
@@ -95,7 +95,7 @@ namespace Coinbase.Tests
       ""name"": ""My Wallet"",
       ""primary"": true,
       ""type"": ""wallet"",
-      ""currency"": ""BTC"",
+      ""currency"": {""code"":""BTC""},
       ""balance"": {
         ""amount"": ""39.59000000"",
         ""currency"": ""BTC""
@@ -111,7 +111,7 @@ namespace Coinbase.Tests
     ""name"": ""New hot wallet"",
     ""primary"": true,
     ""type"": ""wallet"",
-    ""currency"": ""BTC"",
+    ""currency"": {""code"":""BTC""},
     ""balance"": {
       ""amount"": ""0.00000000"",
       ""currency"": ""BTC""
@@ -131,7 +131,10 @@ namespace Coinbase.Tests
          Name = "My Vault",
          Primary =  false,
          Type = "vault",
-         Currency = "BTC",
+         Currency = new AccountCurrency
+            {
+               Code = "BTC"
+            },
          Balance = new Money { Amount = 4, Currency = "BTC"},
          CreatedAt = DateTimeOffset.Parse("2015-01-31T20:49:02Z"),
          UpdatedAt = DateTimeOffset.Parse("2015-01-31T20:49:02Z"),
@@ -146,7 +149,10 @@ namespace Coinbase.Tests
             Name = "My Wallet",
             Primary = true,
             Type = "wallet",
-            Currency = "BTC",
+            Currency = new AccountCurrency
+               {
+                  Code = "BTC"
+               },
             Balance = new Money { Amount = 39.59m, Currency = "BTC" },
             CreatedAt = DateTimeOffset.Parse("2015-01-31T20:49:02Z"),
             UpdatedAt = DateTimeOffset.Parse("2015-01-31T20:49:02Z"),
@@ -160,7 +166,10 @@ namespace Coinbase.Tests
             Name = "New hot wallet",
             Primary = true,
             Type = "wallet",
-            Currency = "BTC",
+            Currency = new AccountCurrency
+               {
+                  Code = "BTC"
+               },
             Balance = new Money { Amount = 0, Currency = "BTC" },
             CreatedAt = DateTimeOffset.Parse("2015-03-31T15:21:58-07:00"),
             UpdatedAt = DateTimeOffset.Parse("2015-03-31T15:21:58-07:00"),
