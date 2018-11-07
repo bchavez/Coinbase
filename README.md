@@ -42,14 +42,14 @@ This library can use both **OAuth** and **API Key + Secret** authentication make
 For the most part, to get the started, simply new up a new `CoinbaseApi` object as shown below:
 ```csharp
 //using OAuth Token
-var api = new CoinbaseApi(new Config{ OAuthToken = "..." });
+var client = new CoinbaseApi(new OAuthConfig{ OAuthToken = "..." });
 
 //using API Key + Secret
-var api = new CoinbaseApi(new Config{ ApiKey = "...", ApiSecret = "..."});
+var client = new CoinbaseApi(new ApiKeyConfig{ ApiKey = "...", ApiSecret = "..."});
 
 //No authentication
 //  - Useful only for Data Endpoints that don't require authentication.
-var api = new CoinbaseApi();
+var client = new CoinbaseApi();
 ```
 Once you have a `CoinbaseApi` object, simply call one of any of the [**Wallet Endpoints**](https://developers.coinbase.com/api/v2#wallet-endpoints) or [**Data Endpoints**](https://developers.coinbase.com/api/v2#data-endpoints). Extensive examples can be [found here](https://github.com/bchavez/Coinbase/tree/master/Source/Coinbase.Tests/Endpoints).
 
@@ -58,10 +58,50 @@ In one such example, to get the [spot price](https://developers.coinbase.com/api
 [Test]
 public async Task can_get_spotprice_of_ETHUSD()
 {
-   var spot = await api.GetSpotPriceAsync("ETH-USD");
+   var spot = await client.Data.GetSpotPriceAsync("ETH-USD");
    spot.Data.Amount.Should().BeGreaterThan(5);
    spot.Data.Currency.Should().Be("USD");
    spot.Data.Base.Should().Be("ETH");
+}
+```
+
+#### Full API Support
+##### Data Endpoints
+* [`client.Data`](https://developers.coinbase.com/api/v2#data-endpoints) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Integration/DataTests.cs)
+* [`client.Notifications`](https://developers.coinbase.com/api/v2#notifications) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/NotificationTests.cs)
+
+##### Wallet Endpoints
+* [`client.Accounts`](https://developers.coinbase.com/api/v2#accounts) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/AccountTests.cs)
+* [`client.Addresses`](https://developers.coinbase.com/api/v2#addresses) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/AddressTests.cs)
+* [`client.Buys`](https://developers.coinbase.com/api/v2#buys) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/BuyTest.cs)
+* [`client.Deposits`](https://developers.coinbase.com/api/v2#deposits) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/DepositTests.cs)
+* [`client.PaymentMethods`](https://developers.coinbase.com/api/v2#payment-methods) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/PaymentMethodTest.cs)
+* [`client.Sells`](https://developers.coinbase.com/api/v2#sells) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/SellTest.cs)
+* [`client.Transactions`](https://developers.coinbase.com/api/v2#transactions) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/TransactionTests.cs)
+* [`client.Users`](https://developers.coinbase.com/api/v2#users) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/UserTests.cs)
+* [`client.Withdrawals`](https://developers.coinbase.com/api/v2#withdrawals) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/WithdrawlTests.cs)
+  
+Some APIs require **Two-Factor Authentication (2FA)**. To use APIs that require **2FA**, add a the `TwoFactorToken` header value before sending the request as shown below:
+```csharp
+using Flurl.Http;
+using static Coinbase.HeaderNames;
+
+//using OAuth Token
+var client = new CoinbaseApi(new OAuthConfig{ OAuthToken = "..." });
+var create = new CreateTransaction
+   {
+      To = "...btc_address..."
+      Amount = 1.0m,
+      Currency = "BTC"
+   };
+
+var response = await client
+    .WithHeader(TwoFactorToken, "...")
+    .Transactions.SendMoneyAsync("accountId", create);
+
+if( response.HasError() )
+{
+   // transaction is okay!
 }
 ``` 
 

@@ -9,7 +9,22 @@ using Flurl.Http.Configuration;
 
 namespace Coinbase
 {
-   public partial class CoinbaseApi : FlurlClient, ICoinbaseClient//IDisposable
+   public interface ICoinbaseClient : IFlurlClient
+   {
+      IAccountsEndpoint Accounts { get; }
+      IAddressesEndpoint Addresses { get; }
+      IBuysEndpoint Buys { get; }
+      IDataEndpoint Data { get; }
+      IDepositsEndpoint Deposits { get; }
+      INotificationsEndpoint Notifications { get; }
+      IPaymentMethodsEndpoint PaymentMethods { get; }
+      ISellsEndpoint Sells { get; }
+      ITransactionsEndpoint Transactions { get; }
+      IUsersEndpoint Users { get; }
+      IWithdrawalsEndpoint Withdrawals { get; }
+   }
+
+   public partial class CoinbaseApi : FlurlClient, ICoinbaseClient
    {
       public const string ApiVersionDate = "2017-08-07";
 
@@ -98,20 +113,5 @@ namespace Coinbase
             this.Configure(settings => ApiKeyAuth(settings, key));
          }
       }  
-   }
-
-   public interface ICoinbaseClient : IFlurlClient
-   {
-      IAccountsEndpoint Accounts { get; }
-      IAddressesEndpoint Addresses { get; }
-      IBuysEndpoint Buys { get; }
-      IDataEndpoint Data { get; }
-      IDepositsEndpoint Deposits { get; }
-      INotificationsEndpoint Notifications { get; }
-      IPaymentMethodsEndpoint PaymentMethods { get; }
-      ISellsEndpoint Sells { get; }
-      ITransactionsEndpoint Transactions { get; }
-      IUsersEndpoint Users { get; }
-      IWithdrawalsEndpoint Withdrawals { get; }
    }
 }

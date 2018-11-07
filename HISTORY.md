@@ -1,3 +1,6 @@
+## v5.0.0-beta-2
+* Promotes `CoinbaseApi` as a full client. Allows mutation of request before request is sent.
+
 ## v5.0.0-beta-1
 **BREAKING CHANGES**
 * Complete re-write of Conbase's API according to current documentation.

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Coinbase;
+using Coinbase.Models;
 using Flurl.Http;
 using static Coinbase.HeaderNames;
 
@@ -7,16 +9,24 @@ namespace Examples
 {
    class Program
    {
-      static void Main(string[] args)
+      static async Task Main(string[] args)
       {
          Console.WriteLine("Hello World!");
          var client = new CoinbaseApi();
 
-         client.WithHeader(TwoFactorToken, "ffff");
+         var create = new CreateTransaction
+            {
+               Amount = 1.0m,
+               Currency = "BTC"
+            };
+         var response = await client
+            .WithHeader(TwoFactorToken, "ffff")
+            .Transactions.SendMoneyAsync("accountId", create);
 
-         client.Accounts.GetAccountAsync("fff");
-
-         client.Users.GetAuthInfoAsync();
+         if( response.HasError() )
+         {
+            // transaction is okay!
+         }
       }
    }
 }
