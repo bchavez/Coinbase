@@ -48,7 +48,7 @@ namespace Coinbase.Models
       [JsonProperty("color")]
       public string Color { get; set; }
       [JsonProperty("sort_index")]
-      public int SortIndex { get; set; }
+      public string SortIndex { get; set; }
       [JsonProperty("exponent")]
       public int Exponent { get; set; }
       [JsonProperty("type")]
@@ -101,17 +101,23 @@ namespace Coinbase.Models
       public string Network { get; set; }
    }
 
-    public partial class To : Json
+    public partial class To : Entity
     {
         [JsonProperty("address")]
         public string Address { get; set; }
 
         [JsonProperty("currency")]
         public string Currency { get; set; }
-
-        [JsonProperty("resource")]
-        public string Resource { get; set; }
     }
+
+   public partial class From : Entity
+   {
+      [JsonProperty("address")]
+      public string Address { get; set; }
+
+      [JsonProperty("currency")]
+      public string Currency { get; set; }
+   }
 
    public partial class Transaction : Entity
    {
@@ -143,7 +149,7 @@ namespace Coinbase.Models
       public To To { get; set; }
 
       [JsonProperty("from")]
-      public Entity From { get; set; }
+      public From From { get; set; }
 
       [JsonProperty("instant_exchange")]
       public bool InstantExchange { get; set; }
@@ -408,6 +414,24 @@ namespace Coinbase.Models
 
       [JsonProperty("hash")]
       public string Hash { get; set; }
+
+      [JsonProperty("transaction_fee")]
+      public NetworkMoney TransactionFee { get; set; }
+
+      [JsonProperty("transaction_amount")]
+      public NetworkMoney TransactionAmount { get; set; }
+
+      [JsonProperty("confirmations")]
+      public long Confirmations { get; set; }
+   }
+
+   public partial class NetworkMoney : Json
+   {
+      [JsonProperty("amount")]
+      public decimal Amount { get; set; }
+
+      [JsonProperty("currency")]
+      public string Currency { get; set; }
    }
 
 

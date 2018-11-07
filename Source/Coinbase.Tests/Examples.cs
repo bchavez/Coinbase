@@ -266,7 +266,7 @@ namespace Coinbase.Tests
             Resource = "transaction",
             ResourcePath = "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/57ffb4ae-0c59-5430-bcd3-3f98f797a66c",
             Network = new Network { Status = "off_blockchain", Name = "bitcoin"},
-            From = new Entity { Id = "a6b4c2df-a62c-5d68-822a-dd4e2102e703", Resource = "user"},
+            From = new From { Id = "a6b4c2df-a62c-5d68-822a-dd4e2102e703", Resource = "user"},
             InstantExchange = false
          };
 
@@ -365,7 +365,7 @@ namespace Coinbase.Tests
             Resource = "transaction",
             ResourcePath = "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/005e55d1-f23a-5d1e-80a4-72943682c055",
             Network = null,
-            To = new Entity
+            To = new To
                {
                   Resource = "email",
                   ExtraJson = new Dictionary<string, JToken>
@@ -420,7 +420,7 @@ namespace Coinbase.Tests
             UpdatedAt = DateTimeOffset.Parse("2015-01-31T20:49:02Z"),
             Resource = "transaction",
             ResourcePath = "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/ff01bbc6-c4ad-59e1-9601-e87b5b709458",
-            To = new Entity
+            To = new To
                {
                   Id = "58542935-67b5-56e1-a3f9-42686e07fa40",
                   Resource = "account",
@@ -483,7 +483,7 @@ namespace Coinbase.Tests
                   Status = "off_blockchain",
                   Name = "bitcoin"
                },
-            To = new Entity
+            To = new To
                {
                   Id = "a6b4c2df-a62c-5d68-822a-dd4e2102e703",
                   Resource = "user",
@@ -546,13 +546,10 @@ namespace Coinbase.Tests
                   Hash = "463397c87beddd9a61ade61359a13adc9efea26062191fe07147037bce7f33ed",
                   Name = "bitcoin"
             },
-            To = new Entity
+            To = new To
                {
                   Resource = "bitcoin_address",
-                  ExtraJson = new Dictionary<string, JToken>
-                     {
-                        {"address", "1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT" }
-                     }
+                  Address = "1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT"
                },
             Details = new Dictionary<string, JToken>
                {
@@ -600,7 +597,7 @@ namespace Coinbase.Tests
          UpdatedAt = DateTimeOffset.Parse("2015-04-01T10:37:11-07:00"),
          Resource = "transaction",
          ResourcePath = "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/2e9f48cd-0b05-5f7c-9056-17a8acb408ad",
-         To = new Entity
+         To = new To
          {
             Resource = "email",
             ExtraJson = new Dictionary<string, JToken>
