@@ -39,26 +39,25 @@ namespace Coinbase.Models
       public string AvatarUrl { get; set; }
     }
 
-    public partial class AccountCurrency
-    {
-        [JsonProperty("code")]
-        public string Code { get; set; }
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [JsonProperty("color")]
-        public string Color { get; set; }
-        [JsonProperty("sort_index")]
-        public int SortIndex { get; set; }
-        [JsonProperty("exponent")]
-        public int Exponent { get; set; }
-        [JsonProperty("type")]
-        public string Type { get; set; }
-        [JsonProperty("address_regex")]
-        public string AddressRegex { get; set; }
-        [JsonProperty("asset_id")]
-        public string AssetId { get; set; }
-
-    }
+   public partial class AccountCurrency : Json
+   {
+      [JsonProperty("code")]
+      public string Code { get; set; }
+      [JsonProperty("name")]
+      public string Name { get; set; }
+      [JsonProperty("color")]
+      public string Color { get; set; }
+      [JsonProperty("sort_index")]
+      public int SortIndex { get; set; }
+      [JsonProperty("exponent")]
+      public int Exponent { get; set; }
+      [JsonProperty("type")]
+      public string Type { get; set; }
+      [JsonProperty("address_regex")]
+      public string AddressRegex { get; set; }
+      [JsonProperty("asset_id")]
+      public string AssetId { get; set; }
+   }
 
    public partial class Account : Entity
    {
