@@ -1,3 +1,6 @@
+## v5.0.0-beta-4
+* Issue 35: Create a new URL for each request.
+
 ## v5.0.0-beta-3
 * Issue #33: AllowAnyHttpStatusCode() to allow parsing of error body instead of throwing.
 * Corrected `currency` model in `accounts` to parse object instead of string.

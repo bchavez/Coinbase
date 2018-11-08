@@ -32,13 +32,13 @@ namespace Coinbase
 
       public const string Endpoint = "https://api.coinbase.com/v2/";
 
-      protected internal Url AccountsEndpoint;
-      protected internal Url PaymentMethodsEndpoint;
-      protected internal Url CurrenciesEndpoint;
-      protected internal Url ExchangeRatesEndpoint;
-      protected internal Url PricesEndpoint;
-      protected internal Url TimeEndpoint;
-      protected internal Url NotificationsEndpoint;
+      protected internal Url AccountsEndpoint => this.config.ApiUrl.AppendPathSegment("accounts");
+      protected internal Url PaymentMethodsEndpoint => this.config.ApiUrl.AppendPathSegment("payment-methods");
+      protected internal Url CurrenciesEndpoint => this.config.ApiUrl.AppendPathSegment("currencies");
+      protected internal Url ExchangeRatesEndpoint => this.config.ApiUrl.AppendPathSegment("exchange-rates");
+      protected internal Url PricesEndpoint => this.config.ApiUrl.AppendPathSegment("prices");
+      protected internal Url TimeEndpoint => this.config.ApiUrl.AppendPathSegment("time");
+      protected internal Url NotificationsEndpoint => this.config.ApiUrl.AppendPathSegment("notifications");
 
       public CoinbaseApi(OAuthConfig config): this(config as Config){}
 
@@ -55,14 +55,6 @@ namespace Coinbase
          this.config.EnsureValid();
 
          this.ConfigureClient();
-
-         this.AccountsEndpoint = this.config.ApiUrl.AppendPathSegment("accounts");
-         this.PaymentMethodsEndpoint = this.config.ApiUrl.AppendPathSegment("payment-methods");
-         this.CurrenciesEndpoint = this.config.ApiUrl.AppendPathSegment("currencies");
-         this.ExchangeRatesEndpoint = this.config.ApiUrl.AppendPathSegment("exchange-rates");
-         this.PricesEndpoint = this.config.ApiUrl.AppendPathSegment("prices");
-         this.TimeEndpoint = this.config.ApiUrl.AppendPathSegment("time");
-         this.NotificationsEndpoint = this.config.ApiUrl.AppendPathSegment("notifications");
       }
 
       private void ApiKeyAuth(ClientFlurlHttpSettings client, ApiKeyConfig keyConfig)

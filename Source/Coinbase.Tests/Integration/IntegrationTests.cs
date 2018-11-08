@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Flurl.Http;
@@ -59,6 +60,16 @@ namespace Coinbase.Tests.Integration
       {
          var r = await client.Accounts.GetAccountAsync("fff");
          r.Dump();
+      }
+
+      [Test]
+      public async Task test_state()
+      {
+         var accounts = await client.Accounts.ListAccountsAsync();
+         var ethAccount = accounts.Data.FirstOrDefault(x => x.Name == "ETH Wallet");
+         var ethAddresses = await client.Addresses.ListAddressesAsync(ethAccount.Id);
+         var ethAddress = ethAddresses.Data.FirstOrDefault();
+         var ethTransactions = await client.Transactions.ListTransactionsAsync(ethAccount.Id);
       }
    }
 }
