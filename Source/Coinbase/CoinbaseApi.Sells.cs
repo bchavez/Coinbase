@@ -36,7 +36,7 @@ namespace Coinbase
       Task<Response<Sell>> CommitSellAsync(string accountId, string sellId, CancellationToken cancellationToken = default);
    }
 
-   public partial class CoinbaseApi : ISellsEndpoint
+   public partial class CoinbaseApiBase : ISellsEndpoint
    {
       public ISellsEndpoint Sells => this;
 

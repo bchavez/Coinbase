@@ -40,7 +40,7 @@ namespace Coinbase
    }
 
 
-   public partial class CoinbaseApi : IAccountsEndpoint
+   public partial class CoinbaseApiBase : IAccountsEndpoint
    {
       public IAccountsEndpoint Accounts => this;
 

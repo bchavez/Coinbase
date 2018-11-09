@@ -19,7 +19,7 @@ namespace Coinbase
       Task<Response<PaymentMethod>> GetPaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken = default);
    }
 
-   public partial class CoinbaseApi : IPaymentMethodsEndpoint
+   public partial class CoinbaseApiBase : IPaymentMethodsEndpoint
    {
       public IPaymentMethodsEndpoint PaymentMethods => this;
 

@@ -8,7 +8,7 @@ namespace Coinbase
       {
       }
 
-      public string ApiUrl { get; set; } = CoinbaseApi.Endpoint;
+      public string ApiUrl { get; set; } = CoinbaseApiBase.Endpoint;
       public bool UseTimeApi { get; set; } = true;
 
       internal virtual void EnsureValid()

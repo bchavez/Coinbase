@@ -27,7 +27,7 @@ namespace Coinbase
    }
 
 
-   public partial class CoinbaseApi : IWithdrawalsEndpoint
+   public partial class CoinbaseApiBase : IWithdrawalsEndpoint
    {
       public IWithdrawalsEndpoint Withdrawals => this;
 

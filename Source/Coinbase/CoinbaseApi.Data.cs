@@ -48,7 +48,7 @@ namespace Coinbase
       Task<Response<Time>> GetCurrentTimeAsync(CancellationToken cancellationToken = default);
    }
 
-   public partial class CoinbaseApi : IDataEndpoint
+   public partial class CoinbaseApiBase : IDataEndpoint
    {
       public IDataEndpoint Data => this;
 

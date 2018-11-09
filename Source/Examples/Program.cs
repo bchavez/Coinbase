@@ -12,7 +12,7 @@ namespace Examples
       static async Task Main(string[] args)
       {
          Console.WriteLine("Hello World!");
-         var client = new CoinbaseApi();
+         var client = new PublicCoinbaseApi();
 
          var create = new CreateTransaction
             {
@@ -21,6 +21,7 @@ namespace Examples
             };
          var response = await client
             .WithHeader(TwoFactorToken, "ffff")
+            .AllowAnyHttpStatus()
             .Transactions.SendMoneyAsync("accountId", create);
 
          if( response.HasError() )

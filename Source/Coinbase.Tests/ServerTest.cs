@@ -44,14 +44,14 @@ namespace Coinbase.Tests
 
    public class OAuthServerTest : ServerTest
    {
-      protected CoinbaseApi client;
+      protected CoinbaseApiBase client;
 
       public string oauthKey = "369ECD3F-2D00-4D7A-ACDB-92C2DC35A878";
 
       [SetUp]
       public void BeforeEachTest()
       {
-         client = new CoinbaseApi(new OAuthConfig{OAuthToken = oauthKey});
+         client = new CoinbaseOAuthApi(new OAuthConfig{OAuthToken = oauthKey});
       }
 
       [TearDown]
@@ -63,8 +63,8 @@ namespace Coinbase.Tests
       private void EnsureEveryRequestHasCorrectHeaders()
       {
          server.ShouldHaveMadeACall()
-            .WithHeader(HeaderNames.Version, CoinbaseApi.ApiVersionDate)
-            .WithHeader("User-Agent", CoinbaseApi.UserAgent)
+            .WithHeader(HeaderNames.Version, CoinbaseApiBase.ApiVersionDate)
+            .WithHeader("User-Agent", CoinbaseApiBase.UserAgent)
             .WithHeader("Authorization", $"Bearer {oauthKey}");
       }
    }

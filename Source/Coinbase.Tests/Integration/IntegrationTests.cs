@@ -11,7 +11,7 @@ namespace Coinbase.Tests.Integration
    [Explicit]
    public class IntegrationTests
    {
-      protected CoinbaseApi client;
+      protected CoinbaseApiBase client;
 
       public IntegrationTests()
       {

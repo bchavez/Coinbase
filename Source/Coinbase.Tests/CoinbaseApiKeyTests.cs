@@ -6,7 +6,7 @@ namespace Coinbase.Tests
    public class CoinbaseApiKeyTests : ServerTest
    {
       public string apiKey = "DBBD0428-B818-4F53-A5F4-F553DC4C374C";
-      private CoinbaseApi client;
+      private CoinbaseApiBase client;
 
       [SetUp]
       public void BeforeEachTest()
@@ -24,9 +24,9 @@ namespace Coinbase.Tests
       private void EnsureEveryRequestHasCorrectHeaders()
       {
          server.ShouldHaveMadeACall()
-            .WithHeader(HeaderNames.Version, CoinbaseApi.ApiVersionDate)
+            .WithHeader(HeaderNames.Version, CoinbaseApiBase.ApiVersionDate)
             .WithHeader(HeaderNames.AccessKey, apiKey)
-            .WithHeader("User-Agent", CoinbaseApi.UserAgent);
+            .WithHeader("User-Agent", CoinbaseApiBase.UserAgent);
       }
 
 

@@ -36,7 +36,7 @@ namespace Coinbase
       Task<Response<Buy>> CommitBuyAsync(string accountId, string buyId, CancellationToken cancellationToken = default);
    }
 
-   public partial class CoinbaseApi : IBuysEndpoint
+   public partial class CoinbaseApiBase : IBuysEndpoint
    {
       public IBuysEndpoint Buys => this;
 
