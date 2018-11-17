@@ -1,3 +1,4 @@
+using Coinbase.Models;
 using System;
 
 namespace Coinbase
@@ -17,10 +18,15 @@ namespace Coinbase
    }
    public class OAuthConfig : Config
    {
-      public string OAuthToken { get; set; }
+      public string TokenEndpoint { get; set; } = CoinbaseApi.TokenEndpoint;
+        public string OAuthToken { get; set; }
+        public string RefreshToken { get; set; }
+        public Action<RefreshResponse> OnTokenRefresh { get; set; }
+
       internal override void EnsureValid()
       {
-         if (string.IsNullOrWhiteSpace(OAuthToken)) throw new ArgumentNullException(nameof(OAuthToken), "The OAuthToken must be specified.");
+         if (string.IsNullOrWhiteSpace(OAuthToken))
+                throw new ArgumentNullException(nameof(OAuthToken), "The OAuthToken must be specified.");
       }
    }
 

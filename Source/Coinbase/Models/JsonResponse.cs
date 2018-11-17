@@ -14,6 +14,21 @@ namespace Coinbase.Models
       public IDictionary<string, JToken> ExtraJson { get; internal set; } = new Dictionary<string, JToken>();
    }
 
+    public class RefreshResponse
+    {
+        [JsonProperty("access_token")]
+        public string AccessToken { get; set; }
+        [JsonProperty("refresh_token")]
+        public string RefreshToken { get; set; }
+        [JsonProperty("expires_in")]
+        public int Expires { get; set; }
+        [JsonProperty("scope")]
+        public string Scope { get; set; }
+        [JsonProperty("token_type")]
+        public string TokenType { get; set; }
+        [JsonProperty("created_at")]
+        public long Created { get; set; }
+   }
    public class JsonResponse : Json
    {
       /// <summary>
@@ -59,6 +74,12 @@ namespace Coinbase.Models
 
       [JsonProperty("data")]
       public T[] Data { get; set; }
+   }
+
+    public class ErrorResponse
+    {
+        [JsonProperty("errors")]
+        public Error[] Errors { get; set; }
    }
 
    public class Error : Json

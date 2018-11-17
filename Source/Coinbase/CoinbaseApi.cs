@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.Models;
@@ -31,6 +32,7 @@ namespace Coinbase
       protected internal readonly Config config;
 
       public const string Endpoint = "https://api.coinbase.com/v2/";
+      public const string TokenEndpoint = "https://api.coinbase.com/oauth/token";
 
       protected internal Url AccountsEndpoint => this.config.ApiUrl.AppendPathSegment("accounts");
       protected internal Url PaymentMethodsEndpoint => this.config.ApiUrl.AppendPathSegment("payment-methods");
@@ -90,12 +92,53 @@ namespace Coinbase
       internal static readonly string UserAgent =
          $"{AssemblyVersionInformation.AssemblyProduct}/{AssemblyVersionInformation.AssemblyVersion} ({AssemblyVersionInformation.AssemblyTitle}; {AssemblyVersionInformation.AssemblyDescription})";
 
+      public const string EXPIRED_TOKEN = "expired_token";
+      public async Task HandleErrorAsync(HttpCall call)
+      {
+            var exception = call.Exception;
+            if (exception is FlurlHttpException)
+            {
+                FlurlHttpException ex = (exception as FlurlHttpException);
+                var errorResponse = await ex.GetResponseJsonAsync<ErrorResponse>();
+                if (errorResponse.Errors.Any(x => x.Id == EXPIRED_TOKEN))
+                {
+                    var tokenResponse = await this.RefreshOAuthToken();
+                    call.FlurlRequest.WithOAuthBearerToken(tokenResponse.AccessToken);
+                    call.Response = await call.FlurlRequest.SendAsync(call.Request.Method, call.Request.Content);
+                    call.ExceptionHandled = true;
+                }
+            }
+      }
+
+      public async Task<RefreshResponse> RefreshOAuthToken(CancellationToken cancellationToken = default)
+      {
+          var oauthConfig = (this.config as OAuthConfig);
+
+            var data = new {
+                refresh_token = oauthConfig.RefreshToken,
+                grant_type = "refresh_token"
+            };
+
+            var response = await oauthConfig.TokenEndpoint.WithClient(this)
+                .PostJsonAsync(data, cancellationToken)
+                .ReceiveJson<RefreshResponse>();
+
+            oauthConfig.RefreshToken = response.RefreshToken;
+            oauthConfig.OAuthToken = response.AccessToken;
+
+            this.WithOAuthBearerToken(oauthConfig.OAuthToken);
+
+            return response;
+      }     
 
       protected internal virtual void ConfigureClient()
       {
          this.WithHeader(HeaderNames.Version, ApiVersionDate)
-            .WithHeader("User-Agent", UserAgent)
-            .AllowAnyHttpStatus(); //Issue 33
+              .WithHeader("User-Agent", UserAgent);
+         
+         this.Configure(x =>{
+            x.OnErrorAsync = HandleErrorAsync;
+         });
 
          if (this.config is OAuthConfig oauth)
          {
