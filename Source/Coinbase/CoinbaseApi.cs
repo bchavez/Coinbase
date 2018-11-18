@@ -105,14 +105,16 @@ namespace Coinbase
       public async Task HandleErrorAsync(HttpCall call)
       {
             var exception = call.Exception;
-            if (exception is FlurlHttpException)
+            if (exception is FlurlHttpException ex)
             {
-                FlurlHttpException ex = (exception as FlurlHttpException);
-                var errorResponse = await ex.GetResponseJsonAsync<ErrorResponse>();
+               var errorResponse = await ex.GetResponseJsonAsync<ErrorResponse>()
+                  .ConfigureAwait(false);
                 if (errorResponse.Errors.Any(x => x.Id == EXPIRED_TOKEN))
                 {
-                    var tokenResponse = await this.RefreshOAuthToken();
-                    call.Response = await call.FlurlRequest.SendAsync(call.Request.Method, call.Request.Content);
+                    var tokenResponse = await this.RefreshOAuthToken()
+                       .ConfigureAwait(false);
+                    call.Response = await call.FlurlRequest.SendAsync(call.Request.Method, call.Request.Content)
+                       .ConfigureAwait(false);
                     call.ExceptionHandled = true;
                 }
             }
@@ -129,7 +131,7 @@ namespace Coinbase
 
             var response = await oauthConfig.TokenEndpoint.WithClient(this)
                 .PostJsonAsync(data, cancellationToken)
-                .ReceiveJson<RefreshResponse>();
+                .ReceiveJson<RefreshResponse>().ConfigureAwait(false);
 
             oauthConfig.RefreshToken = response.RefreshToken;
             oauthConfig.OAuthToken = response.AccessToken;
