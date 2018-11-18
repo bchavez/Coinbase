@@ -136,6 +136,7 @@ namespace Coinbase
             oauthConfig.RefreshToken = response.RefreshToken;
             oauthConfig.OAuthToken = response.AccessToken;
 
+            await oauthConfig.OnTokenRefresh(response).ConfigureAwait(false);
             return response;
       }     
 

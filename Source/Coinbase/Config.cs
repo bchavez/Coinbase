@@ -1,5 +1,6 @@
 using Coinbase.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace Coinbase
 {
@@ -21,7 +22,7 @@ namespace Coinbase
       public string TokenEndpoint { get; set; } = CoinbaseApi.TokenEndpoint;
         public string OAuthToken { get; set; }
         public string RefreshToken { get; set; }
-        public Action<RefreshResponse> OnTokenRefresh { get; set; }
+        public Func<RefreshResponse, Task> OnTokenRefresh { get; set; }
 
       internal override void EnsureValid()
       {
