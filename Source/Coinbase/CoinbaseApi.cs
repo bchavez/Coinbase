@@ -59,6 +59,15 @@ namespace Coinbase
          this.ConfigureClient();
       }
 
+      private void OAuthConfiguration(ClientFlurlHttpSettings client, OAuthConfig oauthConfig)
+      {
+            async Task ApplyAuthorization(HttpCall call)
+            {
+               call.FlurlRequest.WithOAuthBearerToken(oauthConfig.OAuthToken);
+            }
+         client.BeforeCallAsync = ApplyAuthorization;
+      }
+
       private void ApiKeyAuth(ClientFlurlHttpSettings client, ApiKeyConfig keyConfig)
       {
          async Task SetHeaders(HttpCall http)
@@ -103,7 +112,6 @@ namespace Coinbase
                 if (errorResponse.Errors.Any(x => x.Id == EXPIRED_TOKEN))
                 {
                     var tokenResponse = await this.RefreshOAuthToken();
-                    call.FlurlRequest.WithOAuthBearerToken(tokenResponse.AccessToken);
                     call.Response = await call.FlurlRequest.SendAsync(call.Request.Method, call.Request.Content);
                     call.ExceptionHandled = true;
                 }
@@ -126,8 +134,6 @@ namespace Coinbase
             oauthConfig.RefreshToken = response.RefreshToken;
             oauthConfig.OAuthToken = response.AccessToken;
 
-            this.WithOAuthBearerToken(oauthConfig.OAuthToken);
-
             return response;
       }     
 
@@ -142,7 +148,7 @@ namespace Coinbase
 
          if (this.config is OAuthConfig oauth)
          {
-            this.WithOAuthBearerToken(oauth.OAuthToken);
+            this.Configure(settings => OAuthConfiguration(settings, oauth));
          }
          if (this.config is ApiKeyConfig key)
          {
