@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -12,6 +14,38 @@ namespace Coinbase.Models
       /// </summary>
       [JsonExtensionData]
       public IDictionary<string, JToken> ExtraJson { get; internal set; } = new Dictionary<string, JToken>();
+   }
+
+   public class OAuthResponse : Json
+   {
+      [JsonProperty("access_token")]
+      public string AccessToken { get; set; }
+
+      [JsonProperty("refresh_token")]
+      public string RefreshToken { get; set; }
+
+      [JsonProperty("scope")]
+      public string Scope { get; set; }
+
+      [JsonProperty("token_type")]
+      public string TokenType { get; set; }
+
+
+      [JsonProperty("expires_in")]
+      protected internal int ExpiresInSeconds { get; set; }
+
+      [JsonProperty("created_at")]
+      protected internal long CreatedAtEpoch { get; set; }
+
+      public DateTimeOffset CreatedAt { get; private set; }
+      public TimeSpan Expires { get; private set; }
+
+      [OnDeserialized]
+      internal void OnDeserializedMethod(StreamingContext ctx)
+      {
+         this.CreatedAt = TimeHelper.FromUnixTimestampSeconds(this.CreatedAtEpoch);
+         this.Expires = TimeSpan.FromSeconds(this.ExpiresInSeconds);
+      }
    }
 
    public class JsonResponse : Json

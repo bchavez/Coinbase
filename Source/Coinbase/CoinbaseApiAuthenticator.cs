@@ -9,7 +9,6 @@ namespace Coinbase
 {
    public static class ApiKeyAuthenticator
    {
-
       public static string GenerateSignature(string timestamp, string method, string url, string body, string appSecret)
       {
          return GetHMACInHex(appSecret, timestamp + method + url + body);
@@ -41,7 +40,10 @@ namespace Coinbase
          }
          return new string(c);
       }
+   }
 
+   public static class TimeHelper
+   {
       private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
       public static long GetCurrentUnixTimestampSeconds()

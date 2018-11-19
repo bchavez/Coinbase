@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.Models;
@@ -53,58 +54,20 @@ namespace Coinbase
       {
          this.config = config ?? new Config();
          this.config.EnsureValid();
-
+         
          this.ConfigureClient();
       }
 
-      private void ApiKeyAuth(ClientFlurlHttpSettings client, ApiKeyConfig keyConfig)
-      {
-         async Task SetHeaders(HttpCall http)
-         {
-            var body = http.RequestBody;
-            var method = http.Request.Method.Method.ToUpperInvariant();
-            var url = http.Request.RequestUri.PathAndQuery;
-
-            string timestamp;
-            if (keyConfig.UseTimeApi)
-            {
-               var timeResult = await this.Data.GetCurrentTimeAsync().ConfigureAwait(false);
-               timestamp = timeResult.Data.Epoch.ToString();
-            }
-            else
-            {
-               timestamp = ApiKeyAuthenticator.GetCurrentUnixTimestampSeconds().ToString(CultureInfo.CurrentCulture);
-            }
-
-            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, keyConfig.ApiSecret).ToLower();
-
-            http.FlurlRequest
-               .WithHeader(HeaderNames.AccessKey, keyConfig.ApiKey)
-               .WithHeader(HeaderNames.AccessSign, signature)
-               .WithHeader(HeaderNames.AccessTimestamp, timestamp);
-         }
-
-         client.BeforeCallAsync = SetHeaders;
-      }
 
       internal static readonly string UserAgent =
          $"{AssemblyVersionInformation.AssemblyProduct}/{AssemblyVersionInformation.AssemblyVersion} ({AssemblyVersionInformation.AssemblyTitle}; {AssemblyVersionInformation.AssemblyDescription})";
 
-
       protected internal virtual void ConfigureClient()
       {
          this.WithHeader(HeaderNames.Version, ApiVersionDate)
-            .WithHeader("User-Agent", UserAgent)
-            .AllowAnyHttpStatus(); //Issue 33
+              .WithHeader("User-Agent", UserAgent);
 
-         if (this.config is OAuthConfig oauth)
-         {
-            this.WithOAuthBearerToken(oauth.OAuthToken);
-         }
-         if (this.config is ApiKeyConfig key)
-         {
-            this.Configure(settings => ApiKeyAuth(settings, key));
-         }
+         this.config.Configure(this);
       }  
    }
 }
