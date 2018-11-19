@@ -11,12 +11,12 @@ namespace Coinbase.Tests.Integration
 {
    public class DataTests 
    {
-      private CoinbaseApi client;
+      private CoinbaseClient client;
 
       [SetUp]
       public void BeforeEachTest()
       {
-         client = new CoinbaseApi();
+         client = new CoinbaseClient();
       }
 
       [Test]

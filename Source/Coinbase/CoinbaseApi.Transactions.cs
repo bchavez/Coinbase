@@ -56,7 +56,7 @@ namespace Coinbase
    }
 
 
-   public partial class CoinbaseApi : ITransactionsEndpoint
+   public partial class CoinbaseClient : ITransactionsEndpoint
    {
       public ITransactionsEndpoint Transactions => this;
 

@@ -25,7 +25,7 @@ namespace Coinbase
       IWithdrawalsEndpoint Withdrawals { get; }
    }
 
-   public partial class CoinbaseApi : FlurlClient, ICoinbaseClient
+   public partial class CoinbaseClient : FlurlClient, ICoinbaseClient
    {
       public const string ApiVersionDate = "2017-08-07";
 
@@ -41,16 +41,16 @@ namespace Coinbase
       protected internal Url TimeEndpoint => this.config.ApiUrl.AppendPathSegment("time");
       protected internal Url NotificationsEndpoint => this.config.ApiUrl.AppendPathSegment("notifications");
 
-      public CoinbaseApi(OAuthConfig config): this(config as Config){}
+      public CoinbaseClient(OAuthConfig config): this(config as Config){}
 
-      public CoinbaseApi(ApiKeyConfig config) : this(config as Config){}
+      public CoinbaseClient(ApiKeyConfig config) : this(config as Config){}
 
-      public CoinbaseApi() : this(null as Config){}
+      public CoinbaseClient() : this(null as Config){}
 
       /// <summary>
       /// The main class for making Coinbase API calls.
       /// </summary>
-      protected CoinbaseApi(Config config)
+      protected CoinbaseClient(Config config)
       {
          this.config = config ?? new Config();
          this.config.EnsureValid();

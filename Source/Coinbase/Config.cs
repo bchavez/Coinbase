@@ -16,14 +16,14 @@ namespace Coinbase
       {
       }
 
-      public string ApiUrl { get; set; } = CoinbaseApi.Endpoint;
+      public string ApiUrl { get; set; } = CoinbaseClient.Endpoint;
       public bool UseTimeApi { get; set; } = true;
 
       internal virtual void EnsureValid()
       {
       }
 
-      protected internal virtual void Configure(CoinbaseApi client)
+      protected internal virtual void Configure(CoinbaseClient client)
       {
 
       }
@@ -39,12 +39,12 @@ namespace Coinbase
             throw new ArgumentNullException(nameof(this.AccessToken), $"The {nameof(AccessToken)} must be specified.");
       }
 
-      protected internal override void Configure(CoinbaseApi client)
+      protected internal override void Configure(CoinbaseClient client)
       {
          client.Configure(settings => UseOAuth(settings, client));
       }
 
-      private void UseOAuth(ClientFlurlHttpSettings settings, CoinbaseApi client)
+      private void UseOAuth(ClientFlurlHttpSettings settings, CoinbaseClient client)
       {
          async Task ApplyAuthorization(HttpCall call)
          {
@@ -65,12 +65,12 @@ namespace Coinbase
          if (string.IsNullOrWhiteSpace(ApiSecret)) throw new ArgumentNullException(nameof(ApiSecret), "The API Key must be specified.");
       }
 
-      protected internal override void Configure(CoinbaseApi client)
+      protected internal override void Configure(CoinbaseClient client)
       {
          client.Configure(settings => ApiKeyAuth(settings, client));
       }
 
-      private void ApiKeyAuth(ClientFlurlHttpSettings settings, CoinbaseApi client)
+      private void ApiKeyAuth(ClientFlurlHttpSettings settings, CoinbaseClient client)
       {
          async Task SetHeaders(HttpCall http)
          {

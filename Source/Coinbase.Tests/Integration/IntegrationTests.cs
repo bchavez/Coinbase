@@ -51,7 +51,7 @@ namespace Coinbase.Tests.Integration
    [Explicit]
    public class OAuthTests : IntegrationTests
    {
-      private CoinbaseApi client;
+      private CoinbaseClient client;
 
       private string redirectUrl = "http://localhost:8080/callback";
 
@@ -63,7 +63,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_auths()
       {
-         client = new CoinbaseApi(new OAuthConfig { AccessToken = secrets.OAuthCode });
+         client = new CoinbaseClient(new OAuthConfig { AccessToken = secrets.OAuthCode });
          var r = await client.Users.GetAuthInfoAsync();
          r.Dump();
       }
@@ -98,7 +98,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task run_expired_token()
       {
-         this.client = new CoinbaseApi(new OAuthConfig { AccessToken = secrets.OAuthAccessToken })
+         this.client = new CoinbaseClient(new OAuthConfig { AccessToken = secrets.OAuthAccessToken })
             .WithAutomaticOAuthTokenRefresh(secrets.OAuthClientId, secrets.OAuthClientSecret, secrets.OAuthRefreshToken);
 
          var authInfo = await this.client.Users.GetAuthInfoAsync();
@@ -109,11 +109,11 @@ namespace Coinbase.Tests.Integration
    [Explicit]
    public class UserTests : IntegrationTests
    {
-      protected CoinbaseApi client;
+      protected CoinbaseClient client;
 
       public UserTests()
       {
-         client = new CoinbaseApi(new ApiKeyConfig { ApiKey = secrets.ApiKey, ApiSecret = secrets.ApiSecret});
+         client = new CoinbaseClient(new ApiKeyConfig { ApiKey = secrets.ApiKey, ApiSecret = secrets.ApiSecret});
       }
 
       [Test]

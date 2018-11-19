@@ -188,7 +188,7 @@ namespace Coinbase
    {
       public const string ExpiredToken = "expired_token";
 
-      public static CoinbaseApi WithAutomaticOAuthTokenRefresh(this CoinbaseApi client, string clientId, string clientSecret, string refreshToken)
+      public static CoinbaseClient WithAutomaticOAuthTokenRefresh(this CoinbaseClient client, string clientId, string clientSecret, string refreshToken)
       {
          if (client.config is OAuthConfig config) { }
          else throw new InvalidOperationException($"Client must be using an {nameof(OAuthConfig)}");

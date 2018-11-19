@@ -31,7 +31,7 @@ namespace Coinbase
    }
 
 
-   public partial class CoinbaseApi : IUsersEndpoint
+   public partial class CoinbaseClient : IUsersEndpoint
    {
       public IUsersEndpoint Users => this;
 

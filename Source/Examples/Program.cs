@@ -12,7 +12,7 @@ namespace Examples
       static async Task Main(string[] args)
       {
          Console.WriteLine("Hello World!");
-         var client = new CoinbaseApi();
+         var client = new CoinbaseClient();
 
          var create = new CreateTransaction
             {

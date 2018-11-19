@@ -19,7 +19,7 @@ namespace Coinbase
       Task<Response<Notification>> GetNotificationAsync(string notificationId, CancellationToken cancellationToken = default);
    }
 
-   public partial class CoinbaseApi : INotificationsEndpoint
+   public partial class CoinbaseClient : INotificationsEndpoint
    {
       public INotificationsEndpoint Notifications => this;
 

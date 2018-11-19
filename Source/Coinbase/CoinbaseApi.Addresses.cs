@@ -31,7 +31,7 @@ namespace Coinbase
    }
 
 
-   public partial class CoinbaseApi : IAddressesEndpoint
+   public partial class CoinbaseClient : IAddressesEndpoint
    {
       public IAddressesEndpoint Addresses => this;
 

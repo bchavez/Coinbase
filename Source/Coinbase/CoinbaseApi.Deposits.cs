@@ -27,7 +27,7 @@ namespace Coinbase
       Task<Response<Deposit>> CommitDepositAsync(string accountId, string depositId, CancellationToken cancellationToken = default);
    }
 
-   public partial class CoinbaseApi : IDepositsEndpoint
+   public partial class CoinbaseClient : IDepositsEndpoint
    {
       public IDepositsEndpoint Deposits => this;
 
