@@ -39,19 +39,19 @@ This library can use both **OAuth** and **API Key + Secret** authentication make
 ----
 ### Getting Started
 
-For the most part, to get the started, simply new up a new `CoinbaseApi` object as shown below:
+For the most part, to get the started, simply new up a new `CoinbaseClient` object as shown below:
 ```csharp
 //using OAuth Token
-var client = new CoinbaseApi(new OAuthConfig{ OAuthToken = "..." });
+var client = new CoinbaseClient(new OAuthConfig{ AccessToken = "..." });
 
 //using API Key + Secret
-var client = new CoinbaseApi(new ApiKeyConfig{ ApiKey = "...", ApiSecret = "..."});
+var client = new CoinbaseClient(new ApiKeyConfig{ ApiKey = "...", ApiSecret = "..."});
 
 //No authentication
 //  - Useful only for Data Endpoints that don't require authentication.
-var client = new CoinbaseApi();
+var client = new CoinbaseClient();
 ```
-Once you have a `CoinbaseApi` object, simply call one of any of the [**Wallet Endpoints**](https://developers.coinbase.com/api/v2#wallet-endpoints) or [**Data Endpoints**](https://developers.coinbase.com/api/v2#data-endpoints). Extensive examples can be [found here](https://github.com/bchavez/Coinbase/tree/master/Source/Coinbase.Tests/Endpoints).
+Once you have a `CoinbaseClient` object, simply call one of any of the [**Wallet Endpoints**](https://developers.coinbase.com/api/v2#wallet-endpoints) or [**Data Endpoints**](https://developers.coinbase.com/api/v2#data-endpoints). Extensive examples can be [found here](https://github.com/bchavez/Coinbase/tree/master/Source/Coinbase.Tests/Endpoints).
 
 In one such example, to get the [spot price](https://developers.coinbase.com/api/v2#get-spot-price) of `ETH-USD`, do the following:
 ```csharp
@@ -80,14 +80,75 @@ public async Task can_get_spotprice_of_ETHUSD()
 * [`client.Transactions`](https://developers.coinbase.com/api/v2#transactions) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/TransactionTests.cs)
 * [`client.Users`](https://developers.coinbase.com/api/v2#users) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/UserTests.cs)
 * [`client.Withdrawals`](https://developers.coinbase.com/api/v2#withdrawals) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/WithdrawlTests.cs)
-  
+
+
+### Authentication Details
+##### OAuth Access and Refresh Tokens
+This section only applies to developers using **OAuth** authentication, not **API key + Secret** authentication. Full documentation for Coinbase's OAuth token flow can be found [here](https://developers.coinbase.com/docs/wallet/coinbase-connect/integrating). To summarize, obtaining an `AccessToken` from Coinbase is as follows:
+1. First, get authorization from the user by sending the user to a URL using:
+  ```csharp
+//Create the options and permission scopes you want your app to have access to
+var opts = new AuthorizeOptions
+{
+   ClientId = "YOUR_CLIENT_ID",
+   RedirectUri = "YOUR_REDIRECT_URL", //Example value: http://myserver.com/callback
+   State = "SECURE_RANDOM",
+   Scope = "wallet:accounts:read"
+};
+
+//Send the user to URL created by GetAuthorizeUrl
+var authUrl = OAuthHelper.GetAuthorizeUrl(opts);
+  ```
+
+2. The user will be presented with a screen similar to:
+![OAuth Screen](https://developers.coinbase.com/images/docs/oauth-pongbot.png)
+
+If your app needs more permissions, [check here for details](https://developers.coinbase.com/docs/wallet/coinbase-connect/permissions) and [here for reference](https://developers.coinbase.com/docs/wallet/coinbase-connect/reference).
+
+3. Once your app has been given permission, Coinbase will send the user's browser back to `RedirectUri`. In the query string parameter, a `code` will be present. Extract this `code` value in your application and use it to obtain an `AccessToken` as shown below:
+
+    ```csharp
+//http://myserver.com/callback?code=f284bdc3c1c9e24a494e285cb387c69510f28de51c15bb93179d9c7f28705398&state=random
+
+var code = "f284bdc3c1c9e24a494e285cb387c69510f28de51c15bb93179d9c7f28705398";
+
+// Convert an Authorization Code to an Access Token.
+// The RedirectUri parameter is the same parameter used in Step 1's AuthorizeOptions object above.
+var token = await OAuthHelper.GetAccessTokenAsync(code, OAuthClientAppId, OAuthClientSecret, RedirectUri);
+
+var refreshToken = token.RefreshToken; // Save for later
+
+var client = new CoinbaseClient(new OAuthConfig{ AccessToken = token.AccessToken })
+    ```
+
+###### Explicit Token Expiration and Renewal
+`AccessToken`s have a two hour life time. Any **OAuth API** requests after after two hours will be denied. However, you can use a **Refresh Token** to get a new **Access Token** (that will again later, expire after 2 hours). Initially, when a `code` is converted into an access token. You actually get two tokens, an `AccessToken` and a `RefreshToken`. In the previous code example, the variable `refreshToken` is used to obtain a new `AccessToken`.
+
+```csharp
+var newToken = await OAuthHelper.RefreshTokenAsync(refreshToken, OAuthClientAppId, OAuthClientSecret);
+var newClient = new CoinbaseClient(new OAuthConfig{ AccessToken = tokenNew.AccessToken })
+
+// Safe for later, again because refresh tokens can only be used once for renewal.
+var newRefreshToken = newToken.RefreshToken;
+```
+###### Automatic Token Renewal
+The `CoinbaseClient` supports automatic token renewal. If you want to avoid refreshing your every two hours you can use the following `.WithAutomaticOAuthTokenRefresh()` extension method to activate automatic token renewal. When creating the `CoinbaseClient` object in **Step 3** above do the following: 
+
+```csharp
+var client = new CoinbaseClient(new OAuthConfig { AccessToken = token.AccessToken })
+                 .WithAutomaticOAuthTokenRefresh(OAuthClientAppId, OAuthClientSecret, refreshToken);
+```
+You only need to call `.WithAutomaticOAuthTokenRefresh` once when creating the `CoinbaseClient` object.
+
+
+##### Two Factor Authentication
 Some APIs require **Two-Factor Authentication (2FA)**. To use APIs that require **2FA**, add a the `TwoFactorToken` header value before sending the request as shown below:
 ```csharp
 using Flurl.Http;
 using static Coinbase.HeaderNames;
 
 //using OAuth Token
-var client = new CoinbaseApi(new OAuthConfig{ OAuthToken = "..." });
+var client = new CoinbaseClient(new OAuthConfig{ AccessToken = "..." });
 var create = new CreateTransaction
    {
       To = "...btc_address..."

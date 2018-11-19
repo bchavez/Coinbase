@@ -68,6 +68,6 @@ namespace Coinbase
               .WithHeader("User-Agent", UserAgent);
 
          this.config.Configure(this);
-      }  
+      }
    }
 }
