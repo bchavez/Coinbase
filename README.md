@@ -113,7 +113,7 @@ var authUrl = OAuthHelper.GetAuthorizeUrl(opts);
 
    If your app needs more permissions, [check here for details](https://developers.coinbase.com/docs/wallet/coinbase-connect/permissions) and [here for reference](https://developers.coinbase.com/docs/wallet/coinbase-connect/reference).
 
-3. Once your app has been given permission, Coinbase will send the user's browser back to `RedirectUri`. In the query string parameter, a `code` will be present. Extract this `code` value in your application and use it to obtain an `AccessToken` as shown below:
+3. Once your app has been given permission, Coinbase will send the user's browser back to `RedirectUri`. A `code` value will be present as a query string parameter. Extract this `code` value in your application and use it to obtain an `AccessToken` as shown below:
   ```csharp
 //http://myserver.com/callback?code=f284bdc3c1c9e24a494e285cb387c69510f28de51c15bb93179d9c7f28705398&state=random
 
