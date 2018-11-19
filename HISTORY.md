@@ -1,3 +1,8 @@
+## v5.0.0-beta-5
+* PR 41: OAuth Auto Refresh tokens supported.
+* Renamed `CoinbaseApi` to `CoinbaseClient`.
+* `OAuthHelper` static class added. 
+
 ## v5.0.0-beta-4
 * Issue 35: Create a new URL for each request.
 
