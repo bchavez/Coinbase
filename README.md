@@ -135,7 +135,7 @@ var client = new CoinbaseClient(new OAuthConfig{ AccessToken = token.AccessToken
 Initially, back in **Step 3**, when an authorization `code` is converted into an access token, you actually get two tokens, an `AccessToken` and a `RefreshToken`. In **Step 3**, the variable `refreshToken` (which was saved for later use) is used to obtain a new `AccessToken`.
 
 ```csharp
-var newToken = await OAuthHelper.RefreshTokenAsync(refreshToken, ClientAppId, ClientSecret);
+var newToken = await OAuthHelper.RenewAccessAsync(refreshToken, ClientAppId, ClientSecret);
 var newClient = new CoinbaseClient(new OAuthConfig{ AccessToken = tokenNew.AccessToken })
 
 // Safe for later, again because refresh tokens can only be used once for renewal.

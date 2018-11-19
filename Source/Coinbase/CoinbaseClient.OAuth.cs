@@ -148,7 +148,7 @@ namespace Coinbase
       /// <param name="clientId"></param>
       /// <param name="clientSecret"></param>
       /// <returns></returns>
-      public static Task<OAuthResponse> RefreshTokenAsync(string refreshToken, string clientId, string clientSecret)
+      public static Task<OAuthResponse> RenewAccessAsync(string refreshToken, string clientId, string clientSecret)
       {
          var form = new
             {
@@ -201,7 +201,7 @@ namespace Coinbase
                var errorResponse = await ex.GetResponseJsonAsync<JsonResponse>().ConfigureAwait(false);
                if (errorResponse.Errors.Any(x => x.Id == ExpiredToken))
                {
-                  var refresh = await OAuthHelper.RefreshTokenAsync(refreshToken, clientId, clientSecret).ConfigureAwait(false);
+                  var refresh = await OAuthHelper.RenewAccessAsync(refreshToken, clientId, clientSecret).ConfigureAwait(false);
                   config.AccessToken = refresh.AccessToken;
                   refreshToken = refresh.RefreshToken;
 
