@@ -190,7 +190,7 @@ namespace Coinbase
 
       public static CoinbaseClient WithAutomaticOAuthTokenRefresh(this CoinbaseClient client, string clientId, string clientSecret, string refreshToken)
       {
-         if (client.config is OAuthConfig config) { }
+         if (client.Config is OAuthConfig config) { }
          else throw new InvalidOperationException($"Client must be using an {nameof(OAuthConfig)}");
 
          async Task TokenExpiredErrorHandler(HttpCall call)

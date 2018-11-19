@@ -42,7 +42,7 @@ namespace Coinbase
       {
          if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentNullException(nameof(userId));
 
-         return this.config.ApiUrl
+         return this.Config.ApiUrl
             .AppendPathSegments("users",userId)
             .WithClient(this)
             .GetJsonAsync<Response<User>>(cancellationToken);
@@ -52,7 +52,7 @@ namespace Coinbase
       /// </summary>
       Task<Response<User>> IUsersEndpoint.GetCurrentUserAsync(CancellationToken cancellationToken)
       {
-         return this.config.ApiUrl
+         return this.Config.ApiUrl
             .AppendPathSegment("user")
             .WithClient(this)
             .GetJsonAsync<Response<User>>(cancellationToken);
@@ -62,7 +62,7 @@ namespace Coinbase
       /// </summary>
       Task<Response<Auth>> IUsersEndpoint.GetAuthInfoAsync(CancellationToken cancellationToken)
       {
-         return this.config.ApiUrl
+         return this.Config.ApiUrl
             .AppendPathSegments("user", "auth")
             .WithClient(this)
             .GetJsonAsync<Response<Auth>>(cancellationToken);
@@ -72,7 +72,7 @@ namespace Coinbase
       /// </summary>
       Task<Response<User>> IUsersEndpoint.UpdateUserAsync(UserUpdate update, CancellationToken cancellationToken)
       {
-         return this.config.ApiUrl
+         return this.Config.ApiUrl
             .AppendPathSegment("user")
             .WithClient(this)
             .PutJsonAsync(update, cancellationToken)

@@ -29,17 +29,17 @@ namespace Coinbase
    {
       public const string ApiVersionDate = "2017-08-07";
 
-      protected internal readonly Config config;
+      public Config Config { get; }
 
       public const string Endpoint = "https://api.coinbase.com/v2/";
 
-      protected internal Url AccountsEndpoint => this.config.ApiUrl.AppendPathSegment("accounts");
-      protected internal Url PaymentMethodsEndpoint => this.config.ApiUrl.AppendPathSegment("payment-methods");
-      protected internal Url CurrenciesEndpoint => this.config.ApiUrl.AppendPathSegment("currencies");
-      protected internal Url ExchangeRatesEndpoint => this.config.ApiUrl.AppendPathSegment("exchange-rates");
-      protected internal Url PricesEndpoint => this.config.ApiUrl.AppendPathSegment("prices");
-      protected internal Url TimeEndpoint => this.config.ApiUrl.AppendPathSegment("time");
-      protected internal Url NotificationsEndpoint => this.config.ApiUrl.AppendPathSegment("notifications");
+      protected internal Url AccountsEndpoint => this.Config.ApiUrl.AppendPathSegment("accounts");
+      protected internal Url PaymentMethodsEndpoint => this.Config.ApiUrl.AppendPathSegment("payment-methods");
+      protected internal Url CurrenciesEndpoint => this.Config.ApiUrl.AppendPathSegment("currencies");
+      protected internal Url ExchangeRatesEndpoint => this.Config.ApiUrl.AppendPathSegment("exchange-rates");
+      protected internal Url PricesEndpoint => this.Config.ApiUrl.AppendPathSegment("prices");
+      protected internal Url TimeEndpoint => this.Config.ApiUrl.AppendPathSegment("time");
+      protected internal Url NotificationsEndpoint => this.Config.ApiUrl.AppendPathSegment("notifications");
 
       public CoinbaseClient(OAuthConfig config): this(config as Config){}
 
@@ -52,8 +52,8 @@ namespace Coinbase
       /// </summary>
       protected CoinbaseClient(Config config)
       {
-         this.config = config ?? new Config();
-         this.config.EnsureValid();
+         this.Config = config ?? new Config();
+         this.Config.EnsureValid();
          
          this.ConfigureClient();
       }
@@ -67,7 +67,7 @@ namespace Coinbase
          this.WithHeader(HeaderNames.Version, ApiVersionDate)
               .WithHeader("User-Agent", UserAgent);
 
-         this.config.Configure(this);
+         this.Config.Configure(this);
       }
    }
 }
