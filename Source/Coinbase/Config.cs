@@ -1,6 +1,12 @@
 using Coinbase.Models;
 using System;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Flurl;
+using Flurl.Http;
+using Flurl.Http.Configuration;
 
 namespace Coinbase
 {
@@ -16,18 +22,36 @@ namespace Coinbase
       internal virtual void EnsureValid()
       {
       }
+
+      protected internal virtual void Configure(CoinbaseApi client)
+      {
+
+      }
    }
+
    public class OAuthConfig : Config
    {
-      public string TokenEndpoint { get; set; } = CoinbaseApi.TokenEndpoint;
-        public string OAuthToken { get; set; }
-        public string RefreshToken { get; set; }
-        public Func<RefreshResponse, Task> OnTokenRefresh { get; set; }
+      public string AccessToken { get; set; }
 
       internal override void EnsureValid()
       {
-         if (string.IsNullOrWhiteSpace(OAuthToken))
-                throw new ArgumentNullException(nameof(OAuthToken), "The OAuthToken must be specified.");
+         if (string.IsNullOrWhiteSpace(this.AccessToken))
+            throw new ArgumentNullException(nameof(this.AccessToken), $"The {nameof(AccessToken)} must be specified.");
+      }
+
+      protected internal override void Configure(CoinbaseApi client)
+      {
+         client.Configure(settings => UseOAuth(settings, client));
+      }
+
+      private void UseOAuth(ClientFlurlHttpSettings settings, CoinbaseApi client)
+      {
+         async Task ApplyAuthorization(HttpCall call)
+         {
+            call.FlurlRequest.WithOAuthBearerToken(this.AccessToken);
+         }
+
+         settings.BeforeCallAsync = ApplyAuthorization;
       }
    }
 
@@ -39,6 +63,41 @@ namespace Coinbase
       {
          if (string.IsNullOrWhiteSpace(ApiKey)) throw new ArgumentNullException(nameof(ApiKey), "The API Key must be specified.");
          if (string.IsNullOrWhiteSpace(ApiSecret)) throw new ArgumentNullException(nameof(ApiSecret), "The API Key must be specified.");
+      }
+
+      protected internal override void Configure(CoinbaseApi client)
+      {
+         client.Configure(settings => ApiKeyAuth(settings, client));
+      }
+
+      private void ApiKeyAuth(ClientFlurlHttpSettings settings, CoinbaseApi client)
+      {
+         async Task SetHeaders(HttpCall http)
+         {
+            var body = http.RequestBody;
+            var method = http.Request.Method.Method.ToUpperInvariant();
+            var url = http.Request.RequestUri.PathAndQuery;
+
+            string timestamp;
+            if (this.UseTimeApi)
+            {
+               var timeResult = await client.Data.GetCurrentTimeAsync().ConfigureAwait(false);
+               timestamp = timeResult.Data.Epoch.ToString();
+            }
+            else
+            {
+               timestamp = TimeHelper.GetCurrentUnixTimestampSeconds().ToString(CultureInfo.CurrentCulture);
+            }
+
+            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, this.ApiSecret).ToLower();
+
+            http.FlurlRequest
+               .WithHeader(HeaderNames.AccessKey, this.ApiKey)
+               .WithHeader(HeaderNames.AccessSign, signature)
+               .WithHeader(HeaderNames.AccessTimestamp, timestamp);
+         }
+
+         settings.BeforeCallAsync = SetHeaders;
       }
    }
 }
