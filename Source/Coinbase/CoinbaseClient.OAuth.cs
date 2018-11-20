@@ -188,7 +188,7 @@ namespace Coinbase
    {
       public const string ExpiredToken = "expired_token";
 
-      public static CoinbaseClient WithAutomaticOAuthTokenRefresh(this CoinbaseClient client, string clientId, string clientSecret, string refreshToken)
+        public static CoinbaseClient WithAutomaticOAuthTokenRefresh(this CoinbaseClient client, string clientId, string clientSecret, Func<OAuthResponse, Task> onRefresh = null)
       {
          if (client.Config is OAuthConfig config) { }
          else throw new InvalidOperationException($"Client must be using an {nameof(OAuthConfig)}");
@@ -201,10 +201,10 @@ namespace Coinbase
                var errorResponse = await ex.GetResponseJsonAsync<JsonResponse>().ConfigureAwait(false);
                if (errorResponse.Errors.Any(x => x.Id == ExpiredToken))
                {
-                  var refresh = await OAuthHelper.RenewAccessAsync(refreshToken, clientId, clientSecret).ConfigureAwait(false);
-                  config.AccessToken = refresh.AccessToken;
-                  refreshToken = refresh.RefreshToken;
-
+                  var refreshResponse = await OAuthHelper.RenewAccessAsync(config.RefreshToken, clientId, clientSecret).ConfigureAwait(false);
+                  config.AccessToken = refreshResponse.AccessToken;
+                  config.RefreshToken = refreshResponse.RefreshToken;
+                  await onRefresh?.Invoke(refreshResponse);
                   call.Response = await call.FlurlRequest.SendAsync(call.Request.Method, call.Request.Content).ConfigureAwait(false);
                   call.ExceptionHandled = true;
                }

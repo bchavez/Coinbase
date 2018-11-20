@@ -98,8 +98,8 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task run_expired_token()
       {
-         this.client = new CoinbaseClient(new OAuthConfig { AccessToken = secrets.OAuthAccessToken })
-            .WithAutomaticOAuthTokenRefresh(secrets.OAuthClientId, secrets.OAuthClientSecret, secrets.OAuthRefreshToken);
+         this.client = new CoinbaseClient(new OAuthConfig { AccessToken = secrets.OAuthAccessToken, RefreshToken = secrets.OAuthRefreshToken })
+            .WithAutomaticOAuthTokenRefresh(secrets.OAuthClientId, secrets.OAuthClientSecret);
 
          var authInfo = await this.client.Users.GetAuthInfoAsync();
          authInfo.Dump();
