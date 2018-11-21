@@ -41,16 +41,10 @@ namespace Coinbase
       protected internal Url TimeEndpoint => this.Config.ApiUrl.AppendPathSegment("time");
       protected internal Url NotificationsEndpoint => this.Config.ApiUrl.AppendPathSegment("notifications");
 
-      public CoinbaseClient(OAuthConfig config): this(config as Config){}
-
-      public CoinbaseClient(ApiKeyConfig config) : this(config as Config){}
-
-      public CoinbaseClient() : this(null as Config){}
-
       /// <summary>
       /// The main class for making Coinbase API calls.
       /// </summary>
-      protected CoinbaseClient(Config config)
+      public CoinbaseClient(Config config = null)
       {
          this.Config = config ?? new Config();
          this.Config.EnsureValid();

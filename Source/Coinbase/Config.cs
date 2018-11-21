@@ -32,6 +32,7 @@ namespace Coinbase
    public class OAuthConfig : Config
    {
       public string AccessToken { get; set; }
+      public string RefreshToken { get; set; }
 
       internal override void EnsureValid()
       {

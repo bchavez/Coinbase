@@ -469,7 +469,7 @@ namespace Coinbase.Models
       public string[] Scopes { get; set; }
 
       [JsonProperty("oauth_meta")]
-      public IDictionary<string, JToken> OauthMeta { get; set; }
+      public IDictionary<string, JToken> OAuthMeta { get; set; }
    }
 
 
