@@ -188,9 +188,17 @@ namespace Coinbase
    {
       public const string ExpiredToken = "expired_token";
 
-        public static CoinbaseClient WithAutomaticOAuthTokenRefresh(this CoinbaseClient client, string clientId, string clientSecret, Func<OAuthResponse, Task> onRefresh = null)
+      /// <summary>
+      /// Setup the CoinbaseClient to use automatic token refresh.
+      /// </summary>
+      /// <param name="clientId">The OAuth Application Client ID</param>
+      /// <param name="clientSecret">The OAuth Application Secret</param>
+      /// <param name="onRefresh">Callback function to invoke when the OAuth token is refreshed.</param>
+      public static CoinbaseClient WithAutomaticOAuthTokenRefresh(this CoinbaseClient client, string clientId, string clientSecret, Func<OAuthResponse, Task> onRefresh = null)
       {
-         if (client.Config is OAuthConfig config) { }
+         if( client.Config is OAuthConfig config )
+         {
+         }
          else throw new InvalidOperationException($"Client must be using an {nameof(OAuthConfig)}");
 
          async Task TokenExpiredErrorHandler(HttpCall call)
@@ -204,7 +212,12 @@ namespace Coinbase
                   var refreshResponse = await OAuthHelper.RenewAccessAsync(config.RefreshToken, clientId, clientSecret).ConfigureAwait(false);
                   config.AccessToken = refreshResponse.AccessToken;
                   config.RefreshToken = refreshResponse.RefreshToken;
-                  await onRefresh?.Invoke(refreshResponse);
+
+                  if( onRefresh is null )
+                  {
+                  }
+                  else await onRefresh(refreshResponse).ConfigureAwait(false);
+
                   call.Response = await call.FlurlRequest.SendAsync(call.Request.Method, call.Request.Content).ConfigureAwait(false);
                   call.ExceptionHandled = true;
                }

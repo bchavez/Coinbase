@@ -70,7 +70,7 @@ namespace Coinbase.Tests
                   "wallet:user:read",
                   "wallet:user:email"
                },
-         OauthMeta =  new Dictionary<string, JToken>()
+         OAuthMeta =  new Dictionary<string, JToken>()
       };
 
       public const string Account1 = @"{

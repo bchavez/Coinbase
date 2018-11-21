@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -8,9 +7,8 @@ using Flurl;
 using Flurl.Http;
 using Flurl.Http.Testing;
 using NUnit.Framework;
-using Z.ExtensionMethods;
 
-namespace Coinbase.Tests.Endpoints
+namespace Coinbase.Tests.OAuthTests
 {
    public class OAuthHelperTests
    {
