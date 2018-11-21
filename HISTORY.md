@@ -1,3 +1,6 @@
+## v5.0.0-beta-6
+* PR 44: Add callback method OnRefresh when client renews oauth token. 
+
 ## v5.0.0-beta-5
 * PR 41: OAuth Auto Refresh tokens supported.
 * Renamed `CoinbaseApi` to `CoinbaseClient`.
