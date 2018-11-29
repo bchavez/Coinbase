@@ -1,3 +1,8 @@
+## v5.0.1
+* This library now has full model support for all Coinbase v2 APIs including Wallet and Data Endpoints. See: https://github.com/bchavez/Coinbase for more info.
+* Version 5.x is carries with it breaking changes now that OAuth API authentication is supported.
+* Dropped RestSharp dependency for Flurl.Http.
+
 ## v5.0.0-beta-6
 * PR 44: Add callback method OnRefresh when client renews oauth token. 
 
