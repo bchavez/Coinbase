@@ -7,7 +7,10 @@ Project Description
 -------------------
 A .NET implementation for the [Coinbase API](https://developers.coinbase.com/api/v2). This library uses API version 2.
 
-:loudspeaker: ***HEY!*** If you're looking for the [**Coinbase Commerce** API, check this link!](https://github.com/bchavez/Coinbase.Commerce)
+:loudspeaker: ***HEY!*** Be sure to checkout these other Coinbase API integrations:
+
+* [**Coinbase.Commerce**](https://github.com/bchavez/Coinbase.Commerce) - For e-commerce, merchants, and websites selling products or services looking to receive cryptocurrency as payment.
+* [**Coinbase.Pro**](https://github.com/bchavez/Coinbase.Pro) - For [retail trading](https://pro.coinbase.com) on [Coinbase Pro](https://pro.coinbase.com). Integration with orders, market data, and real-time WebSocket feeds.
 
 #### Supported Platforms
 * **.NET Standard 2.0** or later
