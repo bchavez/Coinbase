@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>A .NET implementation for the Coinbase API for online payments. The Coinbase API is a way to seamlessly pay for goods or services online utilizing Coinbase and Bitcoins for low-cost payment processing.</Description>
     <PackageReleaseNotes>
@@ -19,7 +19,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/bchavez/Coinbase</RepositoryUrl>
     <CodeAnalysisRuleSet>Coinbase.ruleset</CodeAnalysisRuleSet>
-     <!--Source Link Settings-->
+    <!--Source Link Settings-->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>false</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>

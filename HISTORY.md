@@ -1,3 +1,6 @@
+## v5.0.2
+* Fixed possible "Operation is not supported on this platform" exception from being thrown in `WebhookHelper.IsValid()` on .NET Core platform. `Rsa.ImportParameters(CoinbasePublicKey)` used instead of `Rsa.FromXmlString()`.
+
 ## v5.0.1
 * This library now has full model support for all Coinbase v2 APIs including Wallet and Data Endpoints. See: https://github.com/bchavez/Coinbase for more info.
 * Version 5.x is carries with it breaking changes now that OAuth API authentication is supported.

@@ -113,7 +113,7 @@ namespace Coinbase.Tests
 
          server.RespondWith(tokenResponse);
 
-         var token = await OAuthHelper.RefreshTokenAsync("refresh", "clientid", "clientsecret");
+         var token = await OAuthHelper.RenewAccessAsync("refresh", "clientid", "clientsecret");
 
          server.ShouldHaveExactCall("https://api.coinbase.com/oauth/token")
             .WithVerb(HttpMethod.Post)
