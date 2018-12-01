@@ -344,7 +344,7 @@ module Helpers =
             | Publish -> (failwith "Only CI server should publish on NuGet")
 
     let DotnetPack (project: NugetProject) (output: string) =
-        let packArgs = sprintf "pack --include-source --configuration Release --output %s" output
+        let packArgs = sprintf "pack --configuration Release --output %s" output
         dotnet packArgs project.Folder
 
     let DotnetBuild (target: NugetProject) (output: string) = 
