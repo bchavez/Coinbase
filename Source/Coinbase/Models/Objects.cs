@@ -679,5 +679,95 @@ namespace Coinbase.Models
       public JObject AdditionalData { get; set; }
    }
 
+   public class NotificationEventNames
+   {
+      /// <summary>
+      /// Ping notification can be send at any time to verify that the notification URL is functioning
+      /// </summary>
+      public const string Ping = "ping";
+
+      /// <summary>
+      /// New payment has been made to an address
+      /// Permissions Required: wallet:addresses:read
+      /// </summary>
+      public const string WalletAddressNewPayment = "wallet:addresses:new-payment";
+
+      /// <summary>
+      /// A buy has been created
+      /// Permissions Required: wallet:buys:read or wallet:buys:create
+      /// </summary>
+      public const string WalletBuysCreated = "wallet:buys:created";
+
+      /// <summary>
+      /// A buy has been completed
+      /// Permissions Required: wallet:buys:read or wallet:buys:create
+      /// </summary>
+      public const string WalletBuysCompleted = "wallet:buys:completed";
+
+
+      /// <summary>
+      /// A buy has been canceled
+      /// Permissions Required: wallet:buys:read or wallet:buys:create
+      /// </summary>
+      public const string WalletBuysCanceled = "wallet:buys:canceled";
+
+      /// <summary>
+      /// A sell has been created
+      /// Permissions Required: wallet:sells:read or wallet:sells:create
+      /// </summary>
+      public const string WalletSellsCreated = "wallet:sells:created";
+
+      /// <summary>
+      /// A sell has been completed
+      /// Permissions Required: wallet:sells:read or wallet:sells:create
+      /// </summary>
+      public const string WalletSellsCompleted = "wallet:sells:completed";
+
+
+      /// <summary>
+      /// A sell has been canceled
+      /// Permissions Required: wallet:sells:read or wallet:sells:create
+      /// </summary>
+      public const string WalletSellsCanceled = "wallet:sells:canceled";
+
+      /// <summary>
+      /// A deposit has been created
+      /// Permissions Required: wallet:deposit:read or wallet:deposit:create
+      /// </summary>
+      public const string WalletDepositCreated = "wallet:deposit:created";
+
+      /// <summary>
+      /// A deposit has been completed
+      /// Permissions Required: wallet:deposit:read or wallet:deposit:create
+      /// </summary>
+      public const string WalletDepositCompleted = "wallet:deposit:completed";
+
+
+      /// <summary>
+      /// A deposit has been canceled
+      /// Permissions Required: wallet:deposit:read or wallet:deposit:create
+      /// </summary>
+      public const string WalletDepositCanceled = "wallet:deposit:canceled";
+
+      /// <summary>
+      /// A withdrawal has been created
+      /// Permissions Required: wallet:withdrawal:read or wallet:withdrawal:create
+      /// </summary>
+      public const string WalletWithdrawalCreated = "wallet:withdrawal:created";
+
+      /// <summary>
+      /// A withdrawal has been completed
+      /// Permissions Required: wallet:withdrawal:read or wallet:withdrawal:create
+      /// </summary>
+      public const string WalletWithdrawalCompleted = "wallet:withdrawal:completed";
+
+
+      /// <summary>
+      /// A withdrawal has been canceled
+      /// Permissions Required: wallet:withdrawal:read or wallet:withdrawal:create
+      /// </summary>
+      public const string WalletWithdrawalCanceled = "wallet:withdrawal:canceled";
+   }
+
 
 }
