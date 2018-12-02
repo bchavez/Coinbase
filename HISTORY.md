@@ -1,3 +1,6 @@
+## v5.0.3
+* PR #47: Extra DI interfaces for DI support. Notification event and transaction status constants. Changed `Transaction.Description` return from object to string. Thanks granthoff1107! 
+
 ## v5.0.2
 * Fixed possible "Operation is not supported on this platform" exception from being thrown in `WebhookHelper.IsValid()` on .NET Core platform. `Rsa.ImportParameters(CoinbasePublicKey)` used instead of `Rsa.FromXmlString()`.
 
