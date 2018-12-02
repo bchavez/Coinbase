@@ -124,6 +124,9 @@ namespace Coinbase.Models
       [JsonProperty("type")]
       public string Type { get; set; }
 
+      /// <summary>
+      /// Status can be comapred using <see cref="TransactionStatus"/>
+      /// </summary>
       [JsonProperty("status")]
       public string Status { get; set; }
 
@@ -651,6 +654,9 @@ namespace Coinbase.Models
 
    public partial class Notification : Entity
    {
+      /// <summary>
+      /// Types can be compared using <see cref="NotificationEventNames"/>
+      /// </summary>
       [JsonProperty("type")]
       public string Type { get; set; }
 
@@ -769,5 +775,42 @@ namespace Coinbase.Models
       public const string WalletWithdrawalCanceled = "wallet:withdrawal:canceled";
    }
 
+   public class TransactionStatus
+   {
+      /// <summary>
+      /// Pending transactions (e.g.a send or a buy)
+      /// </summary>
+      public const string Pending = "pending";
+
+      /// <summary>
+      /// Completed transactions(e.g.a send or a buy)
+      /// </summary>
+      public const string Completed = "completed";
+
+      /// <summary>
+      /// Failed transactions(e.g.failed buy)s
+      /// </summary>
+      public const string Failed = "failed";
+
+      /// <summary>
+      /// Conditional transaction expired due to external factors
+      /// </summary>
+      public const string Expired = "expired";
+
+      /// <summary>
+      /// Transaction was canceled
+      /// </summary>
+      public const string Canceled = "canceled";
+
+      /// <summary>
+      /// Vault withdrawal is waiting for approval
+      /// </summary>
+      public const string WaitingForSignature = "waiting_for_signature";
+
+      /// <summary>
+      /// Vault withdrawal is waiting to be cleared
+      /// </summary>
+      public const string WaitingForClearing = "waiting_for_clearing";
+   }
 
 }
