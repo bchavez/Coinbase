@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -18,10 +19,10 @@ namespace Coinbase.Tests.Integration
       [OneTimeSetUp]
       public void BeforeAllTests()
       {
-         if( !Environment.OSVersion.IsAppVeyor() )
+         if( !Environment.OSVersion.IsAppVeyor() && Process.GetProcessesByName("Fiddler.exe").Any() )
          {
             var webProxy = new WebProxy("http://localhost.:8888", BypassOnLocal: false);
-
+            
             FlurlHttp.Configure(settings =>
                {
                   settings.HttpClientFactory = new ProxyFactory(webProxy);
