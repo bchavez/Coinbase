@@ -134,7 +134,7 @@ namespace Coinbase.Models
       public Money NativeAmount { get; set; }
 
       [JsonProperty("description")]
-      public object Description { get; set; }
+      public string Description { get; set; }
 
       [JsonProperty("created_at")]
       public DateTimeOffset CreatedAt { get; set; }
