@@ -339,10 +339,6 @@ module Helpers =
         let secureFile = findToolInSubPath "secure-file.exe" "."
         let args = sprintf "-decrypt %s.enc -secret %s" file secret
         shellExecSecret secureFile args "."
-  
-    let dotnet args workingDir = 
-        let executable = findOnPath "dotnet.exe"
-        shellExec executable args workingDir
 
                                                           
     let DotnetPack (np: NugetProject) (output: string) =
