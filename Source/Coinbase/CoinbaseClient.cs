@@ -63,5 +63,27 @@ namespace Coinbase
 
          this.Config.Configure(this);
       }
+
+      public interface ICoinbaseApiClient : ICoinbaseClient
+      {
+      }
+
+      public class CoinbaseApiClient : CoinbaseClient, ICoinbaseApiClient
+      {
+         public CoinbaseApiClient(ApiKeyConfig config) : base(config)
+         {
+         }
+      }
+
+      public interface ICoinbaseOAuthClient : ICoinbaseClient
+      {
+      }
+
+      public class CoinbaseOAuthClient : CoinbaseClient, ICoinbaseOAuthClient
+      {
+         public CoinbaseOAuthClient(OAuthConfig config) : base(config)
+         {
+         }
+      }
    }
 }
