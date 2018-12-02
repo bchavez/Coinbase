@@ -146,14 +146,14 @@ var newRefreshToken = newToken.RefreshToken;
 ```
 
 ###### Automatic Token Renewal
-The `CoinbaseClient` supports automatic token renewal. If you want to avoid refreshing your every two hours you can use the following `.WithAutomaticOAuthTokenRefresh()` extension method to activate automatic token renewal. When creating the `CoinbaseClient` object in **Step 3** above do the following: 
+The `CoinbaseClient` supports automatic token renewal. If you want to avoid refreshing your `AccessToken` every two hours you can use the following `.WithAutomaticOAuthTokenRefresh()` extension method to activate automatic token renewal. When creating the `CoinbaseClient` object in **Step 3** above do the following: 
 
 ```csharp
 var client = new CoinbaseClient(new OAuthConfig { AccessToken = token.AccessToken,
                                                   RefreshToken = token.RefreshToken })
                  .WithAutomaticOAuthTokenRefresh(ClientId, ClientSecret);
 ```
-You only need to call `.WithAutomaticOAuthTokenRefresh` once when creating the `CoinbaseClient` object.
+You only need to call `.WithAutomaticOAuthTokenRefresh` once when creating the `CoinbaseClient` object. Any failed HTTP requests that require authorization will be tried again with a refreshed `AccessToken`. 
 
 
 ##### Two Factor Authentication
