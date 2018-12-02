@@ -4,14 +4,30 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Flurl.Http;
 using Flurl.Http.Configuration;
 using NUnit.Framework;
+using Z.ExtensionMethods;
 
 namespace Coinbase.Tests.Integration
 {
    public class DataTests 
    {
       private CoinbaseClient client;
+
+      [OneTimeSetUp]
+      public void BeforeAllTests()
+      {
+         if( !Environment.OSVersion.IsAppVeyor() )
+         {
+            var webProxy = new WebProxy("http://localhost.:8888", BypassOnLocal: false);
+
+            FlurlHttp.Configure(settings =>
+               {
+                  settings.HttpClientFactory = new ProxyFactory(webProxy);
+               });
+         }
+      }
 
       [SetUp]
       public void BeforeEachTest()

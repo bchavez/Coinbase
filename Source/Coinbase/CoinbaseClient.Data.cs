@@ -40,7 +40,7 @@ namespace Coinbase
       /// <summary>
       /// List known currencies. Currency codes will conform to the ISO 4217 standard where possible. Currencies which have or had no representation in ISO 4217 may use a custom code (e.g. BTC).
       /// </summary>
-      Task<PagedResponse<Currency>> GetCurrenciesAsync();
+      Task<PagedResponse<Currency>> GetCurrenciesAsync(CancellationToken cancellationToken = default);
 
       /// <summary>
       /// Get the API server time.
@@ -60,6 +60,7 @@ namespace Coinbase
       Task<Response<Money>> IDataEndpoint.GetBuyPriceAsync(string currencyPair, CancellationToken cancellationToken)
       {
          return this.PricesEndpoint
+            .WithClient(this)
             .AppendPathSegments(currencyPair, "buy")
             .GetJsonAsync<Response<Money>>(cancellationToken);
       }
@@ -72,6 +73,7 @@ namespace Coinbase
       Task<Response<Money>> IDataEndpoint.GetSellPriceAsync(string currencyPair, CancellationToken cancellationToken)
       {
          return this.PricesEndpoint
+            .WithClient(this)
             .AppendPathSegments(currencyPair, "sell")
             .GetJsonAsync<Response<Money>>(cancellationToken);
       }
@@ -85,6 +87,7 @@ namespace Coinbase
       Task<Response<Money>> IDataEndpoint.GetSpotPriceAsync(string currencyPair, DateTime? date, CancellationToken cancellationToken)
       {
          var req = this.PricesEndpoint
+            .WithClient(this)
             .AppendPathSegments(currencyPair, "spot");
 
          if (!(date is null))
@@ -101,7 +104,8 @@ namespace Coinbase
       /// <param name="currency">Base currency (default: USD)</param>
       Task<Response<ExchangeRates>> IDataEndpoint.GetExchangeRatesAsync(string currency, CancellationToken cancellationToken)
       {
-         var req = this.ExchangeRatesEndpoint;
+         var req = this.ExchangeRatesEndpoint
+            .WithClient(this);
 
          if (!(currency is null))
          {
@@ -114,9 +118,11 @@ namespace Coinbase
       /// <summary>
       /// List known currencies. Currency codes will conform to the ISO 4217 standard where possible. Currencies which have or had no representation in ISO 4217 may use a custom code (e.g. BTC).
       /// </summary>
-      Task<PagedResponse<Currency>> IDataEndpoint.GetCurrenciesAsync()
+      Task<PagedResponse<Currency>> IDataEndpoint.GetCurrenciesAsync(CancellationToken cancellationToken)
       {
-         return this.CurrenciesEndpoint.GetJsonAsync<PagedResponse<Currency>>();
+         return this.CurrenciesEndpoint
+            .WithClient(this)
+            .GetJsonAsync<PagedResponse<Currency>>(cancellationToken);
       }
 
 
@@ -125,7 +131,16 @@ namespace Coinbase
       /// </summary>
       Task<Response<Time>> IDataEndpoint.GetCurrentTimeAsync(CancellationToken cancellationToken)
       {
-         return this.TimeEndpoint.GetJsonAsync<Response<Time>>(cancellationToken);
+         // Manually make this request outside the scope of .WithClient(this)
+         // because when UseTimeApi =true and when the user makes the first request,
+         // we need to know the server time but if we use .WithClient(this),
+         // we'll get stuck in a recursive situation with no base case
+         // to resolve the actual server time. So, we have to make this
+         // request out of scope of this configured client.
+         return this.TimeEndpoint
+            .WithHeader(HeaderNames.Version, ApiVersionDate)
+            .WithHeader("User-Agent", UserAgent)
+            .GetJsonAsync<Response<Time>>(cancellationToken);
       }
 
    }

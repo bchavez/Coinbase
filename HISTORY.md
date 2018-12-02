@@ -1,3 +1,7 @@
+## v5.0.4
+* Ensures all requests have a `User-Agent` string, including `Data` requests.
+* Added missing `CancellationToken` to `GetCurrenciesAsync()` 
+
 ## v5.0.3
 * PR #47: Extra DI interfaces for DI support. Notification event and transaction status constants. Changed `Transaction.Description` return from object to string. Thanks granthoff1107! 
 
