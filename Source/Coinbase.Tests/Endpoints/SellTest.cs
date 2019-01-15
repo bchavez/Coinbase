@@ -53,7 +53,7 @@ namespace Coinbase.Tests.Endpoints
 
 
       [Test]
-      public async Task can_place_buyorder()
+      public async Task can_place_sellorder()
       {
          SetupServerSingleResponse(Sell2);
 

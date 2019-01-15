@@ -295,10 +295,10 @@ namespace Coinbase.Models
       public Money Subtotal { get; set; }
 
       [JsonProperty("created_at")]
-      public DateTimeOffset CreatedAt { get; set; }
+      public DateTimeOffset? CreatedAt { get; set; }
 
       [JsonProperty("updated_at")]
-      public DateTimeOffset UpdatedAt { get; set; }
+      public DateTimeOffset? UpdatedAt { get; set; }
 
       [JsonProperty("committed")]
       public bool Committed { get; set; }
