@@ -255,20 +255,7 @@ namespace Coinbase.Models
       public DateTimeOffset UpdatedAt { get; set; }
 
       [JsonProperty("limits")]
-      public IDictionary<string, List<Limit>> Limits { get; set; }
-   }
-
-
-   public partial class Limit
-   {
-      [JsonProperty("period_in_days")]
-      public long PeriodInDays { get; set; }
-
-      [JsonProperty("total")]
-      public Money Total { get; set; }
-
-      [JsonProperty("remaining")]
-      public Money Remaining { get; set; }
+      public JToken Limits { get; set; }
    }
 
 

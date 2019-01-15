@@ -1,3 +1,7 @@
+## v5.0.5
+* Issue #51 - Fixed model mismatch in `Sells.PlaceSellOrderAsync` and `PaymentMethods.ListPaymentMethodsAsync`.
+* Added `EnableFiddlerDebugProxy` method on `CoinbaseClient` to help debug HTTP calls. 
+
 ## v5.0.4
 * Ensures all requests have a `User-Agent` string, including `Data` requests.
 * Added missing `CancellationToken` to `GetCurrenciesAsync()` 
