@@ -96,7 +96,7 @@ namespace Coinbase
       /// <param name="proxyUrl">The full proxy URL Fiddler proxy is listening on. IE: http://localhost.:8888 - The period after localhost is important to include.</param>
       public void EnableFiddlerDebugProxy(string proxyUrl)
       {
-         var webProxy = new WebProxy("http://localhost.:8888", BypassOnLocal: false);
+         var webProxy = new WebProxy(proxyUrl, BypassOnLocal: false);
 
          this.Configure(settings =>
             {

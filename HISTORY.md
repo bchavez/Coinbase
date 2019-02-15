@@ -1,3 +1,6 @@
+## v5.0.6
+* `EnableFiddlerDebugProxy` now uses the `proxyUrl` parameter instead of hard-coded `localhost` when debugging HTTP requests. 
+
 ## v5.0.5
 * Issue #51 - Fixed model mismatch in `Sells.PlaceSellOrderAsync` and `PaymentMethods.ListPaymentMethodsAsync`.
 * Added `EnableFiddlerDebugProxy` method on `CoinbaseClient` to help debug HTTP calls.
