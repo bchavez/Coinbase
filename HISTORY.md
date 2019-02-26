@@ -1,3 +1,6 @@
+## v5.0.7
+* Issue #52: `Coinbase.Models.Account.CreatedAt`/`.UpdatedAt` now nullable to avoid JSON deserialization error when JSON response contains null for these fields. 
+
 ## v5.0.6
 * `EnableFiddlerDebugProxy` now uses the `proxyUrl` parameter instead of hard-coded `localhost` when debugging HTTP requests. 
 
