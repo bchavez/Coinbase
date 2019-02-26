@@ -110,6 +110,8 @@ var opts = new AuthorizeOptions
 //Send the user to URL created by GetAuthorizeUrl
 var authUrl = OAuthHelper.GetAuthorizeUrl(opts);
   ```
+`SECURE_RANDOM` is some random state that you should generate to check when the user returns back to your site.
+
 
 2. The user will be presented with a screen similar to:
 ![OAuth Screen](https://developers.coinbase.com/images/docs/oauth-pongbot.png)
@@ -118,7 +120,7 @@ var authUrl = OAuthHelper.GetAuthorizeUrl(opts);
 
 3. Once your app has been given permission, Coinbase will send the user's browser back to `RedirectUri`. A `code` value will be present as a query string parameter. Extract this `code` value in your application and use it to obtain an `AccessToken` as shown below:
   ```csharp
-//http://myserver.com/callback?code=f284bdc3c1c9e24a494e285cb387c69510f28de51c15bb93179d9c7f28705398&state=random
+//http://myserver.com/callback?code=f284bdc3c1c9e24a494e285cb387c69510f28de51c15bb93179d9c7f28705398&state=SECURE_RANDOM
 
 var redirectUri = "http://myserver.com/callback";
 var code = "f284bdc3c1c9e24a494e285cb387c69510f28de51c15bb93179d9c7f28705398";
@@ -139,7 +141,7 @@ Initially, back in **Step 3**, when an authorization `code` is converted into an
 
 ```csharp
 var newToken = await OAuthHelper.RenewAccessAsync(refreshToken, ClientAppId, ClientSecret);
-var newClient = new CoinbaseClient(new OAuthConfig{ AccessToken = tokenNew.AccessToken })
+var newClient = new CoinbaseClient(new OAuthConfig{ AccessToken = newToken.AccessToken })
 
 // Safe for later, again because refresh tokens can only be used once for renewal.
 var newRefreshToken = newToken.RefreshToken;
