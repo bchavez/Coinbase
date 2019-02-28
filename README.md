@@ -135,16 +135,16 @@ var client = new CoinbaseClient(new OAuthConfig{ AccessToken = token.AccessToken
   ```
 
 ###### Explicit Token Expiration and Renewal
-`AccessToken`s have a two hour life time. Any **OAuth API** requests after after two hours will be denied. However, you can use a **Refresh Token** to get a new **Access Token** (that will again later, expire after 2 hours). **Refresh Token**s don't have a life time per se, but they can only be *used once* to renew an expired **Access Token**.
+`AccessToken`s have a two hour life time. Any **OAuth API** requests after two hours will be denied. However, you can use a **Refresh Token** to get a new **Access Token** (that will again later, expire after 2 hours). **Refresh Token**s don't have a life time per se, but they can only be *used once* to renew an expired **Access Token**.
 
 Initially, back in **Step 3**, when an authorization `code` is converted into an access token, you actually get two tokens, an `AccessToken` and a `RefreshToken`. In **Step 3**, the variable `refreshToken` (which was saved for later use) is used to obtain a new `AccessToken`.
 
 ```csharp
-var newToken = await OAuthHelper.RenewAccessAsync(refreshToken, ClientAppId, ClientSecret);
-var newClient = new CoinbaseClient(new OAuthConfig{ AccessToken = newToken.AccessToken })
+var newTokens = await OAuthHelper.RenewAccessAsync(refreshToken, ClientAppId, ClientSecret);
+var newClient = new CoinbaseClient(new OAuthConfig{ AccessToken = newTokens.AccessToken })
 
 // Safe for later, again because refresh tokens can only be used once for renewal.
-var newRefreshToken = newToken.RefreshToken;
+var newRefreshToken = newTokens.RefreshToken;
 ```
 
 ###### Automatic Token Renewal
