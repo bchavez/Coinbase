@@ -140,10 +140,10 @@ namespace Coinbase.Models
       public string Description { get; set; }
 
       [JsonProperty("created_at")]
-      public DateTimeOffset CreatedAt { get; set; }
+      public DateTimeOffset? CreatedAt { get; set; }
 
       [JsonProperty("updated_at")]
-      public DateTimeOffset UpdatedAt { get; set; }
+      public DateTimeOffset? UpdatedAt { get; set; }
 
       [JsonProperty("network")]
       public Network Network { get; set; }
@@ -249,10 +249,10 @@ namespace Coinbase.Models
       public bool InstantSell { get; set; }
 
       [JsonProperty("created_at")]
-      public DateTimeOffset CreatedAt { get; set; }
+      public DateTimeOffset? CreatedAt { get; set; }
 
       [JsonProperty("updated_at")]
-      public DateTimeOffset UpdatedAt { get; set; }
+      public DateTimeOffset? UpdatedAt { get; set; }
 
       [JsonProperty("limits")]
       public JToken Limits { get; set; }
@@ -319,10 +319,10 @@ namespace Coinbase.Models
       public Money Subtotal { get; set; }
 
       [JsonProperty("created_at")]
-      public DateTimeOffset CreatedAt { get; set; }
+      public DateTimeOffset? CreatedAt { get; set; }
 
       [JsonProperty("updated_at")]
-      public DateTimeOffset UpdatedAt { get; set; }
+      public DateTimeOffset? UpdatedAt { get; set; }
 
       [JsonProperty("committed")]
       public bool Committed { get; set; }
@@ -354,10 +354,10 @@ namespace Coinbase.Models
       public Money Subtotal { get; set; }
 
       [JsonProperty("created_at")]
-      public DateTimeOffset CreatedAt { get; set; }
+      public DateTimeOffset? CreatedAt { get; set; }
 
       [JsonProperty("updated_at")]
-      public DateTimeOffset UpdatedAt { get; set; }
+      public DateTimeOffset? UpdatedAt { get; set; }
 
       [JsonProperty("committed")]
       public bool Committed { get; set; }
@@ -663,10 +663,10 @@ namespace Coinbase.Models
       public JObject DeliveryResponse { get; set; }
 
       [JsonProperty("created_at")]
-      public DateTimeOffset CreatedAt { get; set; }
+      public DateTimeOffset? CreatedAt { get; set; }
 
       [JsonProperty("updated_at")]
-      public DateTimeOffset UpdatedAt { get; set; }
+      public DateTimeOffset? UpdatedAt { get; set; }
 
       [JsonProperty("additional_data")]
       public JObject AdditionalData { get; set; }

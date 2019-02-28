@@ -1,3 +1,6 @@
+## v5.0.8
+* PR #53: Ensure all `.CreatedAt` and `.UpdatedAt` fields are nullable to prevent deserialization exception errors.
+
 ## v5.0.7
 * Issue #52: `Coinbase.Models.Account.CreatedAt`/`.UpdatedAt` now nullable to avoid JSON deserialization error when JSON response contains null for these fields. 
 
