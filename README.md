@@ -84,6 +84,23 @@ public async Task can_get_spotprice_of_ETHUSD()
 * [`client.Users`](https://developers.coinbase.com/api/v2#users) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/UserTests.cs)
 * [`client.Withdrawals`](https://developers.coinbase.com/api/v2#withdrawals) - [Examples](https://github.com/bchavez/Coinbase/blob/master/Source/Coinbase.Tests/Endpoints/WithdrawlTests.cs)
 
+### Pagination
+Some Coinbase [APIs support pagination. See developer docs here](https://developers.coinbase.com/api/v2#pagination). APIs that support pagination can specify an extra `PaginationOptions` object used to specify item page `limit` and other various options. The following code shows how to enumerate the first 3 pages where each page contains 5 buy transactions for an account.
+
+```csharp
+var client = new CoinbaseClient(...);
+
+var page1 = await client.Buys.ListBuysAsync("..accountId..", 
+                  new PaginationOptions{Limit = 5}); //Limit results to 5 items
+
+var page2 = await client.GetNextPageAsync(page1); //Same pagination options used.
+                                                  //Limit 5 items.
+
+var page3 = await client.GetNextPageAsync(page2); //Same pagination options used.
+                                                  //Limit 5 items.
+```
+
+Use the `.GetNextPageAsync` helper method on `CoinbaseClient` supplying the current page of data to get the next page of data.
 
 ### Authentication Details
 ##### OAuth Access and Refresh Tokens

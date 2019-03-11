@@ -122,5 +122,46 @@ namespace Coinbase
                };
          }
       }
+
+
+      /// <summary>
+      /// Get the next page of data given the current paginated response.
+      /// </summary>
+      /// <param name="currentPage">The current paged response.</param>
+      /// <returns>The next page of data.</returns>
+      public Task<PagedResponse<T>> GetNextPageAsync<T>(PagedResponse<T> currentPage, CancellationToken cancellationToken = default)
+      {
+         if( !currentPage.HasNextPage() ) throw new NullReferenceException("No next page.");
+
+         return GetPageAsync<T>(currentPage.Pagination.NextUri, cancellationToken);
+      }
+
+      ///// <summary>
+      ///// Get the previous page of data given the current pagination response.
+      ///// </summary>
+      ///// <param name="currentPage">The current paged response.</param>
+      ///// <returns>The previous page of data.</returns>
+      //public Task<PagedResponse<T>> PreviousPageAsync<T>(PagedResponse<T> currentPage, CancellationToken cancellationToken = default)
+      //{
+      //   if( !currentPage.HasPrevPage() ) throw new NullReferenceException("No previous page.");
+
+      //   return GetPageAsync<T>(currentPage.Pagination.PreviousUri, cancellationToken);
+      //}
+
+      /// <summary>
+      /// Internally used for getting a next or previous page.
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <param name="pageUrl"></param>
+      /// <param name="cancellationToken"></param>
+      /// <returns></returns>
+      protected internal Task<PagedResponse<T>> GetPageAsync<T>(string pageUrl, CancellationToken cancellationToken = default)
+      {
+         pageUrl = pageUrl.Remove(0, 4);
+         return (this.Config.ApiUrl + pageUrl)
+            .WithClient(this)
+            .GetJsonAsync<PagedResponse<T>>(cancellationToken);
+      }
+
    }
 }

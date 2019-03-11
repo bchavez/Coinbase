@@ -1,8 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
+using Coinbase.Models;
+using FluentAssertions;
+using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -43,7 +48,7 @@ namespace Coinbase.Tests.Integration
 
       protected void ReadSecrets()
       {
-         var json = File.ReadAllText("../../.secrets.txt");
+         var json = File.ReadAllText("../../../.secrets.txt");
          this.secrets = JsonConvert.DeserializeObject<Secrets>(json);
       }
    }
@@ -153,6 +158,28 @@ namespace Coinbase.Tests.Integration
          var ethAddresses = await client.Addresses.ListAddressesAsync(ethAccount.Id);
          var ethAddress = ethAddresses.Data.FirstOrDefault();
          var ethTransactions = await client.Transactions.ListTransactionsAsync(ethAccount.Id);
+      }
+
+
+      [Test]
+      public async Task test_paged_response()
+      {
+         var accounts = await client.Accounts.ListAccountsAsync();
+         var btcWallet = accounts.Data.First(a => a.Name.StartsWith("BTC Wallet"));
+
+         var page1 = await client.Addresses.ListAddressesAsync(btcWallet.Id, new PaginationOptions{Limit = 1});
+         page1.Dump();
+         
+         var page2 = await client.GetNextPageAsync(page1);
+         page2.Dump();
+
+         var page3 = await client.GetNextPageAsync(page2);
+         page3.Dump();
+         //var prevPage = await client.PreviousPageAsync(page3);
+         
+         //prevPage.Dump();
+
+         //prevPage.Should().BeEquivalentTo(page1);
       }
    }
 }

@@ -12,7 +12,7 @@ namespace Coinbase
       /// <summary>
       /// Lists account’s transactions.
       /// </summary>
-      Task<PagedResponse<Transaction>> ListTransactionsAsync(string accountId, CancellationToken cancellationToken = default);
+      Task<PagedResponse<Transaction>> ListTransactionsAsync(string accountId, PaginationOptions pagination = null, CancellationToken cancellationToken = default);
 
       /// <summary>
       /// Show an individual transaction for an account. See transaction resource for more information.
@@ -63,10 +63,11 @@ namespace Coinbase
       /// <summary>
       /// Lists account’s transactions.
       /// </summary>
-      Task<PagedResponse<Transaction>> ITransactionsEndpoint.ListTransactionsAsync(string accountId, CancellationToken cancellationToken)
+      Task<PagedResponse<Transaction>> ITransactionsEndpoint.ListTransactionsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "transactions")
+            .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
       }

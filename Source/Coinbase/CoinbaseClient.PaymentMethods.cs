@@ -12,7 +12,7 @@ namespace Coinbase
       /// <summary>
       /// Lists current user’s payment methods.
       /// </summary>
-      Task<PagedResponse<PaymentMethod>> ListPaymentMethodsAsync(CancellationToken cancellationToken = default);
+      Task<PagedResponse<PaymentMethod>> ListPaymentMethodsAsync(PaginationOptions pagination = null, CancellationToken cancellationToken = default);
       /// <summary>
       /// Show current user’s payment method.
       /// </summary>
@@ -24,9 +24,10 @@ namespace Coinbase
       public IPaymentMethodsEndpoint PaymentMethods => this;
 
 
-      Task<PagedResponse<PaymentMethod>> IPaymentMethodsEndpoint.ListPaymentMethodsAsync(CancellationToken cancellationToken)
+      Task<PagedResponse<PaymentMethod>> IPaymentMethodsEndpoint.ListPaymentMethodsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.PaymentMethodsEndpoint
+            .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<PaymentMethod>>(cancellationToken);
       }

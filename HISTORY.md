@@ -1,3 +1,6 @@
+## v5.1.0
+* Issue #54: Better support for Pagination with `client.GetNextPageAsync` helper.
+
 ## v5.0.8
 * PR #53: Ensure all `.CreatedAt` and `.UpdatedAt` fields are nullable to prevent deserialization exception errors.
 

@@ -12,7 +12,7 @@ namespace Coinbase
       /// <summary>
       /// Lists current user’s accounts to which the authentication method has access to.
       /// </summary>
-      Task<PagedResponse<Account>> ListAccountsAsync(CancellationToken cancellationToken = default);
+      Task<PagedResponse<Account>> ListAccountsAsync(PaginationOptions pagination = null, CancellationToken cancellationToken = default);
 
       /// <summary>
       /// Show current user’s account. To access the primary account for a given currency, a currency string (BTC or ETH) can be used instead of the account id in the URL.
@@ -47,9 +47,10 @@ namespace Coinbase
       /// <summary>
       /// Lists current user’s accounts to which the authentication method has access to.
       /// </summary>
-      Task<PagedResponse<Account>> IAccountsEndpoint.ListAccountsAsync(CancellationToken cancellationToken)
+      Task<PagedResponse<Account>> IAccountsEndpoint.ListAccountsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
+            .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Account>>(cancellationToken);
       }

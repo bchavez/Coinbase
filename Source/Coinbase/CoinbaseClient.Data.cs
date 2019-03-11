@@ -40,7 +40,7 @@ namespace Coinbase
       /// <summary>
       /// List known currencies. Currency codes will conform to the ISO 4217 standard where possible. Currencies which have or had no representation in ISO 4217 may use a custom code (e.g. BTC).
       /// </summary>
-      Task<PagedResponse<Currency>> GetCurrenciesAsync(CancellationToken cancellationToken = default);
+      Task<PagedResponse<Currency>> GetCurrenciesAsync(PaginationOptions pagination = null, CancellationToken cancellationToken = default);
 
       /// <summary>
       /// Get the API server time.
@@ -118,9 +118,10 @@ namespace Coinbase
       /// <summary>
       /// List known currencies. Currency codes will conform to the ISO 4217 standard where possible. Currencies which have or had no representation in ISO 4217 may use a custom code (e.g. BTC).
       /// </summary>
-      Task<PagedResponse<Currency>> IDataEndpoint.GetCurrenciesAsync(CancellationToken cancellationToken)
+      Task<PagedResponse<Currency>> IDataEndpoint.GetCurrenciesAsync(PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.CurrenciesEndpoint
+            .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Currency>>(cancellationToken);
       }

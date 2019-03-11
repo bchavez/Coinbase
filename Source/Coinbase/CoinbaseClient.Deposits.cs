@@ -12,7 +12,7 @@ namespace Coinbase
       /// <summary>
       /// Lists deposits for an account.
       /// </summary>
-      Task<PagedResponse<Deposit>> ListDepositsAsync(string accountId, CancellationToken cancellationToken = default);
+      Task<PagedResponse<Deposit>> ListDepositsAsync(string accountId, PaginationOptions pagination = null, CancellationToken cancellationToken = default);
       /// <summary>
       /// Show an individual deposit.
       /// </summary>
@@ -34,10 +34,11 @@ namespace Coinbase
       private const string deposits = "deposits";
 
       /// <inheritdoc />
-      Task<PagedResponse<Deposit>> IDepositsEndpoint.ListDepositsAsync(string accountId, CancellationToken cancellationToken)
+      Task<PagedResponse<Deposit>> IDepositsEndpoint.ListDepositsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, deposits)
+            .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Deposit>>(cancellationToken);
       }

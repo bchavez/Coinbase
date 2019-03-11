@@ -93,6 +93,16 @@ namespace Coinbase.Models
 
       [JsonProperty("data")]
       public T[] Data { get; set; }
+
+      /// <summary>
+      /// Indicates if a next page of data exists.
+      /// </summary>
+      public bool HasNextPage() => !string.IsNullOrWhiteSpace(this.Pagination?.NextUri);
+
+      ///// <summary>
+      ///// Indicates if a previous page of data exits.
+      ///// </summary>
+      //public bool HasPrevPage() => !string.IsNullOrWhiteSpace(this.Pagination?.PreviousUri);
    }
 
    public class Error : Json
@@ -122,7 +132,7 @@ namespace Coinbase.Models
       public SortOrder Order { get; set; }
 
       [JsonProperty("previous_uri")]
-      public object PreviousUri { get; set; }
+      public string PreviousUri { get; set; }
 
       [JsonProperty("next_uri")]
       public string NextUri { get; set; }

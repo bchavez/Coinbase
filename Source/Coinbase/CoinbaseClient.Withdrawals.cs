@@ -11,7 +11,7 @@ namespace Coinbase
       /// <summary>
       /// Lists deposits for an account.
       /// </summary>
-      Task<PagedResponse<Withdrawal>> ListWithdrawalsAsync(string accountId, CancellationToken cancellationToken = default);
+      Task<PagedResponse<Withdrawal>> ListWithdrawalsAsync(string accountId, PaginationOptions pagination = null, CancellationToken cancellationToken = default);
       /// <summary>
       /// Show an individual deposit.
       /// </summary>
@@ -33,10 +33,11 @@ namespace Coinbase
 
       private const string withdrawals = "withdrawals";
 
-      Task<PagedResponse<Withdrawal>> IWithdrawalsEndpoint.ListWithdrawalsAsync(string accountId, CancellationToken cancellationToken)
+      Task<PagedResponse<Withdrawal>> IWithdrawalsEndpoint.ListWithdrawalsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, withdrawals)
+            .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Withdrawal>>(cancellationToken);
       }

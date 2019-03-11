@@ -11,7 +11,7 @@ namespace Coinbase
       /// <summary>
       /// Lists buys for an account.
       /// </summary>
-      Task<PagedResponse<Buy>> ListBuysAsync(string accountId, CancellationToken cancellationToken = default);
+      Task<PagedResponse<Buy>> ListBuysAsync(string accountId, PaginationOptions pagination = null, CancellationToken cancellationToken = default);
 
       /// <summary>
       /// Get an individual buy.
@@ -43,10 +43,11 @@ namespace Coinbase
       /// <summary>
       /// Lists buys for an account.
       /// </summary>
-      Task<PagedResponse<Buy>> IBuysEndpoint.ListBuysAsync(string accountId, CancellationToken cancellationToken)
+      Task<PagedResponse<Buy>> IBuysEndpoint.ListBuysAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegments(accountId, "buys")
+            .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Buy>>(cancellationToken);
       }

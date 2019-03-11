@@ -90,7 +90,7 @@ namespace Coinbase
                timestamp = TimeHelper.GetCurrentUnixTimestampSeconds().ToString(CultureInfo.CurrentCulture);
             }
 
-            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, this.ApiSecret).ToLower();
+            var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, this.ApiSecret);
 
             http.FlurlRequest
                .WithHeader(HeaderNames.AccessKey, this.ApiKey)
