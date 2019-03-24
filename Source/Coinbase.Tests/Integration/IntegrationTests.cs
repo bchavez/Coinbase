@@ -181,5 +181,31 @@ namespace Coinbase.Tests.Integration
 
          //prevPage.Should().BeEquivalentTo(page1);
       }
+
+      [Test]
+      public async Task can_hoist_response()
+      {
+         bool myCustomActionWasCalled = false;
+         client.Configure(cf =>
+            {
+               cf.AfterCall = http =>
+                  {
+                     myCustomActionWasCalled = true;
+                     "AfterCall action set by user.".Dump();
+                  };
+            });
+
+         var list = await client
+            .AllowAnyHttpStatus()
+            .HoistResponse(out var responseGetter)
+            .Accounts
+            .ListAccountsAsync();
+
+         var response = responseGetter();
+
+         response.Should().NotBeNull();
+         response.StatusCode.Should().NotBe(0);
+         myCustomActionWasCalled.Should().BeTrue();
+      }
    }
 }

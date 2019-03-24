@@ -163,5 +163,43 @@ namespace Coinbase
             .GetJsonAsync<PagedResponse<T>>(cancellationToken);
       }
 
+
+      /// <summary>
+      /// Captures the low-level <seealso cref="HttpResponseMessage" /> from a
+      /// underlying request. Useful in advanced scenarios where you
+      /// want to check HTTP headers, HTTP status code or
+      /// inspect the response body manually.
+      /// </summary>
+      /// <param name="responseGetter">A function that must be called to
+      /// retrieve the <seealso cref="HttpResponseMessage"/>
+      /// </param>
+      /// <returns>Returns the <seealso cref="HttpResponseMessage"/> of the
+      /// underlying HTTP request.</returns>
+      public CoinbaseClient HoistResponse(out Func<HttpResponseMessage> responseGetter)
+      {
+         HttpResponseMessage msg = null;
+
+         void CaptureResponse(HttpCall http)
+         {
+            msg = http.Response;
+
+            this.Configure(cf =>
+               {
+                  // Remove Action<HttpCall> from Invocation list
+                  // to avoid memory leak from further calls to the same
+                  // client object.
+                  cf.AfterCall -= CaptureResponse;
+               });
+         }
+
+         this.Configure(cf =>
+            {
+               cf.AfterCall += CaptureResponse;
+            });
+
+         responseGetter = () => msg;
+         return this;
+      }
+
    }
 }

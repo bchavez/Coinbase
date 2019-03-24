@@ -1,3 +1,6 @@
+## v5.1.1
+* Issue #55: Add `client.HoistResponse(out var msg)` that can be used to get the underlying `HttpResponseMessage`. Useful for advanced scenarios where you want to manually check low-level HTTP headers, HTTP status code or inspect the response body manually.
+
 ## v5.1.0
 * Issue #54: Better support for Pagination with `client.GetNextPageAsync` helper.
 
