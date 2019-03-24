@@ -246,6 +246,22 @@ else {
 
  Easy peasy! **Happy crypto shopping!** :tada:
 
+Advanced Usage
+--------------
+In some advanced cases it may be desirable to gain access to the underlying `HttpResponseMessage` object to check **HTTP status codes**, **HTTP headers** or to manually inspect the **response body**. The `.HoistResponse()` method on `CoinbaseClient` can be used to gain access the underlying `HttpResponseMessage`. The following code demonstrates how get the underlying `HttpResponseMessage`:
+
+```csharp
+var accountList = await client
+   .AllowAnyHttpStatus()
+   .HoistResponse(out var responseGetter)
+   .Accounts
+   .ListAccountsAsync();
+
+var response = responseGetter();
+
+var httpStatusCode = response.StatusCode;
+```
+
 
 Reference
 ---------
