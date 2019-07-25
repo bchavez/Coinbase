@@ -112,7 +112,7 @@ Before you begin **OAuth** you'll need to register your **OAuth** application wi
 
 Note the `Client Id` and `Client Secret` values.
 
-The steps to obtain an `AccessToken` from Coinbase user with your app is as follows:
+The following steps show how to obtain an `AccessToken` from a Coinbase user with your application:
 1. First, get authorization from the user by sending the user to a URL using:
   ```csharp
 //Create the options and permission scopes you want your app to have access to
