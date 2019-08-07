@@ -196,6 +196,10 @@ var response = await client
 
 if( response.HasError() )
 {
+   // something went wrong.
+}
+else
+{
    // transaction is okay!
 }
 ``` 
