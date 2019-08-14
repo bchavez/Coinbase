@@ -560,7 +560,7 @@ namespace Coinbase.Models
    public partial class PlaceBuy
    {
       [JsonProperty("amount")]
-      public decimal Amount { get; set; }
+      public decimal? Amount { get; set; }
 
       [JsonProperty("total")]
       public string Total { get; set; }
