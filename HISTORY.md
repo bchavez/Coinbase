@@ -1,3 +1,6 @@
+## v5.1.2
+* PR #58: Makes `PlaceBuy.Amount` nullable. Documentation states that `PlaceBuy.Amount` or `PlaceBuy.Total` can be specified but not both. Thanks Nemeth!
+
 ## v5.1.1
 * Issue #55: Add `client.HoistResponse(out var msg)` that can be used to get the underlying `HttpResponseMessage`. Useful for advanced scenarios where you want to manually check low-level HTTP headers, HTTP status code or inspect the response body manually.
 
