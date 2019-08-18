@@ -36,7 +36,7 @@ namespace Coinbase
       Task<PagedResponse<Withdrawal>> IWithdrawalsEndpoint.ListWithdrawalsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, withdrawals)
+            .AppendPathSegmentsRequire(accountId, withdrawals)
             .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Withdrawal>>(cancellationToken);
@@ -45,7 +45,7 @@ namespace Coinbase
       Task<Response<Withdrawal>> IWithdrawalsEndpoint.GetWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, withdrawals, withdrawalId)
+            .AppendPathSegmentsRequire(accountId, withdrawals, withdrawalId)
             .WithClient(this)
             .GetJsonAsync<Response<Withdrawal>>(cancellationToken);
       }
@@ -53,7 +53,7 @@ namespace Coinbase
       Task<Response<Withdrawal>> IWithdrawalsEndpoint.WithdrawalFundsAsync(string accountId, WithdrawalFunds withdrawalFunds, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, withdrawals)
+            .AppendPathSegmentsRequire(accountId, withdrawals)
             .WithClient(this)
             .PostJsonAsync(withdrawalFunds, cancellationToken)
             .ReceiveJson<Response<Withdrawal>>();
@@ -63,7 +63,7 @@ namespace Coinbase
       Task<Response<Withdrawal>> IWithdrawalsEndpoint.CommitWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, withdrawals, withdrawalId, "commit")
+            .AppendPathSegmentsRequire(accountId, withdrawals, withdrawalId, "commit")
             .WithClient(this)
             .PostJsonAsync(null, cancellationToken)
             .ReceiveJson<Response<Withdrawal>>();

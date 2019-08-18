@@ -37,7 +37,7 @@ namespace Coinbase
       Task<PagedResponse<Deposit>> IDepositsEndpoint.ListDepositsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, deposits)
+            .AppendPathSegmentsRequire(accountId, deposits)
             .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Deposit>>(cancellationToken);
@@ -47,7 +47,7 @@ namespace Coinbase
       Task<Response<Deposit>> IDepositsEndpoint.GetDepositAsync(string accountId, string depositId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, deposits, depositId)
+            .AppendPathSegmentsRequire(accountId, deposits, depositId)
             .WithClient(this)
             .GetJsonAsync<Response<Deposit>>(cancellationToken);
       }
@@ -56,7 +56,7 @@ namespace Coinbase
       Task<Response<Deposit>> IDepositsEndpoint.DepositFundsAsync(string accountId, DepositFunds depositFunds, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, deposits)
+            .AppendPathSegmentsRequire(accountId, deposits)
             .WithClient(this)
             .PostJsonAsync(depositFunds, cancellationToken)
             .ReceiveJson<Response<Deposit>>();
@@ -66,7 +66,7 @@ namespace Coinbase
       Task<Response<Deposit>> IDepositsEndpoint.CommitDepositAsync(string accountId, string depositId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, deposits, depositId, "commit")
+            .AppendPathSegmentsRequire(accountId, deposits, depositId, "commit")
             .WithClient(this)
             .PostJsonAsync(null, cancellationToken)
             .ReceiveJson<Response<Deposit>>();

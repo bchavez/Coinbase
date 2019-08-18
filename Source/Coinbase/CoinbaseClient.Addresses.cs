@@ -39,7 +39,7 @@ namespace Coinbase
       Task<PagedResponse<AddressEntity>> IAddressesEndpoint.ListAddressesAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "addresses")
+            .AppendPathSegmentsRequire(accountId, "addresses")
             .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<AddressEntity>>(cancellationToken);
@@ -49,7 +49,7 @@ namespace Coinbase
       Task<Response<AddressEntity>> IAddressesEndpoint.GetAddressAsync(string accountId, string addressId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "addresses", addressId)
+            .AppendPathSegmentsRequire(accountId, "addresses", addressId)
             .WithClient(this)
             .GetJsonAsync<Response<AddressEntity>>(cancellationToken);
       }
@@ -58,7 +58,7 @@ namespace Coinbase
       Task<PagedResponse<Transaction>> IAddressesEndpoint.ListAddressTransactionsAsync(string accountId, string addressId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "addresses", addressId, "transactions")
+            .AppendPathSegmentsRequire(accountId, "addresses", addressId, "transactions")
             .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
@@ -68,7 +68,7 @@ namespace Coinbase
       Task<Response<AddressEntity>> IAddressesEndpoint.CreateAddressAsync(string accountId, CreateAddress createAddress, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "addresses")
+            .AppendPathSegmentsRequire(accountId, "addresses")
             .WithClient(this)
             .PostJsonAsync(createAddress, cancellationToken)
             .ReceiveJson<Response<AddressEntity>>();

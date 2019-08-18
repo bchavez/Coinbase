@@ -66,7 +66,7 @@ namespace Coinbase
       Task<PagedResponse<Transaction>> ITransactionsEndpoint.ListTransactionsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "transactions")
+            .AppendPathSegmentsRequire(accountId, "transactions")
             .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
@@ -78,7 +78,7 @@ namespace Coinbase
       Task<Response<Transaction>> ITransactionsEndpoint.GetTransactionAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "transactions", transactionId)
+            .AppendPathSegmentsRequire(accountId, "transactions", transactionId)
             .WithClient(this)
             .GetJsonAsync<Response<Transaction>>(cancellationToken);
       }
@@ -92,7 +92,7 @@ namespace Coinbase
       Task<Response<Transaction>> ITransactionsEndpoint.SendMoneyAsync(string accountId, CreateTransaction createTransaction, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "transactions")
+            .AppendPathSegmentsRequire(accountId, "transactions")
             .WithClient(this)
             .PostJsonAsync(createTransaction, cancellationToken)
             .ReceiveJson<Response<Transaction>>();
@@ -107,7 +107,7 @@ namespace Coinbase
       Task<Response<Transaction>> ITransactionsEndpoint.TransferMoneyAsync(string accountId, CreateTransfer createTransfer, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "transactions")
+            .AppendPathSegmentsRequire(accountId, "transactions")
             .WithClient(this)
             .PostJsonAsync(createTransfer, cancellationToken)
             .ReceiveJson<Response<Transaction>>();
@@ -119,7 +119,7 @@ namespace Coinbase
       Task<Response<Transaction>> ITransactionsEndpoint.RequestMoneyAsync(string accountId, RequestMoney requestMoney, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "transactions")
+            .AppendPathSegmentsRequire(accountId, "transactions")
             .WithClient(this)
             .PostJsonAsync(requestMoney, cancellationToken)
             .ReceiveJson<Response<Transaction>>();
@@ -131,7 +131,7 @@ namespace Coinbase
       Task<HttpResponseMessage> ITransactionsEndpoint.CompleteRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "transactions", transactionId, "complete")
+            .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "complete")
             .WithClient(this)
             .PostJsonAsync(null, cancellationToken);
       }
@@ -143,7 +143,7 @@ namespace Coinbase
       Task<HttpResponseMessage> ITransactionsEndpoint.ResendRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "transactions", transactionId, "resend")
+            .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "resend")
             .WithClient(this)
             .PostJsonAsync(null, cancellationToken);
       }
@@ -154,7 +154,7 @@ namespace Coinbase
       Task<HttpResponseMessage> ITransactionsEndpoint.CancelRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "transactions", transactionId)
+            .AppendPathSegmentsRequire(accountId, "transactions", transactionId)
             .WithClient(this)
             .DeleteAsync(cancellationToken);
       }

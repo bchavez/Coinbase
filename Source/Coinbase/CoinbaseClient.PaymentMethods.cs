@@ -35,7 +35,7 @@ namespace Coinbase
       Task<Response<PaymentMethod>> IPaymentMethodsEndpoint.GetPaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
       {
          return this.PaymentMethodsEndpoint
-            .AppendPathSegment(paymentMethodId)
+            .AppendPathSegmentsRequire(paymentMethodId)
             .WithClient(this)
             .GetJsonAsync<Response<PaymentMethod>>(cancellationToken);
       }

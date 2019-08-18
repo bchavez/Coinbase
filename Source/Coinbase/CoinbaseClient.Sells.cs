@@ -46,7 +46,7 @@ namespace Coinbase
       Task<PagedResponse<Sell>> ISellsEndpoint.ListSellsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "sells")
+            .AppendPathSegmentsRequire(accountId, "sells")
             .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Sell>>(cancellationToken);
@@ -58,7 +58,7 @@ namespace Coinbase
       Task<Response<Sell>> ISellsEndpoint.GetSellAsync(string accountId, string sellId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "sells", sellId)
+            .AppendPathSegmentsRequire(accountId, "sells", sellId)
             .WithClient(this)
             .GetJsonAsync<Response<Sell>>(cancellationToken);
       }
@@ -74,7 +74,7 @@ namespace Coinbase
       Task<Response<Sell>> ISellsEndpoint.PlaceSellOrderAsync(string accountId, PlaceSell placeSell, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "sells")
+            .AppendPathSegmentsRequire(accountId, "sells")
             .WithClient(this)
             .PostJsonAsync(placeSell, cancellationToken)
             .ReceiveJson<Response<Sell>>();
@@ -88,7 +88,7 @@ namespace Coinbase
       Task<Response<Sell>> ISellsEndpoint.CommitSellAsync(string accountId, string sellId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "sells", sellId, "commit")
+            .AppendPathSegmentsRequire(accountId, "sells", sellId, "commit")
             .WithClient(this)
             .PostJsonAsync(null, cancellationToken)
             .ReceiveJson<Response<Sell>>();

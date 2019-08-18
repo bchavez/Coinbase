@@ -18,7 +18,7 @@ namespace Coinbase.Tests
       {
          this.server.Dispose();
       }
-
+      
       protected void SetupServerPagedResponse(string pageJson, string dataJson)
       {
          var json = @"{
@@ -46,12 +46,12 @@ namespace Coinbase.Tests
    {
       protected CoinbaseClient client;
 
-      public string oauthKey = "369ECD3F-2D00-4D7A-ACDB-92C2DC35A878";
+      public const string OauthKey = "369ECD3F-2D00-4D7A-ACDB-92C2DC35A878";
 
       [SetUp]
       public void BeforeEachTest()
       {
-         client = new CoinbaseClient(new OAuthConfig{AccessToken = oauthKey});
+         client = new CoinbaseClient(new OAuthConfig{AccessToken = OauthKey});
       }
 
       [TearDown]
@@ -65,7 +65,7 @@ namespace Coinbase.Tests
          server.ShouldHaveMadeACall()
             .WithHeader(HeaderNames.Version, CoinbaseClient.ApiVersionDate)
             .WithHeader("User-Agent", CoinbaseClient.UserAgent)
-            .WithHeader("Authorization", $"Bearer {oauthKey}");
+            .WithHeader("Authorization", $"Bearer {OauthKey}");
       }
    }
 

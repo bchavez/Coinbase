@@ -61,7 +61,7 @@ namespace Coinbase
       Task<Response<Account>> IAccountsEndpoint.GetAccountAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegment(accountId)
+            .AppendPathSegmentsRequire(accountId)
             .WithClient(this)
             .GetJsonAsync<Response<Account>>(cancellationToken);
       }
@@ -72,7 +72,7 @@ namespace Coinbase
       Task<Response<Account>> IAccountsEndpoint.SetAccountAsPrimaryAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegments(accountId, "primary")
+            .AppendPathSegmentsRequire(accountId, "primary")
             .WithClient(this)
             .PostJsonAsync(null, cancellationToken)
             .ReceiveJson<Response<Account>>();
@@ -83,7 +83,7 @@ namespace Coinbase
       Task<Response<Account>> IAccountsEndpoint.UpdateAccountAsync(string accountId, UpdateAccount updateAccount, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegment(accountId)
+            .AppendPathSegmentsRequire(accountId)
             .WithClient(this)
             .PutJsonAsync(updateAccount, cancellationToken)
             .ReceiveJson<Response<Account>>();
@@ -99,7 +99,7 @@ namespace Coinbase
       Task<HttpResponseMessage> IAccountsEndpoint.DeleteAccountAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegment(accountId)
+            .AppendPathSegmentsRequire(accountId)
             .WithClient(this)
             .DeleteAsync(cancellationToken);
       }

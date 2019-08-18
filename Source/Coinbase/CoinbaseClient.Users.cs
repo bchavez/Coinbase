@@ -40,10 +40,8 @@ namespace Coinbase
       /// </summary>
       Task<Response<User>> IUsersEndpoint.GetUserAsync(string userId, CancellationToken cancellationToken)
       {
-         if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentNullException(nameof(userId));
-
          return this.Config.ApiUrl
-            .AppendPathSegments("users",userId)
+            .AppendPathSegmentsRequire("users", userId)
             .WithClient(this)
             .GetJsonAsync<Response<User>>(cancellationToken);
       }

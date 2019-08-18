@@ -61,7 +61,7 @@ namespace Coinbase
       {
          return this.PricesEndpoint
             .WithClient(this)
-            .AppendPathSegments(currencyPair, "buy")
+            .AppendPathSegmentsRequire(currencyPair, "buy")
             .GetJsonAsync<Response<Money>>(cancellationToken);
       }
 
@@ -74,7 +74,7 @@ namespace Coinbase
       {
          return this.PricesEndpoint
             .WithClient(this)
-            .AppendPathSegments(currencyPair, "sell")
+            .AppendPathSegmentsRequire(currencyPair, "sell")
             .GetJsonAsync<Response<Money>>(cancellationToken);
       }
 
@@ -88,7 +88,7 @@ namespace Coinbase
       {
          var req = this.PricesEndpoint
             .WithClient(this)
-            .AppendPathSegments(currencyPair, "spot");
+            .AppendPathSegmentsRequire(currencyPair, "spot");
 
          if (!(date is null))
          {

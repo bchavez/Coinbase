@@ -35,7 +35,7 @@ namespace Coinbase
       Task<Response<Notification>> INotificationsEndpoint.GetNotificationAsync(string notificationId, CancellationToken cancellationToken)
       {
          return this.NotificationsEndpoint
-            .AppendPathSegment(notificationId)
+            .AppendPathSegmentsRequire(notificationId)
             .WithClient(this)
             .GetJsonAsync<Response<Notification>>(cancellationToken);
       }

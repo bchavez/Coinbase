@@ -1,3 +1,6 @@
+## v5.3.1
+* API methods now check for null or whitespace only values for required URL parameters.
+
 ## v5.1.2
 * PR #58: Makes `PlaceBuy.Amount` nullable. Documentation states that `PlaceBuy.Amount` or `PlaceBuy.Total` can be specified but not both. Thanks Nemeth!
 
