@@ -429,7 +429,7 @@ namespace Coinbase.Models
    public partial class Money : Json
    {
       [JsonProperty("amount")]
-      public decimal Amount { get; set; }
+      public double Amount { get; set; }
 
       [JsonProperty("currency")]
       public string Currency { get; set; }
