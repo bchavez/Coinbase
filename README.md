@@ -32,22 +32,22 @@ Install-Package Coinbase
 Usage
 -----
 ### API Authentication
-Coinbase offers two ways to authenticate your application with their API:
+Coinbase offers two ways to authenticate your application with their API. You will need to select one of the following authentication methods:
 
-* By using [**OAuth2**](https://developers.coinbase.com/api/v2#oauth2-coinbase-connect).
-* By using an [**API key + Secret**](https://developers.coinbase.com/api/v2#api-key).
+* [**OAuth2**](https://developers.coinbase.com/api/v2#oauth2-coinbase-connect) authentication.
+* [**API key + Secret**](https://developers.coinbase.com/api/v2#api-key) authentication.
 
-This library can use both **OAuth** and **API Key + Secret** authentication make calls to Coinbase servers.
+This library can perform **OAuth** or **API Key + Secret** authentication make calls to Coinbase servers.
 
 ----
 ### Getting Started
 
 For the most part, to get the started, simply new up a new `CoinbaseClient` object as shown below:
 ```csharp
-//using OAuth Token
+//using OAuth Token authenticiation
 var client = new CoinbaseClient(new OAuthConfig{ AccessToken = "..." });
 
-//using API Key + Secret
+//using API Key + Secret authentication
 var client = new CoinbaseClient(new ApiKeyConfig{ ApiKey = "...", ApiSecret = "..."});
 
 //No authentication
