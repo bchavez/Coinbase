@@ -23,7 +23,7 @@ namespace Examples
             .WithHeader(TwoFactorToken, "ffff")
             .Transactions.SendMoneyAsync("accountId", create);
 
-         if( response.HasError() )
+         if( !response.HasError() )
          {
             // transaction is okay!
          }
