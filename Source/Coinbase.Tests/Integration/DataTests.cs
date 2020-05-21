@@ -41,7 +41,7 @@ namespace Coinbase.Tests.Integration
       {
          var r = await client.Data.GetCurrenciesAsync();
          var usd = r.Data.Where(c => c.Id == "USD").First();
-         usd.Name.Should().StartWith("United States");
+         usd.Name.Should().StartWith("US Dollar");
       }
 
       [Test]
