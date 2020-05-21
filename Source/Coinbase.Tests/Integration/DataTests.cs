@@ -19,7 +19,7 @@ namespace Coinbase.Tests.Integration
       [OneTimeSetUp]
       public void BeforeAllTests()
       {
-         if( !Environment.OSVersion.IsAppVeyor() && Process.GetProcessesByName("Fiddler.exe").Any() )
+         if( !Environment.OSVersion.IsAppVeyor() && Process.GetProcessesByName("Fiddler").Any() )
          {
             var webProxy = new WebProxy("http://localhost.:8888", BypassOnLocal: false);
             
