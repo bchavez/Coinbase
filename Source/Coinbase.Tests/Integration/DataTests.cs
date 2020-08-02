@@ -28,6 +28,10 @@ namespace Coinbase.Tests.Integration
                   settings.HttpClientFactory = new ProxyFactory(webProxy);
                });
          }
+
+#if NETFRAMEWORK
+         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+#endif
       }
 
       [SetUp]

@@ -12,9 +12,17 @@ A .NET implementation for the [Coinbase API](https://developers.coinbase.com/api
 * [**Coinbase.Commerce**](https://github.com/bchavez/Coinbase.Commerce) - For e-commerce, merchants, and websites selling products or services looking to receive cryptocurrency as payment.
 * [**Coinbase.Pro**](https://github.com/bchavez/Coinbase.Pro) - For [retail trading](https://pro.coinbase.com) on [Coinbase Pro](https://pro.coinbase.com). Integration with orders, market data, and real-time WebSocket feeds.
 
-#### Supported Platforms
+[1]:https://docs.microsoft.com/en-us/mem/configmgr/core/plan-design/security/enable-tls-1-2-client
+[2]:https://docs.microsoft.com/en-us/dotnet/framework/network-programming/tls
+#### Minimum Requirements
 * **.NET Standard 2.0** or later
 * **.NET Framework 4.5** or later
+* **TLS 1.2** or later
+
+***Note:*** If you are using **.NET Framework 4.5** you will need to ensure your application is using **TLS 1.2** or later. This can be configured via the registry ([**link 1**][1], [**link 2**][2]) or configured at ***application startup*** by setting the following value in `ServicePointManager`:
+```csharp
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+```
 
 #### Crypto Tip Jar
 <a href="https://commerce.coinbase.com/checkout/119320d7-db0a-45c9-97d8-fe4088348288"><img src="https://raw.githubusercontent.com/bchavez/Coinbase/master/Docs/tipjar.png" /></a>
