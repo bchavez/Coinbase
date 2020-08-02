@@ -5,193 +5,265 @@
 //#endif
 
 // include Fake lib
-#I @"../packages/build/FAKE/tools"
-#I @"../packages/build/DotNetZip/lib/net20"
-#r @"FakeLib.dll"
-#r @"DotNetZip.dll"
+
+#r "paket:
+
+nuget Fake.Core                    
+nuget Fake.Core.Target             
+nuget Fake.Core.Xml                
+nuget Fake.Runtime                 
+nuget Fake.DotNet.NuGet            
+nuget Fake.DotNet.Cli              
+nuget Fake.DotNet.AssemblyInfoFile 
+nuget Fake.DotNet.MSBuild          
+nuget Fake.IO.FileSystem           
+nuget Fake.IO.Zip                  
+nuget Fake.Tools.Git               
+nuget Fake.DotNet.Testing.xUnit2   
+nuget Fake.BuildServer.AppVeyor    
+
+nuget SharpCompress = 0.22.0
+nuget FSharp.Data = 2.4.6
+
+nuget secure-file                  = 1.0.31
+
+nuget Z.ExtensionMethods.WithTwoNamespace
+nuget System.Runtime.Caching //"
+
+#load ".\\.fake\\build.fsx\\intellisense.fsx"
 
 #load @"Utils.fsx"
 
+#if !FAKE
+  #r "netstandard"
+#endif
+
 open Fake
 open Utils
+open Fake.IO
+open Fake.IO.Globbing.Operators
+open Fake.IO.FileSystemOperators
+open Fake.DotNet
+open Fake.Core
+open Fake.IO.Globbing
+open Utils
+open Z.ExtensionMethods
+
 open System.Reflection
-open Helpers
-open Fake.Testing.NUnit3
+open System.Collections.Generic
+open SharpCompress
+open SharpCompress.Archives
+open Newtonsoft.Json
+
+open Fake.BuildServer
+
+BuildServer.install[
+   AppVeyor.Installer
+]
 
 let workingDir = ChangeWorkingFolder();
 
-trace (sprintf "WORKING DIR: %s" workingDir)
+Trace.trace (sprintf "WORKING DIR: %s" workingDir)
 
 let ProjectName = "Coinbase";
 let GitHubUrl = "https://github.com/bchavez/Coinbase"
 
 let Folders = Setup.Folders(workingDir)
-let Files = Setup.Files(Folders)
-let Projects = Setup.Projects(ProjectName, Folders)
+let Files = Setup.Files(ProjectName, Folders)
 
 let CoinbaseProject = NugetProject("Coinbase", "Coinbase API for .NET", Folders)
 let TestProject = TestProject("Coinbase.Tests", Folders)
 
+let EnableSigning = false
 
-Target "dnx" (fun _ ->
-    trace "DNX Build Task"
+Target.description "MAIN BUILD TASK"
+Target.create "dnx" (fun _ ->
+    Trace.trace "DNX Build Task"
 
-    let tag = "dnx_build"
+
     
-    DotnetBuild CoinbaseProject tag
+    let msbParams = { MSBuild.CliArguments.Create()
+                      with
+                        NoWarn = Some([
+                                       "CS1573"; //Disable XML doc warning
+                                       "CS1591"; //Disable XML doc warning
+                                      ]) 
+                    }
+
+    let releaseConfig (opts : DotNet.BuildOptions) =
+        {opts with 
+              Configuration = DotNet.BuildConfiguration.Release
+              MSBuildParams = msbParams
+        }
+    
+    let debugConfig (opts : DotNet.BuildOptions) =
+        { opts with 
+               Configuration = DotNet.BuildConfiguration.Debug 
+               MSBuildParams = msbParams 
+        }
+
+    DotNet.build releaseConfig CoinbaseProject.Folder
+    DotNet.build debugConfig CoinbaseProject.Folder
+
+    Shell.copyDir CoinbaseProject.OutputDirectory (CoinbaseProject.Folder @@ "bin") FileFilter.allFiles
+
+    DotNet.build debugConfig TestProject.Folder
 )
 
-Target "restore" (fun _ -> 
-     trace ".NET Core Restore"
-     DotnetRestore CoinbaseProject
-     DotnetRestore TestProject
- )
+Target.description "NUGET PACKAGE RESTORE TASK"
+Target.create "restore" (fun _ -> 
+     Trace.trace ".NET Core Restore"
+     
+     DotNet.restore id CoinbaseProject.Folder
+     DotNet.restore id TestProject.Folder
+)
 
-open Ionic.Zip
 open System.Xml
 
-Target "nuget" (fun _ ->
-    trace "NuGet Task"
+Target.description "NUGET PACKAGE TASK"
+Target.create "nuget" (fun _ ->
+    Trace.trace "NuGet Task"
+
+    let config (opts: DotNet.PackOptions) =
+         {opts with
+               Configuration = DotNet.BuildConfiguration.Release
+               OutputPath = Some(Folders.Package) }
     
-    DotnetPack CoinbaseProject Folders.Package   
-)
-
-Target "push" (fun _ ->
-    trace "NuGet Push Task"
-    
-    failwith "Only CI server should publish on NuGet"
+    DotNet.pack config CoinbaseProject.Folder
 )
 
 
+Target.description "PROJECT ZIP TASK"
+Target.create "zip" (fun _ -> 
+    Trace.trace "Zip Task"
 
-Target "zip" (fun _ -> 
-    trace "Zip Task"
-
-    !!(CoinbaseProject.OutputDirectory @@ "**") |> Zip Folders.CompileOutput (Folders.Package @@ CoinbaseProject.Zip)
+    !!(CoinbaseProject.OutputDirectory @@ "**")
+    |> Zip.zip Folders.CompileOutput (Folders.Package @@ CoinbaseProject.Zip)
 )
 
-open AssemblyInfoFile
 
 let MakeAttributes (includeSnk:bool) =
     let attrs = [
-                    Attribute.Description GitHubUrl
+                    AssemblyInfo.Description GitHubUrl
                 ]
     if includeSnk then
-        let pubKey = ReadFileAsHexString Projects.SnkFilePublic
+        let pubKey = ReadFileAsHexString Files.SnkFilePublic
         let visibleTo = sprintf "%s, PublicKey=%s" TestProject.Name pubKey
-        attrs @ [ Attribute.InternalsVisibleTo(visibleTo) ]
+        attrs @ [ AssemblyInfo.InternalsVisibleTo(visibleTo) ]
     else
-        attrs @ [ Attribute.InternalsVisibleTo(TestProject.Name) ]
+        attrs @ [ AssemblyInfo.InternalsVisibleTo(TestProject.Name) ]
 
 
-Target "BuildInfo" (fun _ ->
+Target.description "PROJECT BUILDINFO TASK"
+Target.create "BuildInfo" (fun _ ->
     
-    trace "Writing Assembly Build Info"
+    Trace.trace "Writing Assembly Build Info"
+    
+    let includeSnk = EnableSigning && BuildContext.IsTaggedBuild
 
-    MakeBuildInfo CoinbaseProject Folders (fun bip -> 
-        { bip with
-            ExtraAttrs = MakeAttributes(false) } )//BuildContext.IsTaggedBuild) } )
+    let customAttributes = MakeAttributes(includeSnk)
 
-    XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/Version" BuildContext.FullVersion
+    MakeBuildInfo CoinbaseProject Folders (fun bip -> { bip with ExtraAttrs = customAttributes } )
+
+    Xml.pokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/Version" BuildContext.FullVersion
 
     let releaseNotes = History.NugetText Files.History GitHubUrl
-    XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/PackageReleaseNotes" releaseNotes
+    Xml.pokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/PackageReleaseNotes" releaseNotes
 )
 
 
-Target "Clean" (fun _ ->
-    DeleteFile Files.TestResultFile
-    CleanDirs [Folders.CompileOutput; Folders.Package]
+Target.description "PROJECT CLEAN TASK"
+Target.create "Clean" (fun _ ->
+    File.delete Files.TestResultFile
+    Shell.cleanDirs [Folders.CompileOutput; Folders.Package;]
 
-    XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/Version" "0.0.0-localbuild"
-    XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/PackageReleaseNotes" ""
-    XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/AssemblyOriginatorKeyFile" ""
-    XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/SignAssembly" "false"
+    let projects = [CoinbaseProject.Folder; TestProject.Folder;]
+
+    for project in projects do
+      Shell.cleanDir (project @@ "bin")
+      Shell.cleanDir (project @@ "obj")
+
+    Xml.pokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/Version" "0.0.0-localbuild"
+    Xml.pokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/PackageReleaseNotes" ""
+    Xml.pokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/AssemblyOriginatorKeyFile" ""
+    Xml.pokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/SignAssembly" "false"
+
+    Xml.pokeInnerText TestProject.ProjectFile "/Project/PropertyGroup/AssemblyOriginatorKeyFile" ""
+    Xml.pokeInnerText TestProject.ProjectFile "/Project/PropertyGroup/SignAssembly" "false"
 
     MakeBuildInfo CoinbaseProject Folders (fun bip ->
          {bip with
             DateTime = System.DateTime.Parse("1/1/2015")
-            ExtraAttrs = MakeAttributes(false) } )
+            ExtraAttrs = MakeAttributes(false) 
+            VersionContext = Some "0.0.0-localbuild" })
 
 )
 
-open Fake.Testing
-open Fake.AppVeyor
+open Fake.DotNet.Testing
 
-Target "ci" (fun _ ->
-    trace "ci Task"
+let RunTests(logger: string option) =
+   let config (opts: DotNet.TestOptions) =
+      {opts with  
+            NoBuild = true
+            Logger = logger}
+   DotNet.test config TestProject.Folder
+
+open Fake.BuildServer
+
+Target.create "ci" (fun _ ->
+    Trace.trace "ci Task"
 )
 
-Target "test" (fun _ ->
-    trace "TEST"
-    CreateDir Folders.Test
-
-    DotNetCli.Test( fun p ->
-    { p with
-       WorkingDir = TestProject.Folder
-       AdditionalArgs = [
-                          "--test-adapter-path:."
-                          sprintf "--logger:\"nunit;LogFilePath=%s\"" Files.TestResultFile
-                        ]
-    })
+Target.description "PROJECT TEST TASK"
+Target.create "test" (fun _ ->
+    Trace.trace "TEST"
+    RunTests(None)
 )
 
-Target "citest" (fun _ ->
-    trace "CI TEST"
-    
-    DotNetCli.Test( fun p ->
-    { p with
-       WorkingDir = TestProject.Folder
-       AdditionalArgs = [
-                          "--test-adapter-path:."
-                          "--logger:Appveyor"
-                        ]
-    })
+Target.description "CI TEST TASK"
+Target.create "citest" (fun _ ->
+    Trace.trace "CI TEST"
+    RunTests(Some "Appveyor")
 )
 
 
-Target "setup-snk"(fun _ ->
-    trace "Decrypting Strong Name Key (SNK) file."
-    let decryptSecret = environVarOrFail "SNKFILE_SECRET"
-    decryptFile Projects.SnkFile decryptSecret
+Target.description "PROJECT SIGNING KEY SETUP TASK"
+Target.create "setup-snk"(fun _ ->
+    Trace.trace "Decrypting Strong Name Key (SNK) file."
+    let decryptSecret = Environment.environVarOrFail "SNKFILE_SECRET"
+    Helpers.decryptFile Files.SnkFile decryptSecret
+    Xml.pokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/AssemblyOriginatorKeyFile" Files.SnkFile
+    Xml.pokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/SignAssembly" "true"
 
-    XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/AssemblyOriginatorKeyFile" Projects.SnkFile
-    XmlPokeInnerText CoinbaseProject.ProjectFile "/Project/PropertyGroup/SignAssembly" "true"
+    Xml.pokeInnerText TestProject.ProjectFile "/Project/PropertyGroup/AssemblyOriginatorKeyFile" Files.SnkFile
+    Xml.pokeInnerText TestProject.ProjectFile "/Project/PropertyGroup/SignAssembly" "true"
 )
 
+open Fake.Core.TargetOperators
 
-"Clean"
-    ==> "restore"
-    ==> "BuildInfo"
-
-//build systems, order matters
-"BuildInfo"
-    //=?> ("setup-snk", BuildContext.IsTaggedBuild)
-    ==> "dnx"
-    ==> "zip"
-
-"BuildInfo"
-    //=?> ("setup-snk", BuildContext.IsTaggedBuild)
-    ==> "zip"
-
-"dnx"
-    ==> "nuget"
+// Build order and dependencies are read from left to right. For example,
+// Do_This_First ==> Do_This_Second ==> Do_This_Third
+//     Clean     ==>     Restore    ==>     Build
+//
+// REFERENCE:
+//  ( ==> ) x y               | Defines a dependency - y is dependent on x
+//  ( =?> ) x (y, condition)  | Defines a conditional dependency - y is dependent on x if the condition is true
+//  ( <== ) x y
+//  ( <=> ) x y               | Defines that x and y are not dependent on each other but y is dependent on all dependencies of x.
+//  ( <=? ) y x
+//  ( ?=> ) x y               | Defines a soft dependency. x must run before y, if it is present, but y does not require x to be run.
 
 
-"nuget"
-    ==> "ci"
+"Clean"  ==> "restore"  ==> "BuildInfo"
 
-"nuget"
-    ==> "push"
+"BuildInfo" =?> ("setup-snk", EnableSigning && BuildContext.IsTaggedBuild) ==> "dnx" ==> "zip"
 
-"zip"
-    ==> "ci"
+"dnx" ==> "nuget"
 
+"dnx" ==> "test"
 
-//test task depends on msbuild
-"dnx"
-    ==> "test"
+"nuget" <=> "zip" ==> "ci"
 
 
 // start build
-RunTargetOrDefault "dnx"
+Target.runOrDefault "dnx"

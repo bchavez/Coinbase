@@ -1,12 +1,8 @@
 @echo off
 cls
 
-pushd SOurce
-.paket\paket.exe install
-if errorlevel 1 (
-  popd
-  exit /b %errorlevel%
-)
-popd
+SET BUILDER=Source\Builder
 
-"Source\packages\build\FAKE\tools\Fake.exe" .\Source\Builder\build.fsx %1
+dotnet tool restore
+
+dotnet fake run %BUILDER%\build.fsx target %1
