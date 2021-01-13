@@ -171,7 +171,7 @@ namespace Coinbase
       /// </remarks>
       /// <param name="token">The access token to expire.</param>
       /// <param name="accessToken">The token used to make the authenticated request. This can be the same as the token in the first parameter.</param>
-      public static Task<HttpResponseMessage> RevokeTokenAsync(string token, string accessToken)
+      public static Task<IFlurlResponse> RevokeTokenAsync(string token, string accessToken)
       {
          var form = new
             {
@@ -201,7 +201,7 @@ namespace Coinbase
          }
          else throw new InvalidOperationException($"Client must be using an {nameof(OAuthConfig)}");
 
-         async Task TokenExpiredErrorHandler(HttpCall call)
+         async Task TokenExpiredErrorHandler(FlurlCall call)
          {
             var exception = call.Exception;
             if (exception is FlurlHttpException ex)
@@ -218,7 +218,7 @@ namespace Coinbase
                   }
                   else await onRefresh(refreshResponse).ConfigureAwait(false);
 
-                  call.Response = await call.FlurlRequest.SendAsync(call.Request.Method, call.Request.Content).ConfigureAwait(false);
+                  call.Response = await call.Request.SendAsync(call.Request.Verb, call.HttpRequestMessage.Content).ConfigureAwait(false);
                   call.ExceptionHandled = true;
                }
             }

@@ -90,8 +90,8 @@ namespace Coinbase.Tests.Endpoints
       {
          server.RespondWith(status: 204);
          var r = await client.Accounts.DeleteAccountAsync("ffff");
-
-         r.StatusCode.Should().Be(HttpStatusCode.NoContent);
+         
+         r.StatusCode.Should().Be((int)HttpStatusCode.NoContent);
 
          server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/ffff")
             .WithVerb(HttpMethod.Delete);

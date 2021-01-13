@@ -36,7 +36,7 @@ namespace Coinbase
       /// * Fiat account
       /// * Vault with a pending withdrawal
       /// </summary>
-      Task<HttpResponseMessage> DeleteAccountAsync(string accountId, CancellationToken cancellationToken = default);
+      Task<IFlurlResponse> DeleteAccountAsync(string accountId, CancellationToken cancellationToken = default);
    }
 
 
@@ -96,7 +96,7 @@ namespace Coinbase
       /// * Fiat account
       /// * Vault with a pending withdrawal
       /// </summary>
-      Task<HttpResponseMessage> IAccountsEndpoint.DeleteAccountAsync(string accountId, CancellationToken cancellationToken)
+      Task<IFlurlResponse> IAccountsEndpoint.DeleteAccountAsync(string accountId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegmentsRequire(accountId)

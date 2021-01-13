@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
+using Flurl.Http;
 using NUnit.Framework;
 
 namespace Coinbase.Tests.Endpoints
@@ -66,9 +67,9 @@ namespace Coinbase.Tests.Endpoints
          [Values(null, "", "  ")]string txId)
       {
          Func<Task<Response<Transaction>>> a = async () => await client.Transactions.GetTransactionAsync(accountId, txId);
-         Func<Task<HttpResponseMessage>> b = async () => await client.Transactions.CompleteRequestMoneyAsync(accountId, txId);
-         Func<Task<HttpResponseMessage>> c = async () => await client.Transactions.ResendRequestMoneyAsync(accountId, txId);
-         Func<Task<HttpResponseMessage>> d = async () => await client.Transactions.CancelRequestMoneyAsync(accountId, txId);
+         Func<Task<IFlurlResponse>> b = async () => await client.Transactions.CompleteRequestMoneyAsync(accountId, txId);
+         Func<Task<IFlurlResponse>> c = async () => await client.Transactions.ResendRequestMoneyAsync(accountId, txId);
+         Func<Task<IFlurlResponse>> d = async () => await client.Transactions.CancelRequestMoneyAsync(accountId, txId);
 
          a.Should().Throw<ArgumentException>();
          b.Should().Throw<ArgumentException>();
@@ -181,7 +182,7 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<Response<Account>>> a = async () => await client.Accounts.GetAccountAsync(accountId);
          Func<Task<Response<Account>>> b = async () => await client.Accounts.SetAccountAsPrimaryAsync(accountId);
          Func<Task<Response<Account>>> c = async () => await client.Accounts.UpdateAccountAsync(accountId, null);
-         Func<Task<HttpResponseMessage>> d = async () => await client.Accounts.DeleteAccountAsync(accountId);
+         Func<Task<IFlurlResponse>> d = async () => await client.Accounts.DeleteAccountAsync(accountId);
 
          a.Should().Throw<ArgumentException>();
          b.Should().Throw<ArgumentException>();

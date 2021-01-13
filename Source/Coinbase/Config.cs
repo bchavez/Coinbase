@@ -47,9 +47,9 @@ namespace Coinbase
 
       private void UseOAuth(ClientFlurlHttpSettings settings, CoinbaseClient client)
       {
-         async Task ApplyAuthorization(HttpCall call)
+         async Task ApplyAuthorization(FlurlCall call)
          {
-            call.FlurlRequest.WithOAuthBearerToken(this.AccessToken);
+            call.Request.WithOAuthBearerToken(this.AccessToken);
          }
 
          settings.BeforeCallAsync = ApplyAuthorization;
@@ -73,11 +73,11 @@ namespace Coinbase
 
       private void ApiKeyAuth(ClientFlurlHttpSettings settings, CoinbaseClient client)
       {
-         async Task SetHeaders(HttpCall http)
+         async Task SetHeaders(FlurlCall http)
          {
             var body = http.RequestBody;
-            var method = http.Request.Method.Method.ToUpperInvariant();
-            var url = http.Request.RequestUri.PathAndQuery;
+            var method = http.Request.Verb.Method.ToUpperInvariant();
+            var url = http.Request.Url.ToUri().PathAndQuery;
 
             string timestamp;
             if (this.UseTimeApi)
@@ -92,7 +92,7 @@ namespace Coinbase
 
             var signature = ApiKeyAuthenticator.GenerateSignature(timestamp, method, url, body, this.ApiSecret);
 
-            http.FlurlRequest
+            http.Request
                .WithHeader(HeaderNames.AccessKey, this.ApiKey)
                .WithHeader(HeaderNames.AccessSign, signature)
                .WithHeader(HeaderNames.AccessTimestamp, timestamp);

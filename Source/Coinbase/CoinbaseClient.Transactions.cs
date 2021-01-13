@@ -42,17 +42,17 @@ namespace Coinbase
       /// <summary>
       /// Lets the recipient of a money request complete the request by sending money to the user who requested the money. This can only be completed by the user to whom the request was made, not the user who sent the request.
       /// </summary>
-      Task<HttpResponseMessage> CompleteRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
+      Task<IFlurlResponse> CompleteRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
 
       /// <summary>
       /// Lets the user resend a money request. This will notify recipient with a new email.
       /// </summary>
-      Task<HttpResponseMessage> ResendRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
+      Task<IFlurlResponse> ResendRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
 
       /// <summary>
       /// Lets a user cancel a money request. Money requests can be canceled by the sender or the recipient.
       /// </summary>
-      Task<HttpResponseMessage> CancelRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
+      Task<IFlurlResponse> CancelRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken = default);
    }
 
 
@@ -128,7 +128,7 @@ namespace Coinbase
       /// <summary>
       /// Lets the recipient of a money request complete the request by sending money to the user who requested the money. This can only be completed by the user to whom the request was made, not the user who sent the request.
       /// </summary>
-      Task<HttpResponseMessage> ITransactionsEndpoint.CompleteRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
+      Task<IFlurlResponse> ITransactionsEndpoint.CompleteRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "complete")
@@ -140,7 +140,7 @@ namespace Coinbase
       /// <summary>
       /// Lets the user resend a money request. This will notify recipient with a new email.
       /// </summary>
-      Task<HttpResponseMessage> ITransactionsEndpoint.ResendRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
+      Task<IFlurlResponse> ITransactionsEndpoint.ResendRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "resend")
@@ -151,7 +151,7 @@ namespace Coinbase
       /// <summary>
       /// Lets a user cancel a money request. Money requests can be canceled by the sender or the recipient.
       /// </summary>
-      Task<HttpResponseMessage> ITransactionsEndpoint.CancelRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
+      Task<IFlurlResponse> ITransactionsEndpoint.CancelRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
             .AppendPathSegmentsRequire(accountId, "transactions", transactionId)

@@ -175,11 +175,11 @@ namespace Coinbase
       /// </param>
       /// <returns>Returns the <seealso cref="HttpResponseMessage"/> of the
       /// underlying HTTP request.</returns>
-      public CoinbaseClient HoistResponse(out Func<HttpResponseMessage> responseGetter)
+      public CoinbaseClient HoistResponse(out Func<IFlurlResponse> responseGetter)
       {
-         HttpResponseMessage msg = null;
+         IFlurlResponse msg = null;
 
-         void CaptureResponse(HttpCall http)
+         void CaptureResponse(FlurlCall http)
          {
             msg = http.Response;
 
