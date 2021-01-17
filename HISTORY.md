@@ -1,3 +1,6 @@
+## v6.0.1
+* `Flurl.Http` dependency updated to 3.0.1.
+
 ## v5.3.1
 * API methods now check for null or whitespace only values for required URL parameters.
 

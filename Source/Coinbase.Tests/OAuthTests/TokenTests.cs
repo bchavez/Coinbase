@@ -7,9 +7,15 @@ using NUnit.Framework;
 
 namespace Coinbase.Tests.OAuthTests
 {
-   public class TokenTests : OAuthServerTest
+   public class TokenTests : ServerTest
    {
+      private CoinbaseClient client;
 
+      [SetUp]
+      public void BeforeEachTest()
+      {
+         client = new CoinbaseClient(new OAuthConfig(){ AccessToken = "zzz"});
+      }
       [Test]
       public async Task auto_refresh_token()
       {
@@ -44,6 +50,11 @@ namespace Coinbase.Tests.OAuthTests
          config.RefreshToken.Should().Be("bbb");
 
          Examples.UserModel.Should().BeEquivalentTo(response.Data);
+
+         server.ShouldHaveMadeACall()
+            .WithHeader(HeaderNames.Version, CoinbaseClient.ApiVersionDate)
+            .WithHeader("User-Agent", CoinbaseClient.UserAgent)
+            .WithHeader("Authorization", $"Bearer aaa");
       }
 
       [Test]
@@ -84,6 +95,11 @@ namespace Coinbase.Tests.OAuthTests
          config.RefreshToken.Should().Be("bbb");
 
          Examples.UserModel.Should().BeEquivalentTo(response.Data);
+
+         server.ShouldHaveMadeACall()
+            .WithHeader(HeaderNames.Version, CoinbaseClient.ApiVersionDate)
+            .WithHeader("User-Agent", CoinbaseClient.UserAgent)
+            .WithHeader("Authorization", $"Bearer aaa");
       }
 
    }
