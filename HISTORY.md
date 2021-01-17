@@ -1,5 +1,7 @@
 ## v6.0.1
 * `Flurl.Http` dependency updated to 3.0.1.
+* Minimum .NET Framework requirement changed from 4.5 to 4.6.1.
+* Dropped support for `netstandard1.3`; `netstandard2.0` still supported.
 
 ## v5.3.1
 * API methods now check for null or whitespace only values for required URL parameters.
