@@ -63,7 +63,7 @@ namespace Coinbase
       internal override void EnsureValid()
       {
          if (string.IsNullOrWhiteSpace(ApiKey)) throw new ArgumentNullException(nameof(ApiKey), "The API Key must be specified.");
-         if (string.IsNullOrWhiteSpace(ApiSecret)) throw new ArgumentNullException(nameof(ApiSecret), "The API Key must be specified.");
+         if (string.IsNullOrWhiteSpace(ApiSecret)) throw new ArgumentNullException(nameof(ApiSecret), "The API Secret must be specified.");
       }
 
       protected internal override void Configure(CoinbaseClient client)
