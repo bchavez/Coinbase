@@ -1,3 +1,6 @@
+## v6.0.2
+* PR #78: Improve `ApiKeyConfig` exception message during object validation.
+
 ## v6.0.1
 * `Flurl.Http` dependency updated to 3.0.1.
 * Minimum .NET Framework requirement changed from 4.5 to 4.6.1.
