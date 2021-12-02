@@ -1,6 +1,6 @@
 <Project>
    <PropertyGroup>
-      <LangVersion>7.3</LangVersion>
+      <LangVersion>10.0</LangVersion>
       <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
    </PropertyGroup>
 </Project>
