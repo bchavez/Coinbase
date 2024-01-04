@@ -26,8 +26,8 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<PagedResponse<Withdrawal>>> a = async () => await client.Withdrawals.ListWithdrawalsAsync(accountId);
          Func<Task<Response<Withdrawal>>> b = async () => await client.Withdrawals.WithdrawalFundsAsync(accountId, null);
 
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
+         await b.Should().ThrowAsync<ArgumentException>();
       }
 
       [Test]
@@ -39,8 +39,8 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<Response<Withdrawal>>> a = async () => await client.Withdrawals.GetWithdrawalAsync(accountId, withdrawlId);
          Func<Task<Response<Withdrawal>>> b = async () => await client.Withdrawals.CommitWithdrawalAsync(accountId, withdrawlId);
 
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
+         await b.Should().ThrowAsync<ArgumentException>();
       }
 
 
@@ -54,10 +54,10 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<Response<Transaction>>> c = async () => await client.Transactions.TransferMoneyAsync(accountId, null);
          Func<Task<Response<Transaction>>> d = async () => await client.Transactions.RequestMoneyAsync(accountId, null);
 
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
-         c.Should().Throw<ArgumentException>();
-         d.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
+            await b.Should().ThrowAsync<ArgumentException>();
+         await c.Should().ThrowAsync<ArgumentException>();
+         await d.Should().ThrowAsync<ArgumentException>();
       }
 
       [Test]
@@ -71,10 +71,10 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<IFlurlResponse>> c = async () => await client.Transactions.ResendRequestMoneyAsync(accountId, txId);
          Func<Task<IFlurlResponse>> d = async () => await client.Transactions.CancelRequestMoneyAsync(accountId, txId);
 
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
-         c.Should().Throw<ArgumentException>();
-         d.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
+         await b.Should().ThrowAsync<ArgumentException>();
+         await c.Should().ThrowAsync<ArgumentException>();
+         await d.Should().ThrowAsync<ArgumentException>();
       }
 
 
@@ -85,7 +85,7 @@ namespace Coinbase.Tests.Endpoints
       {
          Func<Task<Response<Notification>>> a = async () => await client.Notifications.GetNotificationAsync(notificationId);
 
-         a.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
       }
 
 
@@ -97,8 +97,8 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<PagedResponse<Deposit>>> a = async () => await client.Deposits.ListDepositsAsync(accountId);
          Func<Task<Response<Deposit>>> b = async () => await client.Deposits.DepositFundsAsync(accountId, null);
 
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
+         await b.Should().ThrowAsync<ArgumentException>();
       }
 
       [Test]
@@ -110,8 +110,8 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<Response<Deposit>>> a = async () => await client.Deposits.GetDepositAsync(accountId, depositId);
          Func<Task<Response<Deposit>>> b = async () => await client.Deposits.CommitDepositAsync(accountId, depositId);
 
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
+         await b.Should().ThrowAsync<ArgumentException>();
       }
 
 
@@ -122,7 +122,7 @@ namespace Coinbase.Tests.Endpoints
       {
          Func<Task<Response<PaymentMethod>>> a = async () => await client.PaymentMethods.GetPaymentMethodAsync(paymentMethodId);
 
-         a.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
       }
 
       [Test]
@@ -134,9 +134,9 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<Response<Money>>> b = async () => await client.Data.GetSellPriceAsync(currencyId);
          Func<Task<Response<Money>>> c = async () => await client.Data.GetSpotPriceAsync(currencyId);
 
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
-         c.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
+         await b.Should().ThrowAsync<ArgumentException>();
+         await c.Should().ThrowAsync<ArgumentException>();
       }
 
       [Test]
@@ -149,10 +149,10 @@ namespace Coinbase.Tests.Endpoints
          Func<Task<Response<Account>>> c = async () => await client.Accounts.UpdateAccountAsync(accountId, null);
          Func<Task<IFlurlResponse>> d = async () => await client.Accounts.DeleteAccountAsync(accountId);
 
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
-         c.Should().Throw<ArgumentException>();
-         d.Should().Throw<ArgumentException>();
+         await a.Should().ThrowAsync<ArgumentException>();
+         await b.Should().ThrowAsync<ArgumentException>();
+         await c.Should().ThrowAsync<ArgumentException>();
+         await d.Should().ThrowAsync<ArgumentException>();
       }
    }
 }
