@@ -37,13 +37,13 @@ namespace Coinbase.Tests.Integration
 
          ReadSecrets();
 
-         var webProxy = new WebProxy("http://localhost.:8888", BypassOnLocal: false);
-
-         FlurlHttp.Configure(settings =>
-            {
-               settings.HttpClientFactory = new ProxyFactory(webProxy);
-            });
-
+         FlurlHttp.Clients.WithDefaults(builder => builder.ConfigureInnerHandler(
+            hch =>
+               {
+                  hch.Proxy = new WebProxy("http://localhost.:8888", BypassOnLocal: false);
+                  hch.UseProxy = true;
+               }
+         ));
       }
 
       protected void ReadSecrets()
