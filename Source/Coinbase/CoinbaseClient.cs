@@ -95,31 +95,14 @@ namespace Coinbase
       {
          var webProxy = new WebProxy(proxyUrl, BypassOnLocal: false);
 
-         this.Configure(settings =>
-            {
-               settings.HttpClientFactory = new DebugProxyFactory(webProxy);
-            });
-      }
-
-      private class DebugProxyFactory : DefaultFlurlClientFactory
-      {
-         private readonly WebProxy proxy;
-
-         public DebugProxyFactory(WebProxy proxy)
-         {
-            this.proxy = proxy;
-         }
-
-         public override HttpMessageHandler CreateInnerHandler()
-         {
-            return new HttpClientHandler
+         FlurlHttp.Clients.WithDefaults(builder => builder.ConfigureInnerHandler(
+            hch =>
                {
-                  Proxy = this.proxy,
-                  UseProxy = true
-               };
-         }
+                  hch.Proxy = new WebProxy(proxyUrl, BypassOnLocal: false);
+                  hch.UseProxy = true;
+               }
+         ));
       }
-
 
       /// <summary>
       /// Get the next page of data given the current paginated response.
