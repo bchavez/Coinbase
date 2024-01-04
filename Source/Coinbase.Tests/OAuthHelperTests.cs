@@ -45,7 +45,7 @@ namespace Coinbase.Tests
 
          var response = await authUrl.GetAsync();
 
-         server.ShouldHaveExactCall(url);
+         server.ShouldHaveCalled(url);
 
       }
 
@@ -56,7 +56,7 @@ namespace Coinbase.Tests
 
          var x  = await OAuthHelper.RevokeTokenAsync("fff", "vvv");
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/oauth/revoke")
+         server.ShouldHaveCalled("https://api.coinbase.com/oauth/revoke")
             .WithVerb(HttpMethod.Post)
             .WithRequestBody("token=fff&access_token=vvv");
       }
@@ -81,7 +81,7 @@ namespace Coinbase.Tests
             clientSecret:"3a21f08c585df35c14c0c43b832640b29a3a3a18e5c54d5401f08c87c8be0b20",
             redirectUri: "http://localhost:8080/callback");
          
-         server.ShouldHaveExactCall("https://api.coinbase.com/oauth/token")
+         server.ShouldHaveCalled("https://api.coinbase.com/oauth/token")
             .WithVerb(HttpMethod.Post)
             .WithRequestBody("grant_type=authorization_code" +
                              "&code=4c666b5c0c0d9d3140f2e0776cbe245f3143011d82b7a2c2a590cc7e20b79ae8" +
@@ -115,7 +115,7 @@ namespace Coinbase.Tests
 
          var token = await OAuthHelper.RenewAccessAsync("refresh", "clientid", "clientsecret");
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/oauth/token")
+         server.ShouldHaveCalled("https://api.coinbase.com/oauth/token")
             .WithVerb(HttpMethod.Post)
             .WithRequestBody("grant_type=refresh_token" +
                              "&refresh_token=refresh" +
