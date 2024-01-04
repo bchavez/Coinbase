@@ -1,8 +1,8 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Coinbase.Models;
+﻿using Coinbase.Models;
 using FluentAssertions;
 using NUnit.Framework;
+using System.Net.Http;
+using System.Threading.Tasks;
 using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
@@ -10,25 +10,37 @@ namespace Coinbase.Tests.Endpoints
    public class DepositTests : OAuthServerTest
    {
       [Test]
-      public async Task can_list()
+      public async Task can_commit()
       {
-         SetupServerPagedResponse(PaginationJson, $"{Deposit1}");
+         SetupServerSingleResponse(Deposit1);
 
-         var r = await client.Deposits.ListDepositsAsync("fff");
+         var r = await client.Deposits.CommitDepositAsync("fff", "uuu");
 
-         var truth = new PagedResponse<Deposit>
-            {
-               Pagination = PaginationModel,
-               Data = new[]
-                  {
-                     Deposit1Model
-                  }
-            };
+         var truth = new Response<Deposit> { Data = Deposit1Model };
 
-         truth.Should().BeEquivalentTo(r);
+         truth.Should()
+              .BeEquivalentTo(r);
+
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits/uuu/commit")
+               .WithVerb(HttpMethod.Post);
+      }
+
+      [Test]
+      public async Task can_depositfunds()
+      {
+         SetupServerSingleResponse(Deposit1);
+
+         var create = new DepositFunds { Amount = 10.0m, Currency = "USD", PaymentMethod = "B28EB04F-BD70-4308-90A1-96065283A001" };
+         var r = await client.Deposits.DepositFundsAsync("fff", create);
+
+         var truth = new Response<Deposit> { Data = Deposit1Model };
+
+         truth.Should()
+              .BeEquivalentTo(r);
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits")
-            .WithVerb(HttpMethod.Get);
+               .WithRequestBody(@"{""amount"":10.0,""currency"":""USD"",""payment_method"":""B28EB04F-BD70-4308-90A1-96065283A001"",""commit"":false}")
+               .WithVerb(HttpMethod.Post);
       }
 
       [Test]
@@ -38,60 +50,29 @@ namespace Coinbase.Tests.Endpoints
 
          var r = await client.Deposits.GetDepositAsync("fff", "uuu");
 
-         var truth = new Response<Deposit>
-         {
-            Data = Deposit1Model
-         };
+         var truth = new Response<Deposit> { Data = Deposit1Model };
 
-         truth.Should().BeEquivalentTo(r);
+         truth.Should()
+              .BeEquivalentTo(r);
 
-         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/deposits/uuu")
-            .WithVerb(HttpMethod.Get);
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits/uuu")
+               .WithVerb(HttpMethod.Get);
       }
 
       [Test]
-      public async Task can_depositfunds()
+      public async Task can_list()
       {
-         SetupServerSingleResponse(Deposit1);
+         SetupServerPagedResponse(PaginationJson, $"{Deposit1}");
 
-         var create = new DepositFunds
-            {
-               Amount = 10.0m,
-               Currency = "USD",
-               PaymentMethod = "B28EB04F-BD70-4308-90A1-96065283A001"
-         };
-         var r = await client.Deposits.DepositFundsAsync("fff", create );
+         var r = await client.Deposits.ListDepositsAsync("fff");
 
-         var truth = new Response<Deposit>
-         {
-            Data = Deposit1Model
-         };
+         var truth = new PagedResponse<Deposit> { Pagination = PaginationModel, Data = new[] { Deposit1Model } };
 
-         truth.Should().BeEquivalentTo(r);
+         truth.Should()
+              .BeEquivalentTo(r);
 
-         server.ShouldHaveRequestBody(
-            @"{""amount"":10.0,""currency"":""USD"",""payment_method"":""B28EB04F-BD70-4308-90A1-96065283A001"",""commit"":false}");
-
-         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/deposits")
-            .WithVerb(HttpMethod.Post);
-      }
-
-      [Test]
-      public async Task can_commit()
-      {
-         SetupServerSingleResponse(Deposit1);
-
-         var r = await client.Deposits.CommitDepositAsync("fff", "uuu");
-
-         var truth = new Response<Deposit>
-            {
-               Data = Deposit1Model
-            };
-
-         truth.Should().BeEquivalentTo(r);
-
-         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits/uuu/commit")
-            .WithVerb(HttpMethod.Post);
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits")
+               .WithVerb(HttpMethod.Get);
       }
    }
 }

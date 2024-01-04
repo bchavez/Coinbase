@@ -19,12 +19,6 @@ namespace Coinbase.Tests
          return JsonConvert.SerializeObject(obj, Formatting.Indented);
       }
 
-      public static HttpCallAssertion ShouldHaveRequestBody(this HttpTest test, string json)
-      {
-         test.CallLog.First().RequestBody.Should().Be(json);
-         return new HttpCallAssertion(test.CallLog);
-      }
-
       public static bool IsAppVeyor(this OperatingSystem os)
       {
          return Environment.GetEnvironmentVariable("APPVEYOR").IsNotNullOrWhiteSpace();

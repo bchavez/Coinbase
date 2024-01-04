@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Coinbase.Models;
+﻿using Coinbase.Models;
 using FluentAssertions;
 using NUnit.Framework;
+using System.Net.Http;
+using System.Threading.Tasks;
 using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
@@ -11,28 +10,21 @@ namespace Coinbase.Tests.Endpoints
    public class TransactionTests : OAuthServerTest
    {
       [Test]
-      public async Task can_list()
+      public async Task can_cancel()
       {
-         SetupServerPagedResponse(PaginationJson, $"{Transaction2},{Transaction3},{Transaction4},{Transaction5}");
+         var r = await client.Transactions.CancelRequestMoneyAsync("fff", "uuu");
 
-         var r = await client.Transactions.ListTransactionsAsync("fff");
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
+               .WithVerb(HttpMethod.Delete);
+      }
 
-         var truth = new PagedResponse<Transaction>
-            {
-               Pagination = PaginationModel,
-               Data = new[]
-                  {
-                     Transaction2Model,
-                     Transaction3Model,
-                     Transaction4Model,
-                     Transaction5Model
-                  }
-            };
+      [Test]
+      public async Task can_compelte()
+      {
+         var r = await client.Transactions.CompleteRequestMoneyAsync("fff", "uuu");
 
-         truth.Should().BeEquivalentTo(r);
-
-         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
-            .WithVerb(HttpMethod.Get);
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/complete")
+               .WithVerb(HttpMethod.Post);
       }
 
       [Test]
@@ -42,15 +34,58 @@ namespace Coinbase.Tests.Endpoints
 
          var r = await client.Transactions.GetTransactionAsync("fff", "uuu");
 
-         var truth = new Response<Transaction>
-         {
-            Data = Transaction5Model
-         };
+         var truth = new Response<Transaction> { Data = Transaction5Model };
 
-         truth.Should().BeEquivalentTo(r);
+         truth.Should()
+              .BeEquivalentTo(r);
 
-         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
-            .WithVerb(HttpMethod.Get);
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
+               .WithVerb(HttpMethod.Get);
+      }
+
+      [Test]
+      public async Task can_list()
+      {
+         SetupServerPagedResponse(PaginationJson, $"{Transaction2},{Transaction3},{Transaction4},{Transaction5}");
+
+         var r = await client.Transactions.ListTransactionsAsync("fff");
+
+         var truth = new PagedResponse<Transaction>
+            {
+               Pagination = PaginationModel, Data = new[] { Transaction2Model, Transaction3Model, Transaction4Model, Transaction5Model }
+            };
+
+         truth.Should()
+              .BeEquivalentTo(r);
+
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
+               .WithVerb(HttpMethod.Get);
+      }
+
+      [Test]
+      public async Task can_request()
+      {
+         SetupServerSingleResponse(Transaction7);
+
+         var create = new RequestMoney { Type = "request", To = "email@example.com", Amount = 0.1m, Currency = "BTC" };
+         var r = await client.Transactions.RequestMoneyAsync("fff", create);
+
+         var truth = new Response<Transaction> { Data = Transaction7Model };
+
+         truth.Should()
+              .BeEquivalentTo(r);
+
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
+               .WithVerb(HttpMethod.Post);
+      }
+
+      [Test]
+      public async Task can_resend()
+      {
+         var r = await client.Transactions.ResendRequestMoneyAsync("fff", "uuu");
+
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/resend")
+               .WithVerb(HttpMethod.Post);
       }
 
       [Test]
@@ -65,21 +100,19 @@ namespace Coinbase.Tests.Endpoints
                Amount = 0.1m,
                Currency = "BTC",
                Idem = "9316dd16-0c05"
-         };
-         var r = await client.Transactions.SendMoneyAsync("fff", createTx );
+            };
+         var r = await client.Transactions.SendMoneyAsync("fff", createTx);
 
-         var truth = new Response<Transaction>
-         {
-            Data = Transaction6Model
-         };
+         var truth = new Response<Transaction> { Data = Transaction6Model };
 
-         truth.Should().BeEquivalentTo(r);
+         truth.Should()
+              .BeEquivalentTo(r);
 
-         server.ShouldHaveRequestBody(
-            "{\"type\":\"send\",\"to\":\"1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT\",\"amount\":0.1,\"currency\":\"BTC\",\"skip_notifications\":false,\"idem\":\"9316dd16-0c05\",\"to_financial_institution\":false}");
-
-         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/transactions")
-            .WithVerb(HttpMethod.Post);
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
+               .WithRequestBody(
+                  "{\"type\":\"send\",\"to\":\"1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT\",\"amount\":0.1,\"currency\":\"BTC\",\"skip_notifications\":false,\"idem\":\"9316dd16-0c05\",\"to_financial_institution\":false}"
+               )
+               .WithVerb(HttpMethod.Post);
       }
 
       [Test]
@@ -87,80 +120,17 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Transaction7);
 
-         var createTx = new CreateTransfer
-            {
-               Type = "send",
-               To = "1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT",
-               Amount = 0.1m,
-               Currency = "BTC"
-            };
+         var createTx = new CreateTransfer { Type = "send", To = "1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT", Amount = 0.1m, Currency = "BTC" };
          var r = await client.Transactions.TransferMoneyAsync("fff", createTx);
 
-         var truth = new Response<Transaction>
-            {
-               Data = Transaction7Model
-            };
+         var truth = new Response<Transaction> { Data = Transaction7Model };
 
-         truth.Should().BeEquivalentTo(r);
-
-         server.ShouldHaveRequestBody(
-            @"{""type"":""send"",""to"":""1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT"",""amount"":0.1,""currency"":""BTC""}");
-
-         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/transactions")
-            .WithVerb(HttpMethod.Post);
-      }
-
-      [Test]
-      public async Task can_request()
-      {
-         SetupServerSingleResponse(Transaction7);
-
-         var create = new RequestMoney
-            {
-               Type = "request",
-               To = "email@example.com",
-               Amount = 0.1m,
-               Currency = "BTC"
-            };
-         var r = await client.Transactions.RequestMoneyAsync("fff", create);
-
-         var truth = new Response<Transaction>
-            {
-               Data = Transaction7Model
-            };
-
-
-         truth.Should().BeEquivalentTo(r);
+         truth.Should()
+              .BeEquivalentTo(r);
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
-            .WithVerb(HttpMethod.Post);
-      }
-
-      [Test]
-      public async Task can_compelte()
-      {
-         var r = await client.Transactions.CompleteRequestMoneyAsync("fff", "uuu");
-
-         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/complete")
-            .WithVerb(HttpMethod.Post);
-      }
-
-      [Test]
-      public async Task can_resend()
-      {
-         var r = await client.Transactions.ResendRequestMoneyAsync("fff", "uuu");
-
-         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/resend")
-            .WithVerb(HttpMethod.Post);
-      }
-
-      [Test]
-      public async Task can_cancel()
-      {
-         var r = await client.Transactions.CancelRequestMoneyAsync("fff", "uuu");
-
-         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
-            .WithVerb(HttpMethod.Delete);
+               .WithRequestBody(@"{""type"":""send"",""to"":""1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT"",""amount"":0.1,""currency"":""BTC""}")
+               .WithVerb(HttpMethod.Post);
       }
    }
 }
