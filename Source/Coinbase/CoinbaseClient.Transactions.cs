@@ -66,7 +66,7 @@ namespace Coinbase
       Task<PagedResponse<Transaction>> ITransactionsEndpoint.ListTransactionsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions")
+            .AppendPathSegmentsRequire(accountId, "transactions?expand=all")
             .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
@@ -78,7 +78,7 @@ namespace Coinbase
       Task<Response<Transaction>> ITransactionsEndpoint.GetTransactionAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions", transactionId)
+            .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "?expand=all")
             .WithClient(this)
             .GetJsonAsync<Response<Transaction>>(cancellationToken);
       }
@@ -86,7 +86,7 @@ namespace Coinbase
       /// <summary>
       /// Send funds to a bitcoin address, bitcoin cash address, litecoin address, ethereum address, or email address. No transaction fees are required for off blockchain bitcoin transactions.
       /// It’s recommended to always supply a unique idem field for each transaction.This prevents you from sending the same transaction twice if there has been an unexpected network outage or other issue.
-      /// When used with OAuth2 authentication, this endpoint requires two factor authentication unless used with wallet:transactions:send:bypass-2fa scope.
+      /// When used with OAuth2 authentication, this endpoint requires two-factor authentication unless used with wallet:transactions:send:bypass-2fa scope.
       ///If the user is able to buy bitcoin, they can send funds from their fiat account using instant exchange feature.Buy fees will be included in the created transaction and the recipient will receive the user defined amount.
       /// </summary>
       Task<Response<Transaction>> ITransactionsEndpoint.SendMoneyAsync(string accountId, CreateTransaction createTransaction, CancellationToken cancellationToken)
