@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
@@ -28,7 +27,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(r);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/withdrawals")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/withdrawals")
             .WithVerb(HttpMethod.Get);
       }
 
@@ -46,11 +45,9 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(r);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/fff/withdrawals/uuu")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/withdrawals/uuu")
             .WithVerb(HttpMethod.Get);
       }
-
-
 
       [Test]
       public async Task can_withdrawal()
@@ -75,10 +72,9 @@ namespace Coinbase.Tests.Endpoints
          server.ShouldHaveRequestBody(
             @"{""amount"":10.0,""currency"":""USD"",""payment_method"":""B28EB04F-BD70-4308-90A1-96065283A001"",""commit"":false}");
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/fff/withdrawals")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/withdrawals")
             .WithVerb(HttpMethod.Post);
       }
-
 
       [Test]
       public async Task can_commit()
@@ -94,7 +90,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(r);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/withdrawals/uuu/commit")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/withdrawals/uuu/commit")
             .WithVerb(HttpMethod.Post);
       }
    }

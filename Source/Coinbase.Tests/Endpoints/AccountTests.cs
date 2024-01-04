@@ -25,7 +25,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(accounts);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts")
             .WithVerb(HttpMethod.Get);
       }
 
@@ -43,7 +43,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(account);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/{Account2Model.Id}")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/{Account2Model.Id}")
             .WithVerb(HttpMethod.Get);
       }
 
@@ -61,7 +61,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(account);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/{Account3Model.Id}/primary")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/{Account3Model.Id}/primary")
             .WithVerb(HttpMethod.Post);
       }
 
@@ -81,7 +81,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(account);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/{Account3Model.Id}")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/{Account3Model.Id}")
             .WithVerb(HttpMethod.Put);
       }
 
@@ -93,10 +93,8 @@ namespace Coinbase.Tests.Endpoints
          
          r.StatusCode.Should().Be((int)HttpStatusCode.NoContent);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/ffff")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/ffff")
             .WithVerb(HttpMethod.Delete);
       }
-
-
    }
 }

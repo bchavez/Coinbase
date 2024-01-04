@@ -31,7 +31,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(r);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/transactions")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
             .WithVerb(HttpMethod.Get);
       }
 
@@ -49,11 +49,9 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(r);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
             .WithVerb(HttpMethod.Get);
       }
-
-
 
       [Test]
       public async Task can_send()
@@ -80,7 +78,7 @@ namespace Coinbase.Tests.Endpoints
          server.ShouldHaveRequestBody(
             "{\"type\":\"send\",\"to\":\"1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT\",\"amount\":0.1,\"currency\":\"BTC\",\"skip_notifications\":false,\"idem\":\"9316dd16-0c05\",\"to_financial_institution\":false}");
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/fff/transactions")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/transactions")
             .WithVerb(HttpMethod.Post);
       }
 
@@ -108,7 +106,7 @@ namespace Coinbase.Tests.Endpoints
          server.ShouldHaveRequestBody(
             @"{""type"":""send"",""to"":""1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT"",""amount"":0.1,""currency"":""BTC""}");
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/fff/transactions")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/transactions")
             .WithVerb(HttpMethod.Post);
       }
 
@@ -134,39 +132,35 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(r);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/transactions")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
             .WithVerb(HttpMethod.Post);
       }
-
 
       [Test]
       public async Task can_compelte()
       {
          var r = await client.Transactions.CompleteRequestMoneyAsync("fff", "uuu");
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/complete")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/complete")
             .WithVerb(HttpMethod.Post);
       }
-
 
       [Test]
       public async Task can_resend()
       {
          var r = await client.Transactions.ResendRequestMoneyAsync("fff", "uuu");
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/resend")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/resend")
             .WithVerb(HttpMethod.Post);
       }
-
 
       [Test]
       public async Task can_cancel()
       {
          var r = await client.Transactions.CancelRequestMoneyAsync("fff", "uuu");
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
             .WithVerb(HttpMethod.Delete);
       }
-
    }
 }

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
@@ -28,7 +27,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(r);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/notifications")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/notifications")
             .WithVerb(HttpMethod.Get);
       }
 
@@ -46,7 +45,7 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(r);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/notifications/fff")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/notifications/fff")
             .WithVerb(HttpMethod.Get);
       }
    }

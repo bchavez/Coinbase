@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Coinbase.Models;
+﻿using Coinbase.Models;
 using NUnit.Framework;
-using static Coinbase.Tests.Examples;
+using System.Threading.Tasks;
 
 namespace Coinbase.Tests.Endpoints
 {
@@ -12,7 +11,7 @@ namespace Coinbase.Tests.Endpoints
       {
          await client.Accounts.ListAccountsAsync(new PaginationOptions {Limit = 5, EndingBefore = "before", Order = "ooo", StartingAfter = "after"});
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts?limit=5&order=ooo&starting_after=after&ending_before=before");
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts?limit=5&order=ooo&starting_after=after&ending_before=before");
       }
 
       [Test]
@@ -20,7 +19,7 @@ namespace Coinbase.Tests.Endpoints
       {
          await client.Addresses.ListAddressesAsync("fff", new PaginationOptions { Limit = 5,Order = "ooo" });
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/addresses?limit=5&order=ooo");
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/addresses?limit=5&order=ooo");
       }
 
       [Test]
@@ -33,7 +32,7 @@ namespace Coinbase.Tests.Endpoints
 
          await client.GetNextPageAsync(p);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/next/thing?limit=5");
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/next/thing?limit=5");
       }
 
       //[Test]
@@ -46,7 +45,7 @@ namespace Coinbase.Tests.Endpoints
 
       //   await client.PreviousPageAsync(p);
 
-      //   server.ShouldHaveExactCall("https://api.coinbase.com/v2/prev/thing?limit=5");
+      //   server.ShouldHaveCalled("https://api.coinbase.com/v2/prev/thing?limit=5");
       //}
    }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
@@ -13,8 +12,9 @@ namespace Coinbase.Tests.Endpoints
       private CoinbaseClient client;
 
       [SetUp]
-      public void BeforeEachTest()
+      public override void BeforeEachTest()
       {
+         base.BeforeEachTest();
          client = new CoinbaseClient(new OAuthConfig {AccessToken = OAuthServerTest.OauthKey});
       }
 
@@ -42,8 +42,7 @@ namespace Coinbase.Tests.Endpoints
          await a.Should().ThrowAsync<ArgumentException>();
          await b.Should().ThrowAsync<ArgumentException>();
       }
-
-
+      
       [Test]
       public async Task transactions
       (
@@ -77,7 +76,6 @@ namespace Coinbase.Tests.Endpoints
          await d.Should().ThrowAsync<ArgumentException>();
       }
 
-
       [Test]
       public async Task notifications
       (
@@ -87,7 +85,6 @@ namespace Coinbase.Tests.Endpoints
 
          await a.Should().ThrowAsync<ArgumentException>();
       }
-
 
       [Test]
       public async Task deposits
@@ -113,7 +110,6 @@ namespace Coinbase.Tests.Endpoints
          await a.Should().ThrowAsync<ArgumentException>();
          await b.Should().ThrowAsync<ArgumentException>();
       }
-
 
       [Test]
       public async Task paymentmethod
