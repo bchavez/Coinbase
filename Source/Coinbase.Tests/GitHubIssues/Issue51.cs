@@ -33,24 +33,6 @@ namespace Coinbase.Tests.GitHubIssues
     ""instant"": true
   }";
 
-      [Test]
-      public async Task can_deser_sellorder()
-      {
-         SetupServerSingleResponse(SellOrder);
-
-         var create = new PlaceSell
-            {
-               Amount = 10m,
-               Currency = "BTC",
-               PaymentMethod = "B28EB04F-BD70-4308-90A1-96065283A001"
-            };
-
-         Func<Task<Response<Sell>>> action = async () =>
-            await client.Sells.PlaceSellOrderAsync("fff", create);
-
-         action.Should().NotThrow();
-      }
-
 
       private const string PaymentMethods = @"{
       ""id"": ""ee12b3d9-7476-4f88-a7c4-b11ed8b8fa0a"",

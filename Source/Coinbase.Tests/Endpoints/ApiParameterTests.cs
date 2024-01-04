@@ -116,46 +116,11 @@ namespace Coinbase.Tests.Endpoints
 
 
       [Test]
-      public async Task sells
-      (
-         [Values(null, "", "  ")]string accountId)
-      {
-         Func<Task<PagedResponse<Sell>>> a = async () => await client.Sells.ListSellsAsync(accountId);
-         Func<Task<Response<Sell>>> b = async () => await client.Sells.PlaceSellOrderAsync(accountId, null);
-
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
-      }
-
-      [Test]
-      public async Task sells2
-      (
-         [Values(null, "", "  ", "fff")]string accountId,
-         [Values(null, "", "  ")]string sellId)
-      {
-         Func<Task<Response<Sell>>> a = async () => await client.Sells.GetSellAsync(accountId, sellId);
-         Func<Task<Response<Sell>>> b = async () => await client.Sells.CommitSellAsync(accountId, sellId);
-
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
-      }
-
-      [Test]
       public async Task paymentmethod
       (
          [Values(null, "", "  ")]string paymentMethodId)
       {
          Func<Task<Response<PaymentMethod>>> a = async () => await client.PaymentMethods.GetPaymentMethodAsync(paymentMethodId);
-
-         a.Should().Throw<ArgumentException>();
-      }
-
-      [Test]
-      public async Task user
-      (
-         [Values(null, "", "  ")]string userId)
-      {
-         Func<Task<Response<User>>> a = async () => await client.Users.GetUserAsync(userId);
 
          a.Should().Throw<ArgumentException>();
       }
@@ -188,36 +153,6 @@ namespace Coinbase.Tests.Endpoints
          b.Should().Throw<ArgumentException>();
          c.Should().Throw<ArgumentException>();
          d.Should().Throw<ArgumentException>();
-      }
-
-      [Test]
-      public async Task buys
-      (
-         [Values(null, "", "  ")]string accountId)
-      {
-         var create = new PlaceBuy
-            {
-               Amount = 0.1m,
-               Currency = "BTC",
-               PaymentMethod = "B28EB04F-BD70-4308-90A1-96065283A001"
-            };
-
-         Func<Task<Response<Buy>>> a = async () => await client.Buys.PlaceBuyOrderAsync(accountId, create);
-
-         a.Should().Throw<ArgumentException>();
-      }
-
-      [Test]
-      public async Task buys2
-      (
-         [Values(null, "", "  ", "fff")] string accountId,
-         [Values(null, "", "  ")] string buyId)
-      {
-         Func<Task<Response<Buy>>> a = async () => await client.Buys.CommitBuyAsync(accountId, buyId);
-         Func<Task<Response<Buy>>> b = async () => await client.Buys.GetBuyAsync(accountId, buyId);
-
-         a.Should().Throw<ArgumentException>();
-         b.Should().Throw<ArgumentException>();
       }
    }
 }

@@ -16,14 +16,11 @@ namespace Coinbase
    {
       IAccountsEndpoint Accounts { get; }
       IAddressesEndpoint Addresses { get; }
-      IBuysEndpoint Buys { get; }
       IDataEndpoint Data { get; }
       IDepositsEndpoint Deposits { get; }
       INotificationsEndpoint Notifications { get; }
       IPaymentMethodsEndpoint PaymentMethods { get; }
-      ISellsEndpoint Sells { get; }
       ITransactionsEndpoint Transactions { get; }
-      IUsersEndpoint Users { get; }
       IWithdrawalsEndpoint Withdrawals { get; }
    }
 

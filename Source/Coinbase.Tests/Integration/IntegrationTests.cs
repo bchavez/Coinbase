@@ -66,14 +66,6 @@ namespace Coinbase.Tests.Integration
       }
 
       [Test]
-      public async Task can_get_auths()
-      {
-         client = new CoinbaseClient(new OAuthConfig { AccessToken = secrets.OAuthCode });
-         var r = await client.Users.GetAuthInfoAsync();
-         r.Dump();
-      }
-
-      [Test]
       public async Task test_full_flow_and_expiration()
       {
          //client.
@@ -99,16 +91,6 @@ namespace Coinbase.Tests.Integration
          var token = await OAuthHelper.GetAccessTokenAsync(secrets.OAuthCode, secrets.OAuthClientId, secrets.OAuthClientSecret, redirectUrl);
          token.Dump();
       }
-
-      [Test]
-      public async Task run_expired_token()
-      {
-         this.client = new CoinbaseClient(new OAuthConfig { AccessToken = secrets.OAuthAccessToken, RefreshToken = secrets.OAuthRefreshToken })
-            .WithAutomaticOAuthTokenRefresh(secrets.OAuthClientId, secrets.OAuthClientSecret);
-
-         var authInfo = await this.client.Users.GetAuthInfoAsync();
-         authInfo.Dump();
-      }
    }
 
    [Explicit]
@@ -119,13 +101,6 @@ namespace Coinbase.Tests.Integration
       public UserTests()
       {
          client = new CoinbaseClient(new ApiKeyConfig { ApiKey = secrets.ApiKey, ApiSecret = secrets.ApiSecret});
-      }
-
-      [Test]
-      public async Task can_get_auths()
-      {
-         var r = await client.Users.GetAuthInfoAsync();
-         r.Dump();
       }
 
       [Test]
