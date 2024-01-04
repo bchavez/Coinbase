@@ -161,13 +161,15 @@ namespace Coinbase.Tests.Integration
       public async Task can_hoist_response()
       {
          bool myCustomActionWasCalled = false;
-         client.Configure(cf =>
+         client.WithSettings(_ =>
             {
-               cf.AfterCall = http =>
-                  {
-                     myCustomActionWasCalled = true;
-                     "AfterCall action set by user.".Dump();
-                  };
+               client.AfterCall(
+                  call =>
+                     {
+                        myCustomActionWasCalled = true;
+                        "AfterCall action set by user.".Dump();
+                     }
+               );
             });
 
          var list = await client
