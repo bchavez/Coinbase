@@ -115,7 +115,7 @@ namespace Coinbase.Tests.GitHubIssues
          Func<Task<PagedResponse<PaymentMethod>>> action = async () =>
             await client.PaymentMethods.ListPaymentMethodsAsync();
 
-         action.Should().NotThrowAsync();
+         await action.Should().NotThrowAsync();
       }
 
    }
