@@ -47,12 +47,7 @@ namespace Coinbase
 
       private void UseOAuth(CoinbaseClient client)
       {
-         async Task ApplyAuthorization(FlurlCall call)
-         {
-            call.Request.WithOAuthBearerToken(this.AccessToken);
-         }
-
-         client.BeforeCall(ApplyAuthorization);
+         client.BeforeCall(call => call.Request.WithOAuthBearerToken(AccessToken));
       }
    }
 
