@@ -167,10 +167,21 @@ namespace Coinbase.Models
    public partial class Transaction
    {
       [JsonProperty("buy")]
-      public Entity Buy { get; set; }
+      public Buy Buy { get; set; }
+
+      [JsonProperty("sell")]
+      public Sell Sell { get; set; }
+
+      public bool ShouldSerializeBuy()
+      {
+         return "buy".Equals(Type);
+      }
+
+      public bool ShouldSerializeSell()
+      {
+         return "sell".Equals(Type);
+      }
    }
-
-
 
    public partial class Buy : Entity
    {
