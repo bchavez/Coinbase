@@ -66,7 +66,8 @@ namespace Coinbase
       Task<PagedResponse<Transaction>> ITransactionsEndpoint.ListTransactionsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions?expand=all")
+            .AppendPathSegmentsRequire(accountId, "transactions")
+            .SetQueryParam("expand", "all")
             .WithPagination(pagination)
             .WithClient(this)
             .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
@@ -78,7 +79,8 @@ namespace Coinbase
       Task<Response<Transaction>> ITransactionsEndpoint.GetTransactionAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
          return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "?expand=all")
+            .AppendPathSegmentsRequire(accountId, "transactions", transactionId)
+            .SetQueryParam("expand", "all")
             .WithClient(this)
             .GetJsonAsync<Response<Transaction>>(cancellationToken);
       }
