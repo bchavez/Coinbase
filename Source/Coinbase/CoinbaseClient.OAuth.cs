@@ -224,7 +224,7 @@ namespace Coinbase
             }
          }
 
-         client.Configure(s => s.OnErrorAsync = TokenExpiredErrorHandler);
+         client.WithSettings(_ => client.OnError(TokenExpiredErrorHandler));
          return client;
       }
    }
