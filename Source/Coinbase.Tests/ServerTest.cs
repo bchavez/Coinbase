@@ -8,13 +8,13 @@ namespace Coinbase.Tests
       protected HttpTest server;
 
       [SetUp]
-      public void BeforeEachTest()
+      public virtual void BeforeEachTest()
       {
          server = new HttpTest();
       }
 
       [TearDown]
-      public void AfterEachTest()
+      public virtual void AfterEachTest()
       {
          this.server.Dispose();
       }
@@ -49,15 +49,17 @@ namespace Coinbase.Tests
       public const string OauthKey = "369ECD3F-2D00-4D7A-ACDB-92C2DC35A878";
 
       [SetUp]
-      public void BeforeEachTest()
+      public override void BeforeEachTest()
       {
+         base.BeforeEachTest();
          client = new CoinbaseClient(new OAuthConfig{AccessToken = OauthKey});
       }
 
       [TearDown]
-      public void AfterEachTest()
+      public override void AfterEachTest()
       {
          EnsureEveryRequestHasCorrectHeaders();
+         base.AfterEachTest();
       }
 
       private void EnsureEveryRequestHasCorrectHeaders()

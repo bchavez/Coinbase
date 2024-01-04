@@ -9,16 +9,18 @@ namespace Coinbase.Tests
       private CoinbaseClient client;
 
       [SetUp]
-      public void BeforeEachTest()
+      public override void BeforeEachTest()
       {
+         base.BeforeEachTest();
          client = new CoinbaseClient(new ApiKeyConfig{ ApiKey = "", ApiSecret = ""});
       }
 
       [TearDown]
-      public void AfterEachTest()
+      public override void AfterEachTest()
       {
+
          EnsureEveryRequestHasCorrectHeaders();
-         this.server.Dispose();
+         base.AfterEachTest();
       }
 
       private void EnsureEveryRequestHasCorrectHeaders()
