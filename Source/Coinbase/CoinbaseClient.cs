@@ -142,7 +142,6 @@ namespace Coinbase
              .GetJsonAsync<PagedResponse<T>>(cancellationToken: cancellationToken);
       }
 
-
       /// <summary>
       /// Captures the low-level <seealso cref="HttpResponseMessage" /> from a
       /// underlying request. Useful in advanced scenarios where you
@@ -158,27 +157,10 @@ namespace Coinbase
       {
          IFlurlResponse msg = null;
 
-         void CaptureResponse(FlurlCall http)
-         {
-            msg = http.Response;
-
-            this.Configure(cf =>
-               {
-                  // Remove Action<HttpCall> from Invocation list
-                  // to avoid memory leak from further calls to the same
-                  // client object.
-                  cf.AfterCall -= CaptureResponse;
-               });
-         }
-
-         this.Configure(cf =>
-            {
-               cf.AfterCall += CaptureResponse;
-            });
+         this.WithSettings(_ => this.AfterCall(call => msg = call.Response));
 
          responseGetter = () => msg;
          return this;
       }
-
    }
 }
