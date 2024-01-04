@@ -101,7 +101,7 @@ namespace Coinbase
             });
       }
 
-      private class DebugProxyFactory : DefaultHttpClientFactory
+      private class DebugProxyFactory : DefaultFlurlClientFactory
       {
          private readonly WebProxy proxy;
 
@@ -110,7 +110,7 @@ namespace Coinbase
             this.proxy = proxy;
          }
 
-         public override HttpMessageHandler CreateMessageHandler()
+         public override HttpMessageHandler CreateInnerHandler()
          {
             return new HttpClientHandler
                {
