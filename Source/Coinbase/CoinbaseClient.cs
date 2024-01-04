@@ -138,9 +138,8 @@ namespace Coinbase
       protected internal Task<PagedResponse<T>> GetPageAsync<T>(string pageUrl, CancellationToken cancellationToken = default)
       {
          pageUrl = pageUrl.Remove(0, 4);
-         return (this.Config.ApiUrl + pageUrl)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<T>>(cancellationToken);
+         return this.Request(Config.ApiUrl + pageUrl)
+             .GetJsonAsync<PagedResponse<T>>(cancellationToken: cancellationToken);
       }
 
 

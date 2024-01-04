@@ -65,12 +65,13 @@ namespace Coinbase
       /// </summary>
       Task<PagedResponse<Transaction>> ITransactionsEndpoint.ListTransactionsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions")
-            .SetQueryParam("expand", "all")
-            .WithPagination(pagination)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
+         return Request(
+               AccountsEndpoint
+                  .AppendPathSegmentsRequire(accountId, "transactions")
+                  .SetQueryParam("expand", "all")
+                  .WithPagination(pagination)
+            )
+            .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken: cancellationToken);
       }
 
       /// <summary>
@@ -78,11 +79,12 @@ namespace Coinbase
       /// </summary>
       Task<Response<Transaction>> ITransactionsEndpoint.GetTransactionAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions", transactionId)
-            .SetQueryParam("expand", "all")
-            .WithClient(this)
-            .GetJsonAsync<Response<Transaction>>(cancellationToken);
+         return Request(
+               AccountsEndpoint
+                  .AppendPathSegmentsRequire(accountId, "transactions", transactionId)
+                  .SetQueryParam("expand", "all")
+            )
+            .GetJsonAsync<Response<Transaction>>(cancellationToken: cancellationToken);
       }
 
       /// <summary>
@@ -93,12 +95,12 @@ namespace Coinbase
       /// </summary>
       Task<Response<Transaction>> ITransactionsEndpoint.SendMoneyAsync(string accountId, CreateTransaction createTransaction, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions")
-            .WithClient(this)
-            .PostJsonAsync(createTransaction, cancellationToken)
+         return Request(
+               AccountsEndpoint
+                  .AppendPathSegmentsRequire(accountId, "transactions")
+            )
+            .PostJsonAsync(createTransaction, cancellationToken: cancellationToken)
             .ReceiveJson<Response<Transaction>>();
-
       }
 
       /// <summary>
@@ -108,10 +110,11 @@ namespace Coinbase
       /// </summary>
       Task<Response<Transaction>> ITransactionsEndpoint.TransferMoneyAsync(string accountId, CreateTransfer createTransfer, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions")
-            .WithClient(this)
-            .PostJsonAsync(createTransfer, cancellationToken)
+         return Request(
+                  AccountsEndpoint
+                     .AppendPathSegmentsRequire(accountId, "transactions")
+            )
+            .PostJsonAsync(createTransfer, cancellationToken: cancellationToken)
             .ReceiveJson<Response<Transaction>>();
       }
 
@@ -120,11 +123,12 @@ namespace Coinbase
       /// </summary>
       Task<Response<Transaction>> ITransactionsEndpoint.RequestMoneyAsync(string accountId, RequestMoney requestMoney, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions")
-            .WithClient(this)
-            .PostJsonAsync(requestMoney, cancellationToken)
-            .ReceiveJson<Response<Transaction>>();
+         return Request(
+                   AccountsEndpoint
+                      .AppendPathSegmentsRequire(accountId, "transactions")
+                )
+                .PostJsonAsync(requestMoney, cancellationToken: cancellationToken)
+                .ReceiveJson<Response<Transaction>>();
       }
 
       /// <summary>
@@ -132,22 +136,23 @@ namespace Coinbase
       /// </summary>
       Task<IFlurlResponse> ITransactionsEndpoint.CompleteRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "complete")
-            .WithClient(this)
-            .PostJsonAsync(null, cancellationToken);
+         return Request(
+               AccountsEndpoint
+                  .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "complete")
+            )
+            .PostJsonAsync(null, cancellationToken: cancellationToken);
       }
-
-
+      
       /// <summary>
       /// Lets the user resend a money request. This will notify recipient with a new email.
       /// </summary>
       Task<IFlurlResponse> ITransactionsEndpoint.ResendRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "resend")
-            .WithClient(this)
-            .PostJsonAsync(null, cancellationToken);
+         return Request(
+               AccountsEndpoint
+                  .AppendPathSegmentsRequire(accountId, "transactions", transactionId, "resend")
+            )
+            .PostJsonAsync(null, cancellationToken: cancellationToken);
       }
 
       /// <summary>
@@ -155,11 +160,8 @@ namespace Coinbase
       /// </summary>
       Task<IFlurlResponse> ITransactionsEndpoint.CancelRequestMoneyAsync(string accountId, string transactionId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "transactions", transactionId)
-            .WithClient(this)
-            .DeleteAsync(cancellationToken);
+         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, "transactions", transactionId))
+            .DeleteAsync(cancellationToken: cancellationToken);
       }
-
    }
 }

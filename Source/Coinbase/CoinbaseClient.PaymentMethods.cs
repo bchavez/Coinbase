@@ -23,22 +23,16 @@ namespace Coinbase
    {
       public IPaymentMethodsEndpoint PaymentMethods => this;
 
-
       Task<PagedResponse<PaymentMethod>> IPaymentMethodsEndpoint.ListPaymentMethodsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return this.PaymentMethodsEndpoint
-            .WithPagination(pagination)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<PaymentMethod>>(cancellationToken);
+         return Request(PaymentMethodsEndpoint.WithPagination(pagination))
+            .GetJsonAsync<PagedResponse<PaymentMethod>>(cancellationToken: cancellationToken);
       }
 
       Task<Response<PaymentMethod>> IPaymentMethodsEndpoint.GetPaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
       {
-         return this.PaymentMethodsEndpoint
-            .AppendPathSegmentsRequire(paymentMethodId)
-            .WithClient(this)
-            .GetJsonAsync<Response<PaymentMethod>>(cancellationToken);
+         return Request(PaymentMethodsEndpoint.AppendPathSegmentsRequire(paymentMethodId))
+            .GetJsonAsync<Response<PaymentMethod>>(cancellationToken: cancellationToken);
       }
-
    }
 }

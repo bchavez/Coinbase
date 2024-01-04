@@ -29,8 +29,7 @@ namespace Coinbase
       /// </summary>
       Task<Response<AddressEntity>> CreateAddressAsync(string accountId, CreateAddress createAddress, CancellationToken cancellationToken = default);
    }
-
-
+   
    public partial class CoinbaseClient : IAddressesEndpoint
    {
       public IAddressesEndpoint Addresses => this;
@@ -38,43 +37,35 @@ namespace Coinbase
       /// <inheritdoc />
       Task<PagedResponse<AddressEntity>> IAddressesEndpoint.ListAddressesAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "addresses")
-            .WithPagination(pagination)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<AddressEntity>>(cancellationToken);
+         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, "addresses")
+                  .WithPagination(pagination))
+               .GetJsonAsync<PagedResponse<AddressEntity>>(cancellationToken: cancellationToken);
       }
 
       /// <inheritdoc />
       Task<Response<AddressEntity>> IAddressesEndpoint.GetAddressAsync(string accountId, string addressId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "addresses", addressId)
-            .WithClient(this)
-            .GetJsonAsync<Response<AddressEntity>>(cancellationToken);
+         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, "addresses", addressId))
+            .GetJsonAsync<Response<AddressEntity>>(cancellationToken: cancellationToken);
       }
 
       /// <inheritdoc />
       Task<PagedResponse<Transaction>> IAddressesEndpoint.ListAddressTransactionsAsync(string accountId, string addressId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "addresses", addressId, "transactions")
-            .WithPagination(pagination)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<Transaction>>(cancellationToken);
+         return Request(AccountsEndpoint
+                        .AppendPathSegmentsRequire(accountId, "addresses", addressId, "transactions")
+                        .WithPagination(pagination)
+         ).GetJsonAsync<PagedResponse<Transaction>>(cancellationToken: cancellationToken);
       }
 
       /// <inheritdoc />
       Task<Response<AddressEntity>> IAddressesEndpoint.CreateAddressAsync(string accountId, CreateAddress createAddress, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "addresses")
-            .WithClient(this)
-            .PostJsonAsync(createAddress, cancellationToken)
-            .ReceiveJson<Response<AddressEntity>>();
+         return Request(AccountsEndpoint
+                        .AppendPathSegmentsRequire(accountId, "addresses")
+                        ).PostJsonAsync(
+                           createAddress, cancellationToken: cancellationToken
+                        ).ReceiveJson<Response<AddressEntity>>();
       }
-
-
-
    }
 }

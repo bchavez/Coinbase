@@ -49,10 +49,9 @@ namespace Coinbase
       /// </summary>
       Task<PagedResponse<Account>> IAccountsEndpoint.ListAccountsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .WithPagination(pagination)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<Account>>(cancellationToken);
+         return Request(AccountsEndpoint
+            .WithPagination(pagination))
+            .GetJsonAsync<PagedResponse<Account>>(cancellationToken: cancellationToken);
       }
 
       /// <summary>
@@ -60,10 +59,8 @@ namespace Coinbase
       /// </summary>
       Task<Response<Account>> IAccountsEndpoint.GetAccountAsync(string accountId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId)
-            .WithClient(this)
-            .GetJsonAsync<Response<Account>>(cancellationToken);
+         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId))
+            .GetJsonAsync<Response<Account>>(cancellationToken: cancellationToken);
       }
 
       /// <summary>
@@ -71,22 +68,18 @@ namespace Coinbase
       /// </summary>
       Task<Response<Account>> IAccountsEndpoint.SetAccountAsPrimaryAsync(string accountId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, "primary")
-            .WithClient(this)
-            .PostJsonAsync(null, cancellationToken)
-            .ReceiveJson<Response<Account>>();
+         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, "primary"))
+                .PostJsonAsync(null, cancellationToken: cancellationToken)
+                .ReceiveJson<Response<Account>>();
       }
       /// <summary>
       /// Modifies user’s account.
       /// </summary>
       Task<Response<Account>> IAccountsEndpoint.UpdateAccountAsync(string accountId, UpdateAccount updateAccount, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId)
-            .WithClient(this)
-            .PutJsonAsync(updateAccount, cancellationToken)
-            .ReceiveJson<Response<Account>>();
+         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId))
+                .PostJsonAsync(updateAccount, cancellationToken: cancellationToken)
+                .ReceiveJson<Response<Account>>();
       }
 
       /// <summary>
@@ -98,10 +91,8 @@ namespace Coinbase
       /// </summary>
       Task<IFlurlResponse> IAccountsEndpoint.DeleteAccountAsync(string accountId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId)
-            .WithClient(this)
-            .DeleteAsync(cancellationToken);
+         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId))
+            .DeleteAsync(cancellationToken: cancellationToken);
       }
    }
 }

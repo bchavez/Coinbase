@@ -6,13 +6,13 @@ using Flurl.Http;
 
 namespace Coinbase
 {
-
    public interface INotificationsEndpoint
    {
       /// <summary>
       /// Lists current user’s payment methods.
       /// </summary>
       Task<PagedResponse<Notification>> ListNotificationsAsync(PaginationOptions pagination = null, CancellationToken cancellationToken = default);
+
       /// <summary>
       /// Show current user’s payment method.
       /// </summary>
@@ -23,22 +23,16 @@ namespace Coinbase
    {
       public INotificationsEndpoint Notifications => this;
 
-
       Task<PagedResponse<Notification>> INotificationsEndpoint.ListNotificationsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return this.NotificationsEndpoint
-            .WithPagination(pagination)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<Notification>>(cancellationToken);
+         return Request(NotificationsEndpoint.WithPagination(pagination))
+            .GetJsonAsync<PagedResponse<Notification>>(cancellationToken: cancellationToken);
       }
 
       Task<Response<Notification>> INotificationsEndpoint.GetNotificationAsync(string notificationId, CancellationToken cancellationToken)
       {
-         return this.NotificationsEndpoint
-            .AppendPathSegmentsRequire(notificationId)
-            .WithClient(this)
-            .GetJsonAsync<Response<Notification>>(cancellationToken);
+         return Request(NotificationsEndpoint.AppendPathSegmentsRequire(notificationId))
+            .GetJsonAsync<Response<Notification>>(cancellationToken: cancellationToken);
       }
-
    }
 }
