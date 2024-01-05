@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using Flurl.Http;
+using Newtonsoft.Json;
 
 namespace Coinbase
 {
@@ -25,48 +26,56 @@ namespace Coinbase
       /// </summary>
       Task<Response<Withdrawal>> CommitWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken = default);
    }
-
-
+   
    public partial class CoinbaseClient : IWithdrawalsEndpoint
    {
       public IWithdrawalsEndpoint Withdrawals => this;
 
       private const string withdrawals = "withdrawals";
 
-      Task<PagedResponse<Withdrawal>> IWithdrawalsEndpoint.ListWithdrawalsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
+      async Task<PagedResponse<Withdrawal>> IWithdrawalsEndpoint.ListWithdrawalsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, withdrawals)
-            .WithPagination(pagination)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<Withdrawal>>(cancellationToken);
+         var responseBody = await Request(
+               AccountsEndpoint.AppendPathSegmentsRequire(accountId, withdrawals)
+                               .WithPagination(pagination)
+            )
+            .GetStringAsync(cancellationToken: cancellationToken);
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new PagedResponse<Withdrawal>();
+
+         return JsonConvert.DeserializeObject<PagedResponse<Withdrawal>>(responseBody);
       }
 
-      Task<Response<Withdrawal>> IWithdrawalsEndpoint.GetWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken)
+      async Task<Response<Withdrawal>> IWithdrawalsEndpoint.GetWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, withdrawals, withdrawalId)
-            .WithClient(this)
-            .GetJsonAsync<Response<Withdrawal>>(cancellationToken);
+         var responseBody = await Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, withdrawals, withdrawalId))
+            .GetStringAsync(cancellationToken: cancellationToken);
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new Response<Withdrawal>();
+
+         return JsonConvert.DeserializeObject<Response<Withdrawal>>(responseBody);
       }
 
-      Task<Response<Withdrawal>> IWithdrawalsEndpoint.WithdrawalFundsAsync(string accountId, WithdrawalFunds withdrawalFunds, CancellationToken cancellationToken)
+      async Task<Response<Withdrawal>> IWithdrawalsEndpoint.WithdrawalFundsAsync(string accountId, WithdrawalFunds withdrawalFunds, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, withdrawals)
-            .WithClient(this)
-            .PostJsonAsync(withdrawalFunds, cancellationToken)
-            .ReceiveJson<Response<Withdrawal>>();
+         using var response = Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, withdrawals))
+                .PostJsonAsync(withdrawalFunds, cancellationToken: cancellationToken);
+         var responseBody = await response.ReceiveString();
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new Response<Withdrawal>();
 
+         return JsonConvert.DeserializeObject<Response<Withdrawal>>(responseBody);
       }
 
-      Task<Response<Withdrawal>> IWithdrawalsEndpoint.CommitWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken)
+      async Task<Response<Withdrawal>> IWithdrawalsEndpoint.CommitWithdrawalAsync(string accountId, string withdrawalId, CancellationToken cancellationToken)
       {
-         return this.AccountsEndpoint
-            .AppendPathSegmentsRequire(accountId, withdrawals, withdrawalId, "commit")
-            .WithClient(this)
-            .PostJsonAsync(null, cancellationToken)
-            .ReceiveJson<Response<Withdrawal>>();
+         using var response = Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, withdrawals, withdrawalId, "commit"))
+                .PostJsonAsync(null, cancellationToken: cancellationToken);
+         var responseBody = await response.ReceiveString();
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new Response<Withdrawal>();
+
+         return JsonConvert.DeserializeObject<Response<Withdrawal>>(responseBody);
       }
    }
 }

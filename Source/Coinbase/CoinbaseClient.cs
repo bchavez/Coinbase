@@ -16,20 +16,17 @@ namespace Coinbase
    {
       IAccountsEndpoint Accounts { get; }
       IAddressesEndpoint Addresses { get; }
-      IBuysEndpoint Buys { get; }
       IDataEndpoint Data { get; }
       IDepositsEndpoint Deposits { get; }
       INotificationsEndpoint Notifications { get; }
       IPaymentMethodsEndpoint PaymentMethods { get; }
-      ISellsEndpoint Sells { get; }
       ITransactionsEndpoint Transactions { get; }
-      IUsersEndpoint Users { get; }
       IWithdrawalsEndpoint Withdrawals { get; }
    }
 
    public partial class CoinbaseClient : FlurlClient, ICoinbaseClient
    {
-      public const string ApiVersionDate = "2017-08-07";
+      public const string ApiVersionDate = "2021-06-05";
 
       public Config Config { get; }
 
@@ -98,31 +95,14 @@ namespace Coinbase
       {
          var webProxy = new WebProxy(proxyUrl, BypassOnLocal: false);
 
-         this.Configure(settings =>
-            {
-               settings.HttpClientFactory = new DebugProxyFactory(webProxy);
-            });
-      }
-
-      private class DebugProxyFactory : DefaultHttpClientFactory
-      {
-         private readonly WebProxy proxy;
-
-         public DebugProxyFactory(WebProxy proxy)
-         {
-            this.proxy = proxy;
-         }
-
-         public override HttpMessageHandler CreateMessageHandler()
-         {
-            return new HttpClientHandler
+         FlurlHttp.Clients.WithDefaults(builder => builder.ConfigureInnerHandler(
+            hch =>
                {
-                  Proxy = this.proxy,
-                  UseProxy = true
-               };
-         }
+                  hch.Proxy = new WebProxy(proxyUrl, BypassOnLocal: false);
+                  hch.UseProxy = true;
+               }
+         ));
       }
-
 
       /// <summary>
       /// Get the next page of data given the current paginated response.
@@ -158,11 +138,9 @@ namespace Coinbase
       protected internal Task<PagedResponse<T>> GetPageAsync<T>(string pageUrl, CancellationToken cancellationToken = default)
       {
          pageUrl = pageUrl.Remove(0, 4);
-         return (this.Config.ApiUrl + pageUrl)
-            .WithClient(this)
-            .GetJsonAsync<PagedResponse<T>>(cancellationToken);
+         return this.Request(Config.ApiUrl + pageUrl)
+             .GetJsonAsync<PagedResponse<T>>(cancellationToken: cancellationToken);
       }
-
 
       /// <summary>
       /// Captures the low-level <seealso cref="HttpResponseMessage" /> from a
@@ -179,27 +157,10 @@ namespace Coinbase
       {
          IFlurlResponse msg = null;
 
-         void CaptureResponse(FlurlCall http)
-         {
-            msg = http.Response;
-
-            this.Configure(cf =>
-               {
-                  // Remove Action<HttpCall> from Invocation list
-                  // to avoid memory leak from further calls to the same
-                  // client object.
-                  cf.AfterCall -= CaptureResponse;
-               });
-         }
-
-         this.Configure(cf =>
-            {
-               cf.AfterCall += CaptureResponse;
-            });
+         this.WithSettings(_ => this.AfterCall(call => msg = call.Response));
 
          responseGetter = () => msg;
          return this;
       }
-
    }
 }

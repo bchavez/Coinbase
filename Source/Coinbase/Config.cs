@@ -42,17 +42,12 @@ namespace Coinbase
 
       protected internal override void Configure(CoinbaseClient client)
       {
-         client.Configure(settings => UseOAuth(settings, client));
+         client.WithSettings(_ => UseOAuth(client));
       }
 
-      private void UseOAuth(ClientFlurlHttpSettings settings, CoinbaseClient client)
+      private void UseOAuth(CoinbaseClient client)
       {
-         async Task ApplyAuthorization(FlurlCall call)
-         {
-            call.Request.WithOAuthBearerToken(this.AccessToken);
-         }
-
-         settings.BeforeCallAsync = ApplyAuthorization;
+         client.BeforeCall(call => call.Request.WithOAuthBearerToken(AccessToken));
       }
    }
 
@@ -68,10 +63,10 @@ namespace Coinbase
 
       protected internal override void Configure(CoinbaseClient client)
       {
-         client.Configure(settings => ApiKeyAuth(settings, client));
+         client.WithSettings(_ => ApiKeyAuth(client));
       }
 
-      private void ApiKeyAuth(ClientFlurlHttpSettings settings, CoinbaseClient client)
+      private void ApiKeyAuth(CoinbaseClient client)
       {
          async Task SetHeaders(FlurlCall http)
          {
@@ -98,7 +93,7 @@ namespace Coinbase
                .WithHeader(HeaderNames.AccessTimestamp, timestamp);
          }
 
-         settings.BeforeCallAsync = SetHeaders;
+         client.BeforeCall(SetHeaders);
       }
    }
 }

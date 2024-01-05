@@ -19,18 +19,6 @@ namespace Coinbase.Tests
          return JsonConvert.SerializeObject(obj, Formatting.Indented);
       }
 
-      // https://github.com/tmenier/Flurl/issues/323
-      public static HttpCallAssertion ShouldHaveExactCall(this HttpTest test, string exactUrl)
-      {
-         test.CallLog.First().Request.Url.ToString().Should().Be(exactUrl);
-         return new HttpCallAssertion(test.CallLog);
-      }
-      public static HttpCallAssertion ShouldHaveRequestBody(this HttpTest test, string json)
-      {
-         test.CallLog.First().RequestBody.Should().Be(json);
-         return new HttpCallAssertion(test.CallLog);
-      }
-
       public static bool IsAppVeyor(this OperatingSystem os)
       {
          return Environment.GetEnvironmentVariable("APPVEYOR").IsNotNullOrWhiteSpace();

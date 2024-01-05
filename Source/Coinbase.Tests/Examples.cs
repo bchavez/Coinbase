@@ -312,7 +312,7 @@ namespace Coinbase.Tests
             Resource = "transaction",
             ResourcePath = "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/transactions/4117f7d6-5694-5b36-bc8f-847509850ea4",
             Network = null,
-            Buy = new Entity
+            Buy = new Buy
                {
                   Id = "9e14d574-30fa-5d85-b02c-6be0d851d61d",
                   Resource = "buy",

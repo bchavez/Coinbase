@@ -21,17 +21,19 @@ namespace Coinbase.Tests.Integration
       {
          if( !Environment.OSVersion.IsAppVeyor() && Process.GetProcessesByName("Fiddler").Any() )
          {
-            var webProxy = new WebProxy("http://localhost.:8888", BypassOnLocal: false);
-            
-            FlurlHttp.Configure(settings =>
-               {
-                  settings.HttpClientFactory = new ProxyFactory(webProxy);
-               });
+            FlurlHttp.Clients.WithDefaults(builder => builder.ConfigureInnerHandler(
+               hch =>
+                  {
+                     hch.Proxy = new WebProxy("http://localhost.:8888", BypassOnLocal: false);
+                     hch.UseProxy = true;
+                  }
+            ));
+
          }
 
-#if NETFRAMEWORK
+      #if NETFRAMEWORK
          ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-#endif
+      #endif
       }
 
       [SetUp]
@@ -44,8 +46,8 @@ namespace Coinbase.Tests.Integration
       public async Task can_get_currencies()
       {
          var r = await client.Data.GetCurrenciesAsync();
-         var usd = r.Data.Where(c => c.Id == "USD").First();
-         usd.Name.Should().StartWith("US Dollar");
+         var usd = r.Data.First(c => "USD".Equals(c.Id));
+         usd.Name.Should().StartWith("United States Dollar");
       }
 
       [Test]
@@ -65,6 +67,7 @@ namespace Coinbase.Tests.Integration
          r.Data.Currency.Should().Be("USD");
          r.Data.Base.Should().Be("ETH");
       }
+
       [Test]
       public async Task can_get_sellprice()
       {
@@ -74,6 +77,7 @@ namespace Coinbase.Tests.Integration
          r.Data.Currency.Should().Be("USD");
          r.Data.Base.Should().Be("ETH");
       }
+
       [Test]
       public async Task can_get_spotprice()
       {
@@ -90,25 +94,6 @@ namespace Coinbase.Tests.Integration
          var r = await client.Data.GetCurrentTimeAsync();
          r.Dump();
          r.Data.Iso.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromHours(1));
-      }
-   }
-
-   public class ProxyFactory : DefaultHttpClientFactory
-   {
-      private readonly WebProxy proxy;
-
-      public ProxyFactory(WebProxy proxy)
-      {
-         this.proxy = proxy;
-      }
-
-      public override HttpMessageHandler CreateMessageHandler()
-      {
-         return new HttpClientHandler
-            {
-               Proxy = this.proxy,
-               UseProxy = true
-            };
       }
    }
 }

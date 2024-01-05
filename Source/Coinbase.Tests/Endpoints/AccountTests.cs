@@ -4,18 +4,33 @@ using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
+using System.Configuration;
 using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
 {
+   [TestFixture]
    public class AccountTests : OAuthServerTest
    {
       [Test]
-      public async Task can_list_accounts()
+      public void can_list_accounts()
       {
          SetupServerPagedResponse(PaginationJson, $"{Account1},{Account2}");
 
-         var accounts = await client.Accounts.ListAccountsAsync();
+         PagedResponse<Account> accounts = default;
+
+         Assert.DoesNotThrowAsync(async () =>
+            accounts = await client.Accounts.ListAccountsAsync(
+               new PaginationOptions
+               {
+                  Limit = 25, Order = "desc"
+               })
+            );
+
+         Assert.That(accounts, Is.Not.Null);
+
+         Assert.That(accounts.Data.Length == 2);
 
          var truth = new PagedResponse<Account>
             {
@@ -25,10 +40,12 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(accounts);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts")
             .WithVerb(HttpMethod.Get);
-      }
 
+         Console.WriteLine("*** UNIT TEST PASSED ***");
+      }
+         
       [Test]
       public async Task get_an_account()
       {
@@ -43,8 +60,10 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(account);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/{Account2Model.Id}")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/{Account2Model.Id}")
             .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -61,8 +80,10 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(account);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/{Account3Model.Id}/primary")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/{Account3Model.Id}/primary")
             .WithVerb(HttpMethod.Post);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -81,8 +102,10 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(account);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/{Account3Model.Id}")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/{Account3Model.Id}")
             .WithVerb(HttpMethod.Put);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -93,10 +116,8 @@ namespace Coinbase.Tests.Endpoints
          
          r.StatusCode.Should().Be((int)HttpStatusCode.NoContent);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/ffff")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/ffff")
             .WithVerb(HttpMethod.Delete);
       }
-
-
    }
 }

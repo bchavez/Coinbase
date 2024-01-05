@@ -1,16 +1,16 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
 using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
 {
+   [TestFixture]
    public class AddressTests : OAuthServerTest
    {
-
       [Test]
       public async Task can_list_addresses()
       {
@@ -26,8 +26,10 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(accounts);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/ffff/addresses")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/ffff/addresses")
             .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -44,11 +46,11 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(account);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/ffff/addresses/{Address1Model.Id}")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/ffff/addresses/{Address1Model.Id}")
             .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
-
-
 
       [Test]
       public async Task can_list_address_transactions()
@@ -65,8 +67,10 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(txs);
 
-         server.ShouldHaveExactCall($"https://api.coinbase.com/v2/accounts/fff/addresses/uuu/transactions")
+         server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/addresses/uuu/transactions")
             .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -86,9 +90,10 @@ namespace Coinbase.Tests.Endpoints
 
          truth.Should().BeEquivalentTo(add);
 
-         server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/addresses")
+         server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/addresses")
             .WithVerb(HttpMethod.Post);
-      }
 
+         Console.WriteLine("*** UNIT TEST PASSED ***");
+      }
    }
 }
