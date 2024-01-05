@@ -7,6 +7,7 @@ using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
 {
+   [TestFixture]
    public class NotificationTests : OAuthServerTest
    {
       [Test]

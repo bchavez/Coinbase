@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using Flurl.Http;
+using Newtonsoft.Json;
 
 namespace Coinbase
 {
@@ -23,16 +24,23 @@ namespace Coinbase
    {
       public INotificationsEndpoint Notifications => this;
 
-      Task<PagedResponse<Notification>> INotificationsEndpoint.ListNotificationsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
+      async Task<PagedResponse<Notification>> INotificationsEndpoint.ListNotificationsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return Request(NotificationsEndpoint.WithPagination(pagination))
-            .GetJsonAsync<PagedResponse<Notification>>(cancellationToken: cancellationToken);
+         var responseBody = await Request(NotificationsEndpoint.WithPagination(pagination))
+                            .GetStringAsync(cancellationToken: cancellationToken);
+         if (string.IsNullOrWhiteSpace(responseBody))
+            return new PagedResponse<Notification>();
+
+         return JsonConvert.DeserializeObject<PagedResponse<Notification>>(responseBody);
       }
 
-      Task<Response<Notification>> INotificationsEndpoint.GetNotificationAsync(string notificationId, CancellationToken cancellationToken)
+      async Task<Response<Notification>> INotificationsEndpoint.GetNotificationAsync(string notificationId, CancellationToken cancellationToken)
       {
-         return Request(NotificationsEndpoint.AppendPathSegmentsRequire(notificationId))
-            .GetJsonAsync<Response<Notification>>(cancellationToken: cancellationToken);
+         var responseBody = await Request(NotificationsEndpoint.AppendPathSegmentsRequire(notificationId))
+            .GetStringAsync(cancellationToken: cancellationToken);
+         if( string.IsNullOrWhiteSpace(responseBody) ) return new Response<Notification>();
+
+         return JsonConvert.DeserializeObject<Response<Notification>>(responseBody);
       }
    }
 }
