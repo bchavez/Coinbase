@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using JsonSerializer = System.Text.Json.JsonSerializer;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
@@ -7,7 +8,7 @@ using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
 {
-   public class WithdrawlTests : OAuthServerTest
+   public class WithdrawalTests : OAuthServerTest
    {
       [Test]
       public async Task can_commit()
@@ -88,7 +89,7 @@ namespace Coinbase.Tests.Endpoints
          truth.Should().BeEquivalentTo(r);
 
          server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/withdrawals")
-               .WithRequestBody(@"{""amount"":10.0,""currency"":""USD"",""payment_method"":""B28EB04F-BD70-4308-90A1-96065283A001"",""commit"":false}")
+               .WithRequestBody(JsonSerializer.Serialize(create))
                .WithVerb(HttpMethod.Post);
       }
    }
