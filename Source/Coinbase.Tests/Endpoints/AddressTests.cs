@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using Coinbase.Models;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
 using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
 {
+   [TestFixture]
    public class AddressTests : OAuthServerTest
    {
       [Test]
@@ -26,6 +28,8 @@ namespace Coinbase.Tests.Endpoints
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/ffff/addresses")
             .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -44,6 +48,8 @@ namespace Coinbase.Tests.Endpoints
 
          server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/ffff/addresses/{Address1Model.Id}")
             .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -63,6 +69,8 @@ namespace Coinbase.Tests.Endpoints
 
          server.ShouldHaveCalled($"https://api.coinbase.com/v2/accounts/fff/addresses/uuu/transactions")
             .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -84,6 +92,8 @@ namespace Coinbase.Tests.Endpoints
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/addresses")
             .WithVerb(HttpMethod.Post);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
    }
 }

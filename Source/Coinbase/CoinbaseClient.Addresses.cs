@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using Flurl.Http;
+using Newtonsoft.Json;
 
 namespace Coinbase
 {
@@ -34,38 +35,52 @@ namespace Coinbase
    {
       public IAddressesEndpoint Addresses => this;
 
-      /// <inheritdoc />
-      Task<PagedResponse<AddressEntity>> IAddressesEndpoint.ListAddressesAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
+      /// <inheritdoc />   
+      async Task<PagedResponse<AddressEntity>> IAddressesEndpoint.ListAddressesAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, "addresses")
-                  .WithPagination(pagination))
-               .GetJsonAsync<PagedResponse<AddressEntity>>(cancellationToken: cancellationToken);
+         var responseBody = await Request(
+            AccountsEndpoint.AppendPathSegmentsRequire(accountId, "addresses")
+                            .WithPagination(pagination)
+         ).GetStringAsync(cancellationToken: cancellationToken);
+         if( string.IsNullOrWhiteSpace(responseBody) ) return new PagedResponse<AddressEntity>();
+
+         return JsonConvert.DeserializeObject<PagedResponse<AddressEntity>>(responseBody);
       }
 
       /// <inheritdoc />
-      Task<Response<AddressEntity>> IAddressesEndpoint.GetAddressAsync(string accountId, string addressId, CancellationToken cancellationToken)
+      async Task<Response<AddressEntity>> IAddressesEndpoint.GetAddressAsync(string accountId, string addressId, CancellationToken cancellationToken)
       {
-         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, "addresses", addressId))
-            .GetJsonAsync<Response<AddressEntity>>(cancellationToken: cancellationToken);
+         var responseBody = await Request(
+            AccountsEndpoint.AppendPathSegmentsRequire(accountId, "addresses", addressId)
+            ).GetStringAsync(cancellationToken: cancellationToken);
+         if( string.IsNullOrWhiteSpace(responseBody) ) return new Response<AddressEntity>();
+
+         return JsonConvert.DeserializeObject<Response<AddressEntity>>(responseBody);
       }
 
       /// <inheritdoc />
-      Task<PagedResponse<Transaction>> IAddressesEndpoint.ListAddressTransactionsAsync(string accountId, string addressId, PaginationOptions pagination, CancellationToken cancellationToken)
+      async Task<PagedResponse<Transaction>> IAddressesEndpoint.ListAddressTransactionsAsync(string accountId, string addressId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return Request(AccountsEndpoint
-                        .AppendPathSegmentsRequire(accountId, "addresses", addressId, "transactions")
-                        .WithPagination(pagination)
-         ).GetJsonAsync<PagedResponse<Transaction>>(cancellationToken: cancellationToken);
+         var responseBody = await Request(
+            AccountsEndpoint
+               .AppendPathSegmentsRequire(accountId, "addresses", addressId, "transactions")
+               .WithPagination(pagination)
+         ).GetStringAsync(cancellationToken: cancellationToken);
+         if( string.IsNullOrWhiteSpace(responseBody) ) return new PagedResponse<Transaction>();
+
+         return JsonConvert.DeserializeObject<PagedResponse<Transaction>>(responseBody);
       }
 
       /// <inheritdoc />
-      Task<Response<AddressEntity>> IAddressesEndpoint.CreateAddressAsync(string accountId, CreateAddress createAddress, CancellationToken cancellationToken)
+      async Task<Response<AddressEntity>> IAddressesEndpoint.CreateAddressAsync(string accountId, CreateAddress createAddress, CancellationToken cancellationToken)
       {
-         return Request(AccountsEndpoint
-                        .AppendPathSegmentsRequire(accountId, "addresses")
-                        ).PostJsonAsync(
-                           createAddress, cancellationToken: cancellationToken
-                        ).ReceiveJson<Response<AddressEntity>>();
+         using var response = Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, "addresses"))
+            .PostJsonAsync(createAddress, cancellationToken: cancellationToken);
+         var responseBody = await response.ReceiveString();
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new Response<AddressEntity>();
+
+         return JsonConvert.DeserializeObject<Response<AddressEntity>>(responseBody);
       }
    }
 }
