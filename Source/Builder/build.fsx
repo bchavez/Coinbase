@@ -22,8 +22,8 @@ nuget Fake.Tools.Git
 nuget Fake.DotNet.Testing.xUnit2   
 nuget Fake.BuildServer.AppVeyor    
 
-nuget SharpCompress = 0.22.0
-nuget FSharp.Data = 2.4.6
+nuget SharpCompress = 0.35.0
+nuget FSharp.Data = 6.3.0
 
 nuget secure-file                  = 1.0.31
 
