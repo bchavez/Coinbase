@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.Models;
 using Flurl.Http;
+using Newtonsoft.Json;
 
 namespace Coinbase
 {
@@ -23,16 +24,24 @@ namespace Coinbase
    {
       public IPaymentMethodsEndpoint PaymentMethods => this;
 
-      Task<PagedResponse<PaymentMethod>> IPaymentMethodsEndpoint.ListPaymentMethodsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
+      async Task<PagedResponse<PaymentMethod>> IPaymentMethodsEndpoint.ListPaymentMethodsAsync(PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return Request(PaymentMethodsEndpoint.WithPagination(pagination))
-            .GetJsonAsync<PagedResponse<PaymentMethod>>(cancellationToken: cancellationToken);
+         var responseBody = await Request(PaymentMethodsEndpoint.WithPagination(pagination))
+            .GetStringAsync(cancellationToken: cancellationToken);
+         if (string.IsNullOrWhiteSpace(responseBody))
+            return new PagedResponse<PaymentMethod>();
+
+         return JsonConvert.DeserializeObject<PagedResponse<PaymentMethod>>(responseBody);
       }
 
-      Task<Response<PaymentMethod>> IPaymentMethodsEndpoint.GetPaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
+      async Task<Response<PaymentMethod>> IPaymentMethodsEndpoint.GetPaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
       {
-         return Request(PaymentMethodsEndpoint.AppendPathSegmentsRequire(paymentMethodId))
-            .GetJsonAsync<Response<PaymentMethod>>(cancellationToken: cancellationToken);
+         var responseBody = await Request(PaymentMethodsEndpoint.AppendPathSegmentsRequire(paymentMethodId))
+            .GetStringAsync(cancellationToken: cancellationToken);
+         if (string.IsNullOrWhiteSpace(responseBody))
+            return new Response<PaymentMethod>();
+
+         return JsonConvert.DeserializeObject<Response<PaymentMethod>>(responseBody);
       }
    }
 }
