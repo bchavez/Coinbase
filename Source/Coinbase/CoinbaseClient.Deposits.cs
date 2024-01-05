@@ -36,20 +36,27 @@ namespace Coinbase
       private const string deposits = "deposits";
 
       /// <inheritdoc />
-      Task<PagedResponse<Deposit>> IDepositsEndpoint.ListDepositsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
+      async Task<PagedResponse<Deposit>> IDepositsEndpoint.ListDepositsAsync(string accountId, PaginationOptions pagination, CancellationToken cancellationToken)
       {
-         return Request(
+         var responseBody = await Request(
                AccountsEndpoint.AppendPathSegmentsRequire(accountId, deposits)
                                .WithPagination(pagination)
-            )
-            .GetJsonAsync<PagedResponse<Deposit>>(cancellationToken: cancellationToken);
+            ).GetStringAsync(cancellationToken: cancellationToken);
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new PagedResponse<Deposit>();
+
+         return JsonConvert.DeserializeObject<PagedResponse<Deposit>>(responseBody);
       }
 
       /// <inheritdoc />
-      Task<Response<Deposit>> IDepositsEndpoint.GetDepositAsync(string accountId, string depositId, CancellationToken cancellationToken)
+      async Task<Response<Deposit>> IDepositsEndpoint.GetDepositAsync(string accountId, string depositId, CancellationToken cancellationToken)
       {
-         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, deposits, depositId))
-            .GetJsonAsync<Response<Deposit>>(cancellationToken: cancellationToken);
+         var responseBody = await Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, deposits, depositId))
+            .GetStringAsync(cancellationToken: cancellationToken);
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new Response<Deposit>();
+
+         return JsonConvert.DeserializeObject<Response<Deposit>>(responseBody);
       }
 
       /// <inheritdoc />
