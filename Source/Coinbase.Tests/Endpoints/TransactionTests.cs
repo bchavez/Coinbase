@@ -1,4 +1,5 @@
-﻿using Coinbase.Models;
+﻿using JsonSerializer = System.Text.Json.JsonSerializer;
+using Coinbase.Models;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Net.Http;
@@ -12,16 +13,16 @@ namespace Coinbase.Tests.Endpoints
       [Test]
       public async Task can_cancel()
       {
-         var r = await client.Transactions.CancelRequestMoneyAsync("fff", "uuu");
+         using var r = await client.Transactions.CancelRequestMoneyAsync("fff", "uuu");
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
                .WithVerb(HttpMethod.Delete);
       }
 
       [Test]
-      public async Task can_compelte()
+      public async Task can_complete()
       {
-         var r = await client.Transactions.CompleteRequestMoneyAsync("fff", "uuu");
+         using var r = await client.Transactions.CompleteRequestMoneyAsync("fff", "uuu");
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/complete")
                .WithVerb(HttpMethod.Post);
@@ -82,7 +83,7 @@ namespace Coinbase.Tests.Endpoints
       [Test]
       public async Task can_resend()
       {
-         var r = await client.Transactions.ResendRequestMoneyAsync("fff", "uuu");
+         using var r = await client.Transactions.ResendRequestMoneyAsync("fff", "uuu");
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/resend")
                .WithVerb(HttpMethod.Post);
@@ -110,7 +111,7 @@ namespace Coinbase.Tests.Endpoints
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
                .WithRequestBody(
-                  "{\"type\":\"send\",\"to\":\"1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT\",\"amount\":0.1,\"currency\":\"BTC\",\"skip_notifications\":false,\"idem\":\"9316dd16-0c05\",\"to_financial_institution\":false}"
+                  JsonSerializer.Serialize(createTx)
                )
                .WithVerb(HttpMethod.Post);
       }
@@ -129,7 +130,7 @@ namespace Coinbase.Tests.Endpoints
               .BeEquivalentTo(r);
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/transactions")
-               .WithRequestBody(@"{""type"":""send"",""to"":""1AUJ8z5RuHRTqD1eikyfUUetzGmdWLGkpT"",""amount"":0.1,""currency"":""BTC""}")
+               .WithRequestBody(JsonSerializer.Serialize(createTx))
                .WithVerb(HttpMethod.Post);
       }
    }
