@@ -26,7 +26,7 @@ namespace Coinbase
 
    public partial class CoinbaseClient : FlurlClient, ICoinbaseClient
    {
-      public const string ApiVersionDate = "2017-08-07";
+      public const string ApiVersionDate = "2021-06-05";
 
       public Config Config { get; }
 
