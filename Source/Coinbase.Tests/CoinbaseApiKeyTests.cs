@@ -2,7 +2,6 @@
 
 namespace Coinbase.Tests
 {
-   [TestFixture]
    public class CoinbaseApiKeyTests : ServerTest
    {
       public string apiKey = "DBBD0428-B818-4F53-A5F4-F553DC4C374C";
@@ -18,7 +17,6 @@ namespace Coinbase.Tests
       [TearDown]
       public override void AfterEachTest()
       {
-
          EnsureEveryRequestHasCorrectHeaders();
          base.AfterEachTest();
       }
@@ -30,7 +28,5 @@ namespace Coinbase.Tests
             .WithHeader(HeaderNames.AccessKey, apiKey)
             .WithHeader("User-Agent", CoinbaseClient.UserAgent);
       }
-
-
    }
 }
