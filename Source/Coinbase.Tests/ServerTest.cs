@@ -1,5 +1,6 @@
 ﻿using Flurl.Http.Testing;
 using NUnit.Framework;
+using System;
 
 namespace Coinbase.Tests
 {
@@ -29,6 +30,13 @@ namespace Coinbase.Tests
             .Replace("{pageJson}", pageJson);
 
          server.RespondWith(json);
+
+         Console.WriteLine("Anticipated server response:");
+         Console.WriteLine("---");
+         Console.WriteLine();
+         Console.WriteLine(json);
+         Console.WriteLine();
+         Console.WriteLine("---");
       }
 
       protected void SetupServerSingleResponse(string dataJson)
@@ -39,6 +47,13 @@ namespace Coinbase.Tests
 ".Replace("{dataJson}", dataJson);
 
          server.RespondWith(json);
+
+         Console.WriteLine("Anticipated server response:");
+         Console.WriteLine("---");
+         Console.WriteLine();
+         Console.WriteLine(json);
+         Console.WriteLine();
+         Console.WriteLine("---");
       }
    }
 

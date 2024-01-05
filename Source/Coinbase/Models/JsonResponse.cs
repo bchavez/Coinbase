@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 
 namespace Coinbase.Models
 {
@@ -128,7 +129,7 @@ namespace Coinbase.Models
 
       public int Limit { get; set; }
 
-      [JsonConverter(typeof(StringEnumConverter))]
+      [JsonProperty("order"), JsonConverter(typeof(StringEnumConverter))]
       public SortOrder Order { get; set; }
 
       [JsonProperty("previous_uri")]
@@ -141,7 +142,10 @@ namespace Coinbase.Models
 
    public enum SortOrder
    {
+      [Description("desc"), EnumMember(Value = "desc")]
       Desc,
+
+      [Description("asc"), EnumMember(Value = "asc")]
       Asc
    }
 
