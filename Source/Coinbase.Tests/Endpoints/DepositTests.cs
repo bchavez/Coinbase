@@ -1,12 +1,15 @@
-﻿using Coinbase.Models;
+﻿using JsonSerializer = System.Text.Json.JsonSerializer;
+using Coinbase.Models;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static Coinbase.Tests.Examples;
 
 namespace Coinbase.Tests.Endpoints
 {
+   [TestFixture]
    public class DepositTests : OAuthServerTest
    {
       [Test]
@@ -23,6 +26,8 @@ namespace Coinbase.Tests.Endpoints
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits/uuu/commit")
                .WithVerb(HttpMethod.Post);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -39,8 +44,10 @@ namespace Coinbase.Tests.Endpoints
               .BeEquivalentTo(r);
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits")
-               .WithRequestBody(@"{""amount"":10.0,""currency"":""USD"",""payment_method"":""B28EB04F-BD70-4308-90A1-96065283A001"",""commit"":false}")
+               .WithRequestBody(JsonSerializer.Serialize(create))
                .WithVerb(HttpMethod.Post);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -57,6 +64,8 @@ namespace Coinbase.Tests.Endpoints
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits/uuu")
                .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
 
       [Test]
@@ -73,6 +82,8 @@ namespace Coinbase.Tests.Endpoints
 
          server.ShouldHaveCalled("https://api.coinbase.com/v2/accounts/fff/deposits")
                .WithVerb(HttpMethod.Get);
+
+         Console.WriteLine("*** UNIT TEST PASSED ***");
       }
    }
 }

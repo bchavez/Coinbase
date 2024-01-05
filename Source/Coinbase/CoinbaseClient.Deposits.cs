@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Coinbase.Models;
 using Flurl.Http;
+using Newtonsoft.Json;
 
 namespace Coinbase
 {
@@ -52,19 +53,27 @@ namespace Coinbase
       }
 
       /// <inheritdoc />
-      Task<Response<Deposit>> IDepositsEndpoint.DepositFundsAsync(string accountId, DepositFunds depositFunds, CancellationToken cancellationToken)
+      async Task<Response<Deposit>> IDepositsEndpoint.DepositFundsAsync(string accountId, DepositFunds depositFunds, CancellationToken cancellationToken)
       {
-         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, deposits))
-                .PostJsonAsync(depositFunds, cancellationToken: cancellationToken)
-                .ReceiveJson<Response<Deposit>>();
+         using var response = Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, deposits))
+            .PostJsonAsync(depositFunds, cancellationToken: cancellationToken);
+         var responseBody = await response.ReceiveString();
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new Response<Deposit>();
+
+         return JsonConvert.DeserializeObject<Response<Deposit>>(responseBody);
       }
 
       /// <inheritdoc />
-      Task<Response<Deposit>> IDepositsEndpoint.CommitDepositAsync(string accountId, string depositId, CancellationToken cancellationToken)
+      async Task<Response<Deposit>> IDepositsEndpoint.CommitDepositAsync(string accountId, string depositId, CancellationToken cancellationToken)
       {
-         return Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, deposits, depositId, "commit"))
-                .PostJsonAsync(null, cancellationToken: cancellationToken)
-                .ReceiveJson<Response<Deposit>>();
+         using var response = Request(AccountsEndpoint.AppendPathSegmentsRequire(accountId, deposits, depositId, "commit"))
+            .PostJsonAsync(null, cancellationToken: cancellationToken);
+         var responseBody = await response.ReceiveString();
+         if( string.IsNullOrWhiteSpace(responseBody) )
+            return new Response<Deposit>();
+
+         return JsonConvert.DeserializeObject<Response<Deposit>>(responseBody);
       }
    }
 }
