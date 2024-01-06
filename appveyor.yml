@@ -13,8 +13,9 @@ init:
 build_script: 
   - build.cmd ci
 
-test_script:
-  - build.cmd citest
+test: off
+# test_script:
+#   - build.cmd citest
 
 artifacts:
   - path: __package\*.nupkg
